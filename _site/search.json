@@ -1,0 +1,20 @@
+{
+  "articles": [
+    {
+      "path": "about.html",
+      "title": "Welcome to LiteralFightNerd!",
+      "description": "This blog seeks to bring rigorous quantitative analysis to the mixed martial arts world in a form that is digestable for non-technical individuals but still comprehensive for those who are more quantiatively inclined.",
+      "author": [],
+      "contents": "\r\nI am a Data Scientist currently living in the Washington, D.C. area. I’ve always been passionate about both math and sports. I was a collegiate soccer player at Dickinson College before earning an M.S. in Statistics from Carnegie Mellon University. Now I spend my free time combining my passions to conduct quantitative analysis primarily for mixed martial arts (MMA). I’ve witnessed most major American sports go through some sort of analytics revolution, but I have not yet seen the same growth in MMA. Hence, I think there’s room to use publicly available MMA data in new ways that are fruitful to anyone interested in the sport, from fighters and coaches to MMA experts and sports bettors to even casual fans.\r\nI invite feedback on everything. While all of my current plans for this blog involve quantitative MMA analysis, I am interested in branching out to other sports analytics or data science topics in the future. I’m always open to connecting with others to collaborate or just exchange ideas. The best way to connect with me is through Twitter.\r\nFor those wondering where the name LiteralFightNerd came from, I began sharing my early quantitative MMA analysis on Twitter and Reddit. In September 2020 I posted a long piece to Reddit on a machine learning model I created that predicts judging decisions by round in the UFC. That post received over 100 comments. The very first comment, which came almost immediately, read “literal fight nerd” (proof). A couple months later this blog was born in honor of one of Reddit’s finest. I literally am a fight nerd. Through this blog I hope to show that fight nerds can make substantive contributions to the sport.\r\nEnjoy!\r\n-Nate\r\n\r\n\r\n\r\n",
+      "last_modified": "2021-02-04T22:32:56-05:00"
+    },
+    {
+      "path": "index.html",
+      "title": "LiteralFightNerd",
+      "author": [],
+      "contents": "\r\n\r\n\r\n\r\n",
+      "last_modified": "2021-02-04T22:33:00-05:00"
+    }
+  ],
+  "collections": ["posts/posts.json"]
+}
