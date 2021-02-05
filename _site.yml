@@ -3,6 +3,7 @@ title: "LiteralFightNerd"
 description: |
   LiteralFightNerd
 output_dir: "_site"
+google_analytics: "UA-189011183-1"
 navbar:
   right:
     - text: "Home"

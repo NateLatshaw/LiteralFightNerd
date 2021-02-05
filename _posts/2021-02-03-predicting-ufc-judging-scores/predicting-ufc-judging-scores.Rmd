@@ -35,7 +35,5 @@ df <- readRDS(paste0(data_path, 'round_decisions_and_stats_20210203.RDS'))
 
 ```
 
-Blog named after first Reddit comment on this work. I had to honor one of Reddit's finest with this blog. Link to [proof](https://www.reddit.com/r/MMA/comments/iy2z3i/introducing_a_new_fight_evaluation_tool_a_machine/g6abz5w?utm_source=share&utm_medium=web2x&context=3). Comment was the very first of over 100 comments. It has also received the second most upvotes of all comments.
-
-
+Test text.
 

@@ -11,9 +11,9 @@
     ],
     "date": "2021-02-03",
     "categories": [],
-    "contents": "\r\n\r\n         used (Mb) gc trigger (Mb) max used (Mb)\r\nNcells 452925 24.2     974747 52.1   638648 34.2\r\nVcells 813865  6.3    8388608 64.0  1632170 12.5\r\n\r\nBlog named after first Reddit comment on this work. I had to honor one of Reddit’s finest with this blog. Link to proof. Comment was the very first of over 100 comments. It has also received the second most upvotes of all comments.\r\n\r\n\r\n\r\n",
+    "contents": "\r\n\r\n         used (Mb) gc trigger (Mb) max used (Mb)\r\nNcells 456484 24.4     984915 52.7   638648 34.2\r\nVcells 821847  6.3    8388608 64.0  1632170 12.5\r\n\r\nTest text.\r\n\r\n\r\n\r\n",
     "preview": {},
-    "last_modified": "2021-02-04T00:13:22-05:00",
-    "input_file": {}
+    "last_modified": "2021-02-04T23:23:04-05:00",
+    "input_file": "predicting-ufc-judging-scores.utf8.md"
   }
 ]
