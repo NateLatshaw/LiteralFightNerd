@@ -1,0 +1,13 @@
+---
+title: "Check out the UFC Fight Night Statistical Companion!"
+description: |
+  A web app containing a suite of comprehensive data visualization tools used to explore detailed historical statistics on all fighters on the upcoming UFC card.
+---
+
+Here is the link, be sure to check it out on a desktop (rather than a mobile device): [https://natelatshaw.shinyapps.io/ufc_fight_night_statistical_companion/](https://natelatshaw.shinyapps.io/ufc_fight_night_statistical_companion/).
+
+Before starting this blog, I spent a lot of time working with publicly available UFC statistics. I found the sites available at that time to be severely lacking. I'd often have to click several times just to view a single fighter's historical statistics spread out over many separate web pages. As a result, it was incredibly frustrating to simply try to view and compare statistics between the two fighters in each bout on the upcoming UFC card.
+
+Eventually, around March 2020, I decided to make my own site that would enable me to quickly and cleanly visualize publicly available statistics on the fighters on the upcoming card. Soon after that I decided to share it with others in the form of a web app, which I've named the UFC Fight Night Statistical Companion. I update the web app regularly so it (almost) always reflects the upcoming UFC card. While it has no official affiliation with the UFC, I hope to continue to grow this web app into a valuable, comprehensive resource for UFC audiences of all types.
+
+Enjoy!
