@@ -1,7 +1,7 @@
 ---
 title: "Welcome to LiteralFightNerd!"
 description: |
-  This blog seeks to bring rigorous quantitative analysis to the mixed martial arts world in a form that is digestable for non-technical audiences but still comprehensive for those who are more quantiatively inclined.
+  This blog seeks to bring rigorous quantitative analysis to the mixed martial arts world in a form that is digestable for non-technical audiences but still comprehensive for those who are more quantitatively inclined.
 ---
 
 I am a Data Scientist currently living in the Washington, D.C. area. I've always been passionate about both math and sports. I was a collegiate soccer player at Dickinson College before earning an M.S. in Statistics from Carnegie Mellon University. Now I spend my free time combining my passions to conduct quantitative analysis primarily for mixed martial arts (MMA). I've witnessed most major American sports go through some sort of analytics revolution, but I have not yet seen the same growth in MMA. Hence, I think there's room to use publicly available MMA data in new ways that are fruitful to anyone interested in the sport, from fighters and coaches to MMA experts and sports bettors to even casual fans.
