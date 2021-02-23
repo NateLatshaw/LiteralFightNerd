@@ -321,7 +321,7 @@ ggplot(plot_df, aes(x = probs_grp_midpoint, y = probs_grp_actual)) +
 
 Using the predicted probabilities for each possible score, we define the *predicted score* as the score with the highest predicted probability from the model. We then compute the scoring accuracy of the model by determining the number of rounds in which the predicted score matches the score given by the majority of the judges and then dividing by the total number of rounds. That is, 
 
-$\text{Scoring accuracy} = \frac{\text{# of rounds where JudgeAI's predicted score = the score given by majority of judges}}{\text{Total number of rounds}}$.
+$\text{Scoring accuracy} = \frac{\text{# of rounds where predicted score = judges' majority score}}{\text{total number of rounds}}$.
 
 Over all fights considered between 2012-2020, the model's scoring accuracy is `r paste0(100 * round(round_score_accuracy, 3), '%')`, which means that the model agrees with the majority of judges on the particular score in approximately 4 out of every 5 rounds.
 
