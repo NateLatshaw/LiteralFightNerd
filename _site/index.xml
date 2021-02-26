@@ -1,0 +1,30 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<rss xmlns:atom="http://www.w3.org/2005/Atom" xmlns:media="http://search.yahoo.com/mrss/" xmlns:content="http://purl.org/rss/1.0/modules/content/" xmlns:dc="http://purl.org/dc/elements/1.1/" version="2.0">
+  <channel>
+    <title>LiteralFightNerd</title>
+    <link>https://literalfightnerd.com/</link>
+    <atom:link href="https://literalfightnerd.com/index.xml" rel="self" type="application/rss+xml"/>
+    <description>Bringing rigorous quantitative analysis to MMA
+</description>
+    <generator>Distill</generator>
+    <lastBuildDate>Thu, 25 Feb 2021 00:00:00 +0000</lastBuildDate>
+    <item>
+      <title>Extending JudgeAI</title>
+      <dc:creator>Nate Latshaw</dc:creator>
+      <link>https://literalfightnerd.com/posts/2021-02-25-extending-judgeai</link>
+      <description>Aggregating JudgeAI's round score predictions to generate final scorecard probability distributions with a case study on the judging decisions made during the main event of UFC 247: Jones vs Reyes</description>
+      <guid>https://literalfightnerd.com/posts/2021-02-25-extending-judgeai</guid>
+      <pubDate>Thu, 25 Feb 2021 00:00:00 +0000</pubDate>
+      <media:content url="https://literalfightnerd.com/posts/2021-02-25-extending-judgeai/extending-judgeai_files/figure-html5/unnamed-chunk-7-1.png" medium="image" type="image/png" width="1248" height="768"/>
+    </item>
+    <item>
+      <title>Introducing JudgeAI</title>
+      <dc:creator>Nate Latshaw</dc:creator>
+      <link>https://literalfightnerd.com/posts/2021-02-19-introducing-judgeai</link>
+      <description>A machine learning algorithm that predicts judges' scores by round in the UFC</description>
+      <guid>https://literalfightnerd.com/posts/2021-02-19-introducing-judgeai</guid>
+      <pubDate>Fri, 19 Feb 2021 00:00:00 +0000</pubDate>
+      <media:content url="https://literalfightnerd.com/posts/2021-02-19-introducing-judgeai/introducing-judgeai_files/figure-html5/unnamed-chunk-6-1.png" medium="image" type="image/png" width="1248" height="768"/>
+    </item>
+  </channel>
+</rss>
