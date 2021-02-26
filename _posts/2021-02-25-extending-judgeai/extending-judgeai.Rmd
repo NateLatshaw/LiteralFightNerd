@@ -1,7 +1,7 @@
 ---
 title: "Extending JudgeAI"
 description: |
-  Aggregating JudgeAI's round score predictions to generate final scorecard probability distributions.
+  Aggregating JudgeAI's round score predictions to generate final scorecard probability distributions with a case study on the judging decisions made during the main event of UFC 247: Jones vs Reyes
 twitter:
   - site: "@NateLatshaw"
   - creator: "@NateLatshaw"
