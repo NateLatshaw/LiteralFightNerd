@@ -2,6 +2,7 @@ name: "LiteralFightNerd"
 title: "LiteralFightNerd"
 description: |
   Bringing rigorous quantitative analysis to MMA
+base_url: https://literalfightnerd.com/
 output_dir: "_site"
 navbar:
   right:
@@ -14,3 +15,10 @@ navbar:
     - icon: fa fa-twitter
       href: https://twitter.com/NateLatshaw
 output: distill::distill_article
+twitter:
+  site: "@NateLatshaw"
+  creator: "@NateLatshaw"
+collections:
+  posts:
+    share: [twitter]
+    citations: false

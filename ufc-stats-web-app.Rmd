@@ -1,7 +1,7 @@
 ---
 title: "Check out the UFC Fight Night Statistical Companion!"
 description: |
-  A web app containing a suite of comprehensive data visualization tools used to explore detailed historical statistics on all fighters on the upcoming UFC card.
+  A web app containing a suite of comprehensive data visualization tools used to explore detailed historical statistics on all fighters on the upcoming UFC card
 ---
 
 Here is the link, be sure to check it out on a desktop (rather than a mobile device): [https://natelatshaw.shinyapps.io/ufc_fight_night_statistical_companion/](https://natelatshaw.shinyapps.io/ufc_fight_night_statistical_companion/).
