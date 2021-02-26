@@ -85,635 +85,39 @@ code span.wa { color: #5e5e5e; font-style: italic; } /* Warning */
 </style>
 
   <!--radix_placeholder_meta_tags-->
-  <title>LiteralFightNerd: Posts</title>
+  <title>Extending JudgeAI</title>
+
+  <meta property="description" itemprop="description" content="Aggregating JudgeAI&#39;s round score predictions to generate final scorecard probability distributions."/>
 
 
-
+  <!--  https://schema.org/Article -->
+  <meta property="article:published" itemprop="datePublished" content="2021-02-25"/>
+  <meta property="article:created" itemprop="dateCreated" content="2021-02-25"/>
+  <meta name="article:author" content="Nate Latshaw"/>
 
   <!--  https://developers.facebook.com/docs/sharing/webmasters#markup -->
-  <meta property="og:title" content="LiteralFightNerd: Posts"/>
+  <meta property="og:title" content="Extending JudgeAI"/>
   <meta property="og:type" content="article"/>
+  <meta property="og:description" content="Aggregating JudgeAI&#39;s round score predictions to generate final scorecard probability distributions."/>
   <meta property="og:locale" content="en_US"/>
-  <meta property="og:site_name" content="LiteralFightNerd"/>
 
   <!--  https://dev.twitter.com/cards/types/summary -->
   <meta property="twitter:card" content="summary"/>
-  <meta property="twitter:title" content="LiteralFightNerd: Posts"/>
+  <meta property="twitter:title" content="Extending JudgeAI"/>
+  <meta property="twitter:description" content="Aggregating JudgeAI&#39;s round score predictions to generate final scorecard probability distributions."/>
 
   <!--/radix_placeholder_meta_tags-->
   <!--radix_placeholder_rmarkdown_metadata-->
 
   <script type="text/json" id="radix-rmarkdown-metadata">
-  {"type":"list","attributes":{"names":{"type":"character","attributes":{},"value":["title","site","listing"]}},"value":[{"type":"character","attributes":{},"value":["Posts"]},{"type":"character","attributes":{},"value":["distill::distill_website"]},{"type":"character","attributes":{},"value":["posts"]}]}
+  {"type":"list","attributes":{"names":{"type":"character","attributes":{},"value":["title","description","twitter","author","date","output","draft"]}},"value":[{"type":"character","attributes":{},"value":["Extending JudgeAI"]},{"type":"character","attributes":{},"value":["Aggregating JudgeAI's round score predictions to generate final scorecard probability distributions.\n"]},{"type":"list","attributes":{},"value":[{"type":"list","attributes":{"names":{"type":"character","attributes":{},"value":["site"]}},"value":[{"type":"character","attributes":{},"value":["@NateLatshaw"]}]},{"type":"list","attributes":{"names":{"type":"character","attributes":{},"value":["creator"]}},"value":[{"type":"character","attributes":{},"value":["@NateLatshaw"]}]}]},{"type":"list","attributes":{},"value":[{"type":"list","attributes":{"names":{"type":"character","attributes":{},"value":["name"]}},"value":[{"type":"character","attributes":{},"value":["Nate Latshaw"]}]}]},{"type":"character","attributes":{},"value":["02-25-2021"]},{"type":"list","attributes":{"names":{"type":"character","attributes":{},"value":["distill::distill_article"]}},"value":[{"type":"list","attributes":{"names":{"type":"character","attributes":{},"value":["self_contained","toc"]}},"value":[{"type":"logical","attributes":{},"value":[false]},{"type":"logical","attributes":{},"value":[true]}]}]},{"type":"logical","attributes":{},"value":[false]}]}
   </script>
   <!--/radix_placeholder_rmarkdown_metadata-->
+  
+  <script type="text/json" id="radix-resource-manifest">
+  {"type":"character","attributes":{},"value":["extending-judgeai_files/anchor-4.2.2/anchor.min.js","extending-judgeai_files/bowser-1.9.3/bowser.min.js","extending-judgeai_files/distill-2.2.21/template.v2.js","extending-judgeai_files/figure-html5/unnamed-chunk-2-1.png","extending-judgeai_files/figure-html5/unnamed-chunk-3-1.png","extending-judgeai_files/figure-html5/unnamed-chunk-4-1.png","extending-judgeai_files/figure-html5/unnamed-chunk-5-1.png","extending-judgeai_files/figure-html5/unnamed-chunk-6-1.png","extending-judgeai_files/figure-html5/unnamed-chunk-7-1.png","extending-judgeai_files/header-attrs-2.6/header-attrs.js","extending-judgeai_files/jquery-1.11.3/jquery.min.js","extending-judgeai_files/popper-2.6.0/popper.min.js","extending-judgeai_files/tippy-6.2.7/tippy-bundle.umd.min.js","extending-judgeai_files/tippy-6.2.7/tippy-light-border.css","extending-judgeai_files/tippy-6.2.7/tippy.css","extending-judgeai_files/tippy-6.2.7/tippy.umd.min.js","extending-judgeai_files/webcomponents-2.0.0/webcomponents.js","files/input_files/functions.R"]}
+  </script>
   <!--radix_placeholder_navigation_in_header-->
-  <meta name="distill:offset" content=""/>
-
-  <script type="application/javascript">
-
-    window.headroom_prevent_pin = false;
-
-    window.document.addEventListener("DOMContentLoaded", function (event) {
-
-      // initialize headroom for banner
-      var header = $('header').get(0);
-      var headerHeight = header.offsetHeight;
-      var headroom = new Headroom(header, {
-        tolerance: 5,
-        onPin : function() {
-          if (window.headroom_prevent_pin) {
-            window.headroom_prevent_pin = false;
-            headroom.unpin();
-          }
-        }
-      });
-      headroom.init();
-      if(window.location.hash)
-        headroom.unpin();
-      $(header).addClass('headroom--transition');
-
-      // offset scroll location for banner on hash change
-      // (see: https://github.com/WickyNilliams/headroom.js/issues/38)
-      window.addEventListener("hashchange", function(event) {
-        window.scrollTo(0, window.pageYOffset - (headerHeight + 25));
-      });
-
-      // responsive menu
-      $('.distill-site-header').each(function(i, val) {
-        var topnav = $(this);
-        var toggle = topnav.find('.nav-toggle');
-        toggle.on('click', function() {
-          topnav.toggleClass('responsive');
-        });
-      });
-
-      // nav dropdowns
-      $('.nav-dropbtn').click(function(e) {
-        $(this).next('.nav-dropdown-content').toggleClass('nav-dropdown-active');
-        $(this).parent().siblings('.nav-dropdown')
-           .children('.nav-dropdown-content').removeClass('nav-dropdown-active');
-      });
-      $("body").click(function(e){
-        $('.nav-dropdown-content').removeClass('nav-dropdown-active');
-      });
-      $(".nav-dropdown").click(function(e){
-        e.stopPropagation();
-      });
-    });
-  </script>
-
-  <style type="text/css">
-
-  /* Theme (user-documented overrideables for nav appearance) */
-
-  .distill-site-nav {
-    color: rgba(255, 255, 255, 0.8);
-    background-color: #0F2E3D;
-    font-size: 15px;
-    font-weight: 300;
-  }
-
-  .distill-site-nav a {
-    color: inherit;
-    text-decoration: none;
-  }
-
-  .distill-site-nav a:hover {
-    color: white;
-  }
-
-  @media print {
-    .distill-site-nav {
-      display: none;
-    }
-  }
-
-  .distill-site-header {
-
-  }
-
-  .distill-site-footer {
-
-  }
-
-
-  /* Site Header */
-
-  .distill-site-header {
-    width: 100%;
-    box-sizing: border-box;
-    z-index: 3;
-  }
-
-  .distill-site-header .nav-left {
-    display: inline-block;
-    margin-left: 8px;
-  }
-
-  @media screen and (max-width: 768px) {
-    .distill-site-header .nav-left {
-      margin-left: 0;
-    }
-  }
-
-
-  .distill-site-header .nav-right {
-    float: right;
-    margin-right: 8px;
-  }
-
-  .distill-site-header a,
-  .distill-site-header .title {
-    display: inline-block;
-    text-align: center;
-    padding: 14px 10px 14px 10px;
-  }
-
-  .distill-site-header .title {
-    font-size: 18px;
-    min-width: 150px;
-  }
-
-  .distill-site-header .logo {
-    padding: 0;
-  }
-
-  .distill-site-header .logo img {
-    display: none;
-    max-height: 20px;
-    width: auto;
-    margin-bottom: -4px;
-  }
-
-  .distill-site-header .nav-image img {
-    max-height: 18px;
-    width: auto;
-    display: inline-block;
-    margin-bottom: -3px;
-  }
-
-
-
-  @media screen and (min-width: 1000px) {
-    .distill-site-header .logo img {
-      display: inline-block;
-    }
-    .distill-site-header .nav-left {
-      margin-left: 20px;
-    }
-    .distill-site-header .nav-right {
-      margin-right: 20px;
-    }
-    .distill-site-header .title {
-      padding-left: 12px;
-    }
-  }
-
-
-  .distill-site-header .nav-toggle {
-    display: none;
-  }
-
-  .nav-dropdown {
-    display: inline-block;
-    position: relative;
-  }
-
-  .nav-dropdown .nav-dropbtn {
-    border: none;
-    outline: none;
-    color: rgba(255, 255, 255, 0.8);
-    padding: 16px 10px;
-    background-color: transparent;
-    font-family: inherit;
-    font-size: inherit;
-    font-weight: inherit;
-    margin: 0;
-    margin-top: 1px;
-    z-index: 2;
-  }
-
-  .nav-dropdown-content {
-    display: none;
-    position: absolute;
-    background-color: white;
-    min-width: 200px;
-    border: 1px solid rgba(0,0,0,0.15);
-    border-radius: 4px;
-    box-shadow: 0px 8px 16px 0px rgba(0,0,0,0.1);
-    z-index: 1;
-    margin-top: 2px;
-    white-space: nowrap;
-    padding-top: 4px;
-    padding-bottom: 4px;
-  }
-
-  .nav-dropdown-content hr {
-    margin-top: 4px;
-    margin-bottom: 4px;
-    border: none;
-    border-bottom: 1px solid rgba(0, 0, 0, 0.1);
-  }
-
-  .nav-dropdown-active {
-    display: block;
-  }
-
-  .nav-dropdown-content a, .nav-dropdown-content .nav-dropdown-header {
-    color: black;
-    padding: 6px 24px;
-    text-decoration: none;
-    display: block;
-    text-align: left;
-  }
-
-  .nav-dropdown-content .nav-dropdown-header {
-    display: block;
-    padding: 5px 24px;
-    padding-bottom: 0;
-    text-transform: uppercase;
-    font-size: 14px;
-    color: #999999;
-    white-space: nowrap;
-  }
-
-  .nav-dropdown:hover .nav-dropbtn {
-    color: white;
-  }
-
-  .nav-dropdown-content a:hover {
-    background-color: #ddd;
-    color: black;
-  }
-
-  .nav-right .nav-dropdown-content {
-    margin-left: -45%;
-    right: 0;
-  }
-
-  @media screen and (max-width: 768px) {
-    .distill-site-header a, .distill-site-header .nav-dropdown  {display: none;}
-    .distill-site-header a.nav-toggle {
-      float: right;
-      display: block;
-    }
-    .distill-site-header .title {
-      margin-left: 0;
-    }
-    .distill-site-header .nav-right {
-      margin-right: 0;
-    }
-    .distill-site-header {
-      overflow: hidden;
-    }
-    .nav-right .nav-dropdown-content {
-      margin-left: 0;
-    }
-  }
-
-
-  @media screen and (max-width: 768px) {
-    .distill-site-header.responsive {position: relative; min-height: 500px; }
-    .distill-site-header.responsive a.nav-toggle {
-      position: absolute;
-      right: 0;
-      top: 0;
-    }
-    .distill-site-header.responsive a,
-    .distill-site-header.responsive .nav-dropdown {
-      display: block;
-      text-align: left;
-    }
-    .distill-site-header.responsive .nav-left,
-    .distill-site-header.responsive .nav-right {
-      width: 100%;
-    }
-    .distill-site-header.responsive .nav-dropdown {float: none;}
-    .distill-site-header.responsive .nav-dropdown-content {position: relative;}
-    .distill-site-header.responsive .nav-dropdown .nav-dropbtn {
-      display: block;
-      width: 100%;
-      text-align: left;
-    }
-  }
-
-  /* Site Footer */
-
-  .distill-site-footer {
-    width: 100%;
-    overflow: hidden;
-    box-sizing: border-box;
-    z-index: 3;
-    margin-top: 30px;
-    padding-top: 30px;
-    padding-bottom: 30px;
-    text-align: center;
-  }
-
-  /* Headroom */
-
-  d-title {
-    padding-top: 6rem;
-  }
-
-  @media print {
-    d-title {
-      padding-top: 4rem;
-    }
-  }
-
-  .headroom {
-    z-index: 1000;
-    position: fixed;
-    top: 0;
-    left: 0;
-    right: 0;
-  }
-
-  .headroom--transition {
-    transition: all .4s ease-in-out;
-  }
-
-  .headroom--unpinned {
-    top: -100px;
-  }
-
-  .headroom--pinned {
-    top: 0;
-  }
-
-  /* adjust viewport for navbar height */
-  /* helps vertically center bootstrap (non-distill) content */
-  .min-vh-100 {
-    min-height: calc(100vh - 100px) !important;
-  }
-
-  </style>
-
-  <script src="site_libs/jquery-1.11.3/jquery.min.js"></script>
-  <link href="site_libs/font-awesome-5.1.0/css/all.css" rel="stylesheet"/>
-  <link href="site_libs/font-awesome-5.1.0/css/v4-shims.css" rel="stylesheet"/>
-  <script src="site_libs/headroom-0.9.4/headroom.min.js"></script>
-  <script src="site_libs/autocomplete-0.37.1/autocomplete.min.js"></script>
-  <script src="site_libs/fuse-6.4.1/fuse.min.js"></script>
-
-  <script type="application/javascript">
-
-  function getMeta(metaName) {
-    var metas = document.getElementsByTagName('meta');
-    for (let i = 0; i < metas.length; i++) {
-      if (metas[i].getAttribute('name') === metaName) {
-        return metas[i].getAttribute('content');
-      }
-    }
-    return '';
-  }
-
-  function offsetURL(url) {
-    var offset = getMeta('distill:offset');
-    return offset ? offset + '/' + url : url;
-  }
-
-  function createFuseIndex() {
-
-    // create fuse index
-    var options = {
-      keys: [
-        { name: 'title', weight: 20 },
-        { name: 'categories', weight: 15 },
-        { name: 'description', weight: 10 },
-        { name: 'contents', weight: 5 },
-      ],
-      ignoreLocation: true,
-      threshold: 0
-    };
-    var fuse = new window.Fuse([], options);
-
-    // fetch the main search.json
-    return fetch(offsetURL('search.json'))
-      .then(function(response) {
-        if (response.status == 200) {
-          return response.json().then(function(json) {
-            // index main articles
-            json.articles.forEach(function(article) {
-              fuse.add(article);
-            });
-            // download collections and index their articles
-            return Promise.all(json.collections.map(function(collection) {
-              return fetch(offsetURL(collection)).then(function(response) {
-                if (response.status === 200) {
-                  return response.json().then(function(articles) {
-                    articles.forEach(function(article) {
-                      fuse.add(article);
-                    });
-                  })
-                } else {
-                  return Promise.reject(
-                    new Error('Unexpected status from search index request: ' +
-                              response.status)
-                  );
-                }
-              });
-            })).then(function() {
-              return fuse;
-            });
-          });
-
-        } else {
-          return Promise.reject(
-            new Error('Unexpected status from search index request: ' +
-                        response.status)
-          );
-        }
-      });
-  }
-
-  window.document.addEventListener("DOMContentLoaded", function (event) {
-
-    // get search element (bail if we don't have one)
-    var searchEl = window.document.getElementById('distill-search');
-    if (!searchEl)
-      return;
-
-    createFuseIndex()
-      .then(function(fuse) {
-
-        // make search box visible
-        searchEl.classList.remove('hidden');
-
-        // initialize autocomplete
-        var options = {
-          autoselect: true,
-          hint: false,
-          minLength: 2,
-        };
-        window.autocomplete(searchEl, options, [{
-          source: function(query, callback) {
-            const searchOptions = {
-              isCaseSensitive: false,
-              shouldSort: true,
-              minMatchCharLength: 2,
-              limit: 10,
-            };
-            var results = fuse.search(query, searchOptions);
-            callback(results
-              .map(function(result) { return result.item; })
-            );
-          },
-          templates: {
-            suggestion: function(suggestion) {
-              var img = suggestion.preview && Object.keys(suggestion.preview).length > 0
-                ? `<img src="${offsetURL(suggestion.preview)}"</img>`
-                : '';
-              var html = `
-                <div class="search-item">
-                  <h3>${suggestion.title}</h3>
-                  <div class="search-item-description">
-                    ${suggestion.description || ''}
-                  </div>
-                  <div class="search-item-preview">
-                    ${img}
-                  </div>
-                </div>
-              `;
-              return html;
-            }
-          }
-        }]).on('autocomplete:selected', function(event, suggestion) {
-          window.location.href = offsetURL(suggestion.path);
-        });
-        // remove inline display style on autocompleter (we want to
-        // manage responsive display via css)
-        $('.algolia-autocomplete').css("display", "");
-      })
-      .catch(function(error) {
-        console.log(error);
-      });
-
-  });
-
-  </script>
-
-  <style type="text/css">
-
-  .nav-search {
-    font-size: x-small;
-  }
-
-  /* Algolioa Autocomplete */
-
-  .algolia-autocomplete {
-    display: inline-block;
-    margin-left: 10px;
-    vertical-align: sub;
-    background-color: white;
-    color: black;
-    padding: 6px;
-    padding-top: 8px;
-    padding-bottom: 0;
-    border-radius: 6px;
-    border: 1px #0F2E3D solid;
-    width: 180px;
-  }
-
-
-  @media screen and (max-width: 768px) {
-    .distill-site-nav .algolia-autocomplete {
-      display: none;
-      visibility: hidden;
-    }
-    .distill-site-nav.responsive .algolia-autocomplete {
-      display: inline-block;
-      visibility: visible;
-    }
-    .distill-site-nav.responsive .algolia-autocomplete .aa-dropdown-menu {
-      margin-left: 0;
-      width: 400px;
-      max-height: 400px;
-    }
-  }
-
-  .algolia-autocomplete .aa-input, .algolia-autocomplete .aa-hint {
-    width: 90%;
-    outline: none;
-    border: none;
-  }
-
-  .algolia-autocomplete .aa-hint {
-    color: #999;
-  }
-  .algolia-autocomplete .aa-dropdown-menu {
-    width: 550px;
-    max-height: 70vh;
-    overflow-x: visible;
-    overflow-y: scroll;
-    padding: 5px;
-    margin-top: 3px;
-    margin-left: -150px;
-    background-color: #fff;
-    border-radius: 5px;
-    border: 1px solid #999;
-    border-top: none;
-  }
-
-  .algolia-autocomplete .aa-dropdown-menu .aa-suggestion {
-    cursor: pointer;
-    padding: 5px 4px;
-    border-bottom: 1px solid #eee;
-  }
-
-  .algolia-autocomplete .aa-dropdown-menu .aa-suggestion:last-of-type {
-    border-bottom: none;
-    margin-bottom: 2px;
-  }
-
-  .algolia-autocomplete .aa-dropdown-menu .aa-suggestion .search-item {
-    overflow: hidden;
-    font-size: 0.8em;
-    line-height: 1.4em;
-  }
-
-  .algolia-autocomplete .aa-dropdown-menu .aa-suggestion .search-item h3 {
-    font-size: 1rem;
-    margin-block-start: 0;
-    margin-block-end: 5px;
-  }
-
-  .algolia-autocomplete .aa-dropdown-menu .aa-suggestion .search-item-description {
-    display: inline-block;
-    overflow: hidden;
-    height: 2.8em;
-    width: 80%;
-    margin-right: 4%;
-  }
-
-  .algolia-autocomplete .aa-dropdown-menu .aa-suggestion .search-item-preview {
-    display: inline-block;
-    width: 15%;
-  }
-
-  .algolia-autocomplete .aa-dropdown-menu .aa-suggestion .search-item-preview img {
-    height: 3em;
-    width: auto;
-    display: none;
-  }
-
-  .algolia-autocomplete .aa-dropdown-menu .aa-suggestion .search-item-preview img[src] {
-    display: initial;
-  }
-
-  .algolia-autocomplete .aa-dropdown-menu .aa-suggestion.aa-cursor {
-    background-color: #eee;
-  }
-  .algolia-autocomplete .aa-dropdown-menu .aa-suggestion em {
-    font-weight: bold;
-    font-style: normal;
-  }
-
-  </style>
-
-
   <!--/radix_placeholder_navigation_in_header-->
   <!--radix_placeholder_distill-->
 
@@ -2029,236 +1433,128 @@ code span.wa { color: #5e5e5e; font-style: italic; } /* Warning */
   </script>
 
   <!--/radix_placeholder_distill-->
-  <script src="site_libs/header-attrs-2.6/header-attrs.js"></script>
-  <script src="site_libs/popper-2.6.0/popper.min.js"></script>
-  <link href="site_libs/tippy-6.2.7/tippy.css" rel="stylesheet" />
-  <link href="site_libs/tippy-6.2.7/tippy-light-border.css" rel="stylesheet" />
-  <script src="site_libs/tippy-6.2.7/tippy.umd.min.js"></script>
-  <script src="site_libs/anchor-4.2.2/anchor.min.js"></script>
-  <script src="site_libs/bowser-1.9.3/bowser.min.js"></script>
-  <script src="site_libs/webcomponents-2.0.0/webcomponents.js"></script>
-  <script src="site_libs/distill-2.2.21/template.v2.js"></script>
+  <script src="extending-judgeai_files/header-attrs-2.6/header-attrs.js"></script>
+  <script src="extending-judgeai_files/jquery-1.11.3/jquery.min.js"></script>
+  <script src="extending-judgeai_files/popper-2.6.0/popper.min.js"></script>
+  <link href="extending-judgeai_files/tippy-6.2.7/tippy.css" rel="stylesheet" />
+  <link href="extending-judgeai_files/tippy-6.2.7/tippy-light-border.css" rel="stylesheet" />
+  <script src="extending-judgeai_files/tippy-6.2.7/tippy.umd.min.js"></script>
+  <script src="extending-judgeai_files/anchor-4.2.2/anchor.min.js"></script>
+  <script src="extending-judgeai_files/bowser-1.9.3/bowser.min.js"></script>
+  <script src="extending-judgeai_files/webcomponents-2.0.0/webcomponents.js"></script>
+  <script src="extending-judgeai_files/distill-2.2.21/template.v2.js"></script>
   <!--radix_placeholder_site_in_header-->
   <!--/radix_placeholder_site_in_header-->
 
 
 </head>
 
-<body class="layout-listing">
+<body>
 
 <!--radix_placeholder_front_matter-->
 
 <script id="distill-front-matter" type="text/json">
-{"title":"Posts","authors":[]}
+{"title":"Extending JudgeAI","description":"Aggregating JudgeAI's round score predictions to generate final scorecard probability distributions.","authors":[{"author":"Nate Latshaw","authorURL":"#","affiliation":"&nbsp;","affiliationURL":"#","orcidID":""}],"publishedDate":"2021-02-25T00:00:00.000-05:00","citationText":"Latshaw, 2021"}
 </script>
 
 <!--/radix_placeholder_front_matter-->
 <!--radix_placeholder_navigation_before_body-->
-<header class="header header--fixed" role="banner">
-<nav class="distill-site-nav distill-site-header">
-<div class="nav-left">
-<a href="index.html" class="title">LiteralFightNerd</a>
-<input id="distill-search" class="nav-search hidden" type="text" placeholder="Search..."/>
-</div>
-<div class="nav-right">
-<a href="index.html">Home</a>
-<a href="about.html">About</a>
-<a href="ufc-stats-web-app.html">UFC Stats Web App</a>
-<a href="https://twitter.com/NateLatshaw">
-<i class="fa fa-twitter" aria-hidden="true"></i>
-</a>
-<a href="javascript:void(0);" class="nav-toggle">&#9776;</a>
-</div>
-</nav>
-</header>
 <!--/radix_placeholder_navigation_before_body-->
 <!--radix_placeholder_site_before_body-->
 <!--/radix_placeholder_site_before_body-->
-<!--radix_placeholder_article_listing-->
-
-
-<script type="application/javascript">
-
-function init_posts_list() {
-
-  function load_image(img) {
-    var src = $(img).attr('data-src');
-    if (src) {
-      $(img).attr('src', src);
-      $(img).load(function() {
-        img.removeAttribute('data-src');
-      });
-    }
-  }
-
-  function set_posts_visible(posts, visible) {
-    if (visible) {
-
-      // show bottom border by default
-      $(posts).removeClass('post-preview-last');
-
-      // apply limits if need be
-      var max_posts = 25;
-      var apply_limits = $('.posts-container').hasClass('posts-apply-limit');
-      if (apply_limits && posts.length > max_posts) {
-        posts = $(posts).slice(0, max_posts);
-      } else {
-        $('.posts-more a').addClass('hidden');
-      }
-
-      // apply last style
-      $(posts.slice(-1)[0]).addClass('post-preview-last');
-
-      $(posts).removeClass('hidden');
-      $(posts).find('img[data-src]').each(function(i, img) {
-        load_image(img);
-      });
-    } else {
-      $(posts).addClass('hidden');
-    }
-  }
-
-  function apply_hash_filter() {
-
-    // clear active state
-    $('.categories .active').removeClass('active');
-
-    // mark all posts invisible to start
-    set_posts_visible($('.posts-list').children('a'), false);
-
-    // if we have a hash filter
-    if (window.location.hash && window.location.hash.startsWith("#category:")) {
-
-      // mark posts that match the category visible
-      var page_category = window.location.hash.replace(/^#category:/, "");
-      var posts = $('.post-metadata').map(function(idx, script) {
-        var metadata = $.parseJSON($(script).html());
-        var post = null;
-        $.each(metadata.categories, function(idx, category) {
-          category = category.replace(/ /g,"_");
-          if ((page_category || '').toLowerCase() === "articles" || category === page_category) {
-            post = $(script).parent().get();
-            return false;
-          }
-        });
-        return post;
-      });
-      set_posts_visible(posts, true);
-
-      // mark the hash active
-      $('.categories li>a[href="' + window.location.hash + '"]').addClass('active');
-
-      // update the list_caption
-      var list_caption = $('.posts-list-caption');
-      var caption = (page_category || '').toLowerCase() === "articles"
-        ? list_caption.attr('data-caption')
-        : ('Category: ' + page_category.replace(/_/g," "));
-      list_caption.text(caption);
-
-    } else {
-
-      // no hash filter, make all posts visible (subject to max display)
-      set_posts_visible($('.posts-list').children(), true);
-
-      // reset list caption
-      var list_caption = $('.posts-list-caption');
-      list_caption.text(list_caption.attr('data-caption'));
-
-
-    }
-  }
-
-  // more articles
-  function apply_post_limits(apply) {
-    if (apply) {
-      $('.posts-container').addClass('posts-apply-limit');
-      $('.posts-more a').removeClass('hidden');
-    } else {
-      $('.posts-container').removeClass('posts-apply-limit');
-      $('.posts-more a').addClass('hidden');
-    }
-  }
-
-  // click handling for tags
-  $('.dt-tag').click(function(ev) {
-    window.location.hash = '#category:' + $(this).text().replace(/ /g, "_");
-    return false;
-  })
-
-  // hash filter handling
-  apply_hash_filter();
-  $(window).on('hashchange',function() {
-    apply_post_limits(true);
-    apply_hash_filter();
-  });
-
-  // more articles link
-  $('.posts-more a').click(function(e) {
-    e.preventDefault();
-    apply_post_limits(false);
-    apply_hash_filter();
-    return false;
-  });
-
-}
-
-</script>
-
-
-
-<div class="posts-container posts-apply-limit l-page">
-<div class="posts-list">
-<h1 class="posts-list-caption" data-caption="Posts">Posts</h1>
-<a href="posts/2021-02-25-extending-judgeai/" class="post-preview">
-<script class="post-metadata" type="text/json">{"categories":[]}</script>
-<div class="metadata">
-<div class="publishedDate">Feb. 25, 2021</div>
-<div class="dt-authors">
-<div class="dt-author">Nate Latshaw</div>
-</div>
-</div>
-<div class="thumbnail">
-<img src="posts/2021-02-25-extending-judgeai/extending-judgeai_files/figure-html5/unnamed-chunk-7-1.png"/>
-</div>
-<div class="description">
-<h2>Extending JudgeAI</h2>
-<div class="dt-tags"></div>
-<p>Aggregating JudgeAI's round score predictions to generate final scorecard probability distributions.</p>
-</div>
-</a>
-<a href="posts/2021-02-19-introducing-judgeai/" class="post-preview">
-<script class="post-metadata" type="text/json">{"categories":[]}</script>
-<div class="metadata">
-<div class="publishedDate">Feb. 19, 2021</div>
-<div class="dt-authors">
-<div class="dt-author">Nate Latshaw</div>
-</div>
-</div>
-<div class="thumbnail">
-<img src="posts/2021-02-19-introducing-judgeai/introducing-judgeai_files/figure-html5/unnamed-chunk-6-1.png"/>
-</div>
-<div class="description">
-<h2>Introducing JudgeAI</h2>
-<div class="dt-tags"></div>
-<p>A machine learning algorithm that predicts judges' scores by round in the UFC</p>
-</div>
-</a>
-</div>
-<div class="posts-more">
-<a href="#">More articles &raquo;</a>
-</div>
-</div>
-<!--/radix_placeholder_article_listing-->
 
 <div class="d-title">
-<h1>Posts</h1>
+<h1>Extending JudgeAI</h1>
 <!--radix_placeholder_categories-->
 <!--/radix_placeholder_categories-->
-
+<p><p>Aggregating JudgeAI’s round score predictions to generate final scorecard probability distributions.</p></p>
 </div>
 
+<div class="d-byline">
+  Nate Latshaw  
+  
+<br/>02-25-2021
+</div>
 
 <div class="d-article">
+<div class="d-contents d-contents-float">
+<nav class="l-text toc figcaption" id="TOC">
+<h3>Contents</h3>
+<ul>
+<li><a href="#introduction">Introduction</a></li>
+<li><a href="#case-study-jon-jones-vs-dominick-reyes">Case study: Jon Jones vs Dominick Reyes</a>
+<ul>
+<li><a href="#round-1">Round 1</a></li>
+<li><a href="#round-2">Round 2</a></li>
+<li><a href="#round-3">Round 3</a></li>
+<li><a href="#round-4">Round 4</a></li>
+<li><a href="#round-5">Round 5</a></li>
+</ul></li>
+<li><a href="#methodology-computing-final-scorecard-probabilities">Methodology: computing final scorecard probabilities</a></li>
+<li><a href="#jones-vs-reyes-final-scorecard">Jones vs Reyes final scorecard</a></li>
+<li><a href="#conclusion">Conclusion</a></li>
+</ul>
+</nav>
+</div>
+<h1 id="introduction">Introduction</h1>
+<p>In my <a href="https://literalfightnerd.com/posts/2021-02-19-introducing-judgeai/">previous blog post</a>, I introduced JudgeAI, a machine learning algorithm that uses round-level statistics to predict judges’ scores by round in the UFC. That post illustrated in detail how JudgeAI was built and how it performs across time. Overall, the model provides well-calibrated round win probabilities and is able to predict round scores with high accuracy. I strongly suggest reading that post if you are interested in understanding the methodological details of JudgeAI. Alternatively, if you’re interested in a quicker summary of the details of an earlier version of the model, you can check out my posts on <a href="https://www.reddit.com/r/MMA/comments/iy2z3i/introducing_a_new_fight_evaluation_tool_a_machine/">Reddit</a> and <a href="https://twitter.com/NateLatshaw/status/1303460155540070400?s=20">Twitter</a> - those social media posts combine the information presented in this blog post and my previous post. This post largely assumes you either understand the technical details of JudgeAI or do not care about such details - either is perfectly fine.</p>
+<p>This post seeks to extend JudgeAI by leveraging its round score probabilities to produce a probability distribution of all possible final scores. I hope audiences of all types find this post approachable. We explore the methodology by taking a look at the Jon Jones vs Dominick Reyes fight from UFC 247 on February 8, 2020, which was a unanimous, but controversial, decision by the judges. I also include a brief methodology section for those interested in how the round score probabilities are aggregated to produce final scorecard predictions.</p>
+<p>As we will see, using JudgeAI’s round score probabilities to generate a distribution of final scores is a powerful way to utilize the underlying uncertainty in the round-level scoring, and then propagate that uncertainty across rounds, to understand how likely or unlikely each possible final score is. It also allows us to move away from thinking about discrete scores and move towards thinking probabilistically about judging decisions.</p>
+<h1 id="case-study-jon-jones-vs-dominick-reyes">Case study: Jon Jones vs Dominick Reyes</h1>
+<h3 id="round-1">Round 1</h3>
+<p>The figure below shows a number of statistics from the first round of Jones vs Reyes. Note that JudgeAI includes many more features than those shown here. The figure also displays the score given by each judge, the score given by JudgeAI, and JudgeAI’s probability of each score in 10-9, 10-8, 9-10, and 8-10.</p>
+<p>We see that Reyes landed more significant strikes and only absorbed a single strike to the head. All 3 judges and JudgeAI scored this round 9-10 in favor of Reyes. Also, JudgeAI shows high confidence in its predicted score by placing an 81% probability on the majority of judges giving that score.</p>
+<div class="layout-chunk" data-layout="l-body-outset">
+<p><img src="extending-judgeai_files/figure-html5/unnamed-chunk-2-1.png" width="624" /></p>
+</div>
+<h3 id="round-2">Round 2</h3>
+<p>The figure below shows round 2. We see that Reyes landed 50% more significant strikes than Jones, and he landed more strikes to each of the head, body, and legs. JudgeAI again scored this 9-10 to Reyes. However, 2 of the 3 judges scored the round 10-9 to Jones.</p>
+<p>It is important to note here that JudgeAI is not perfect. The model identifies broad trends in the relationship between round-level statistics and judges’ scores. Here the model is essentially saying that rounds with these striking differentials (plus all other statistics considered but not shown) go to the fighter who landed more strikes, which is Reyes here, around 3 out of every 4 times. While JudgeAI placed a high probability on Reyes winning this round, we cannot say for sure that 2 of the judges got this round wrong. Though striking differentials often correlate with damage dealt, for example, the model does not perfectly account for this. It is possible that Jones dealt more damage even though he landed fewer strikes.</p>
+<p>Finally, notice that JudgeAI was less certain about this 9-10 score than in the previous round. There is uncertainty in round-level scoring because judges are subjective and see different things in each round. This uncertainty propagates across rounds and can result in seemingly strange final scores. Hence, it is more important to focus on JudgeAI’s score probabilities than its predicted score of 9-10.</p>
+<div class="layout-chunk" data-layout="l-body-outset">
+<p><img src="extending-judgeai_files/figure-html5/unnamed-chunk-3-1.png" width="624" /></p>
+</div>
+<h3 id="round-3">Round 3</h3>
+<p>Round 3 scores and statistics are displayed in the figure below. We see that Reyes again landed more significant strikes than Jones, and again, JudgeAI scored this round 9-10 to Reyes. However, 2 of the 3 judges scored this round 10-9 to Jones.</p>
+<p>Over the last 2 rounds, either JudgeAI has been missing some important factor in the fight, like damage dealt discrepancies, or it is safe to say that the judges are not doing Reyes any favors. The judges have been split on the last 2 rounds, which suggests these rounds have been tight, even though Reyes has had the striking advantage on paper.</p>
+<div class="layout-chunk" data-layout="l-body-outset">
+<p><img src="extending-judgeai_files/figure-html5/unnamed-chunk-4-1.png" width="624" /></p>
+</div>
+<h3 id="round-4">Round 4</h3>
+<p>The figure below shows round 4. We see that Jones landed more strikes than Reyes overall and to each of the head, body and legs. In addition, Jones landed the only takedown of the round and accumulated nearly 1 minute of control time. JudgeAI scored this round 10-9 to Jones with a very high probability, and all 3 judges agreed.</p>
+<div class="layout-chunk" data-layout="l-body-outset">
+<p><img src="extending-judgeai_files/figure-html5/unnamed-chunk-5-1.png" width="624" /></p>
+</div>
+<h3 id="round-5">Round 5</h3>
+<p>The final round is displayed below. Jones landed more significant strikes than Reyes and secured a takedown with around 30 seconds of control time. As in the last round, JudgeAI scored this round 10-9 to Jones with a high probability, and all 3 judges agreed.</p>
+<div class="layout-chunk" data-layout="l-body-outset">
+<p><img src="extending-judgeai_files/figure-html5/unnamed-chunk-6-1.png" width="624" /></p>
+</div>
+<h1 id="methodology-computing-final-scorecard-probabilities">Methodology: computing final scorecard probabilities</h1>
+<p>This section provides a quick overview of the methodological details involved in computing the forthcoming final score probabilities. If that is not something that interests you, feel free to skip to the next section.</p>
+<p>Recall that our goal is to utilize JudgeAI’s round score probabilities to produce a probability distribution of all possible final scores. Such a distribution will provide more information than a discrete final score, like 48-47. Instead, the distribution will show how likely or unlikely each final score is after accounting for the uncertainty in round scoring that propagates across rounds.</p>
+<p>Since JudgeAI returns predicted probabilities for each score in 10-9, 10-8, 9-10, and 8-10, mathematically deriving the probability of each possible final score after 3 or 5 rounds is cumbersome. Hence, we instead use a Monte Carlo method to numerically compute final scorecard probabilities. That is, we essentially simulate the scoring of each round many times using JudgeAI’s round score probabilities and then see what proportion of simulated fights had each final score.</p>
+<p>The computational algorithm employed is below.</p>
+<ol type="1">
+<li>Draw 1 sample score for each round using JudgeAI’s corresponding round score probabilities. That is, for each round, draw a sample score from the possible scores 10-9, 10-8, 9-10, and 8-10 where the probability of drawing each possible score is set to the corresponding round score probability provided by JudgeAI.</li>
+<li>Add each fighter’s sample scores together across rounds to generate the sample final score for the fight.</li>
+<li>Repeat steps 1-2 100,000 times. This yields 100,000 final score samples.</li>
+<li>Compute final scorecard probabilities by dividing the number of times each final score appears in the samples by 100,000.</li>
+</ol>
+<h1 id="jones-vs-reyes-final-scorecard">Jones vs Reyes final scorecard</h1>
+<p>The figure below shows the final scorecard for the fight and, according to JudgeAI coupled with the Monte Carlo method outlined above, the probability of each possible final score. We see that all 3 judges had Jones winning. However, if we add up JudgeAI’s predicted scores by round, we find that JudgeAI scored the fight 47-48 in favor of Reyes. Without properly aggregating JudgeAI’s round score probabilities, our analysis would end here, but fortunately, we recover a probability distribution of final scores that enables much more in-depth analysis.</p>
+<p>Using the aforementioned algorithm to aggregate round score probabilities, we see that the most likely final score of 47-48 in favor of Reyes is expected to occur with a 43% probability. In other words, JudgeAI predicts that over many fights with the exact same round-level statistics as this fight, Reyes would win the decision 47-48 around 43% of the time.</p>
+<p>Further, Reyes’ win probability (computed by adding up the appropriate final score probabilities) was 55%. Again, this means that over many fights with identical round-level statistics, JudgeAI predicts that Reyes would win via decision more often than not.</p>
+<div class="layout-chunk" data-layout="l-body-outset">
+<p><img src="extending-judgeai_files/figure-html5/unnamed-chunk-7-1.png" width="624" data-distill-preview=1 /></p>
+</div>
+<p>Even though JudgeAI has Reyes winning this fight, notice that the win probability was barely over 50%. According to JudgeAI, the two most dominant rounds were 4 and 5, both of which went to Jones. This means that JudgeAI was more certain that the judges would also give these rounds to Jones, which turned out to be true as Jones won those rounds 10-9 on every scorecard. Since rounds are scored independently, once a fighter in a 5 round fight secures 2 dominant rounds, the math begins moving in that fighter’s direction. As we saw, JudgeAI had Reyes winning the other 3 rounds, which should be enough to win the decision. However, since Reyes’ round wins (according to JudgeAI) were less dominant, it was more likely that some judges would award some of those rounds to Jones, which is also what we saw.</p>
+<p>This is the difference between using JudgeAI to score rounds probabilistically vs keeping track of one’s own personal round scores at home. The latter can lead to confusion or anger when comparing one’s own final score to that of the judges, while the latter is more likely to help us understand how likely or unlikely a particular judge’s final score was. In this case, according to JudgeAI, two judges scoring the fight 48-47 to Jones was not terribly egregious, but the 49-46 score to Jones was relatively unlikely.</p>
+<p>In the end, after accounting for the round-level scoring uncertainty, JudgeAI had Reyes winning with a 55% probability, which is quite low coming from a model that had Reyes winning 3 rounds. In this case, the uncertainty captured by JudgeAI lowered Reyes’ win probability from what we might have expected and happened to coincide with Jones winning the fight on each judge’s scorecard. Though JudgeAI still disagrees with the judges on the winner of the fight, the model only awarded Reyes a 55% win probability, which makes this fight a toss up.</p>
+<p>While the judges all agreed that Jones won the fight and JudgeAI had the fight as a toss up, the community seems to feel much more strongly that Reyes won. According to <a href="http://www.mmadecisions.com/decision/10877/Jon-Jones-vs-Dominick-Reyes">MMADecisions</a>, which posts the official scorecards along with scores provided by members of the media and by fans, 14 of the 21 media members scored the fight 47-48 in favor of Reyes. The other 7 members of the media scored it 48-47 to Jones. In addition, as of the writing of this post, 77% of the fans who submitted scores had Reyes winning, the majority of which scored it 47-48 to Reyes. The scores provided by the community align with the two most likely final scores according to JudgeAI, but the share of media members and fans awarding the fight to Reyes is much higher than JudgeAI’s win probability for Reyes. Thus, the actual final scorecard submitted by the judges was generally much more surprising to media members and fans than it was to JudgeAI, which is likely due to the probabilistic decision-making of JudgeAI that is typically challenging for humans to replicate on their own.</p>
+<h1 id="conclusion">Conclusion</h1>
+<p>The purpose of this post was not to argue that Reyes should have won the Lightweight title against Jones at UFC 247. Instead, this post serves to illustrate how the round score probabilities provided by JudgeAI can be aggregated to produce a probability distribution of final scores that is both unique and insightful.</p>
+<p>We saw how using JudgeAI’s discrete round scores to score the fight resulted in a final score that did not match any of the judges on the final scorecard. However, leveraging JudgeAI’s round score probabilities allowed us to think probabilistically about how likely each final score might be. That is, we saw that Jones won the two most dominant rounds and thus only needed to win 1 additional round among the 3 more competitive rounds. Hence, even though JudgeAI had Reyes winning the 3 more contested rounds, it only gave Reyes a 55% chance of winning the decision because of all the uncertainty in how judges were likely to score those 3 rounds. Media members and fans had Reyes winning at significantly higher rates than JudgeAI. While the resulting frustration among members of the media and fans may or may not be justified, I think the probabilistic features of scoring a fight with JudgeAI provides the community with valuable insights that are tough to get anywhere else.</p>
 <div class="sourceCode" id="cb1"><pre class="sourceCode r distill-force-highlighting-css"><code class="sourceCode r"></code></pre></div>
 <!--radix_placeholder_article_footer-->
 <!--/radix_placeholder_article_footer-->
