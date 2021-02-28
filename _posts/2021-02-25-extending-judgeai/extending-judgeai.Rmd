@@ -42,8 +42,8 @@ library(scales)
 library(kableExtra)
 library(plyr)
 
-data_path <- '../2021-02-19-introducing-judgeai/files/output_files/'
-functions_path <- './files/input_files/'
+data_path <- '../../_supplemential_files/2021-02-19-introducing-judgeai/output_files/'
+functions_path <- '../../_supplemential_files/2021-02-25-extending-judgeai/input_files/'
 
 source(paste0(functions_path, 'functions.R'))
 

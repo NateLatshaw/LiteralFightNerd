@@ -30,8 +30,8 @@ library(scales)
 library(kableExtra)
 library(ranger)
 
-data_path <- paste0(getwd(), '/files/input_files/')
-output_path <- paste0(getwd(), '/files/output_files/')
+data_path <- '../../_supplemential_files/2021-02-19-introducing-judgeai/input_files/'
+output_path <- '../../_supplemential_files/2021-02-19-introducing-judgeai/output_files/'
 
 # plot aesthetics
 paired_colors4 <- brewer.pal(6, 'Paired')[c(6,5,2,1)]
@@ -59,7 +59,7 @@ num_rounds_analysis_str <- formatC(num_rounds_analysis, big.mark = ',')
 num_rounds_analysis_unanimous_str <- formatC(num_rounds_analysis_unanimous, big.mark = ',')
 
 # establish features
-rf_features <- names(df)[grepl('Diff_', names(df)) & names(df) != 'Diff_CtrlMin']
+rf_features <- names(df)[grepl('Diff_', names(df)) & !grepl('xR|Diff_CtrlMin', names(df))]
 ```
 
 # Introduction
