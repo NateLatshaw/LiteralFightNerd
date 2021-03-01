@@ -70,7 +70,7 @@ Judging decisions can be controversial. It's often unclear how a particular judg
 
 The purpose of this post is twofold:
 
-1. Create a machine learning model, JudgeAI, that utilizes publicly available round-level statistics and judging decisions to predict round scores. 
+1. Create a machine learning algorithm, JudgeAI, that utilizes publicly available round-level statistics and judging decisions to predict round scores. 
 2. Develop a methodologically sound framework to properly illustrate how JudgeAI would have performed had it been implemented in the past in order to provide a valid measure of how well the model will perform in the future.
 
 One final note before we get started: this post is primarily methodological in nature, which is admittedly off-putting to some. This post serves to illustrate what I did, how I did it, and how good or bad JudgeAI performs. I plan to use this post and the methodology described herein as a foundation for a number of derivative results and metrics that are hopefully much more accessible to those who enjoy the UFC but are not interested in these methodological details. It is my hope that this post will be a comprehensive reference for anyone interested in the details of JudgeAI.
