@@ -5,7 +5,7 @@ library(data.table)
 library(lubridate)
 
 data_path <- 'E:/UFC-Analytics/Processed Data/'
-output_path <- './_supplemential_files/2021-02-28-introducing-expected-rounds-xr/input_files/'
+output_path <- './_supplemential_files/2021-03-02-introducing-expected-rounds-xr/input_files/'
 
 # read in data
 rounds <- fread(paste0(data_path, 'round_level_stats.csv'))
@@ -19,6 +19,7 @@ fights[, EventDate := as.Date(EventDate)]
 rounds <- rounds[grepl('UFC', Event) | (grepl('The Ultimate Fighter', Event) & grepl('Finale', Event))]
 fights <- fights[grepl('UFC', Event) | (grepl('The Ultimate Fighter', Event) & grepl('Finale', Event))]
 
+all_fights <- copy(fights)
 rounds <- rounds[year(EventDate) %in% 2011:2020]
 fights <- fights[year(EventDate) %in% 2011:2020]
 
@@ -26,3 +27,4 @@ fights <- fights[year(EventDate) %in% 2011:2020]
 current_dt <- gsub('-', '', Sys.Date())
 saveRDS(rounds, paste0(output_path, 'round_stats_', current_dt, '.RDS'))
 saveRDS(fights, paste0(output_path, 'fight_stats_', current_dt, '.RDS'))
+saveRDS(all_fights, paste0(output_path, 'all_fight_stats_', current_dt, '.RDS'))

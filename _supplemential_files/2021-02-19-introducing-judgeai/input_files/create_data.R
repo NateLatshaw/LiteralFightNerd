@@ -11,7 +11,7 @@ output_path <- './_supplemential_files/2021-02-19-introducing-judgeai/input_file
 df <- readRDS(paste0(data_path, 'round_decisions_and_stats.RDS'))
 
 # subset data
-df <- df[grepl('UFC', Event)]
+df <- df[grepl('UFC', Event) | (grepl('The Ultimate Fighter', Event) & grepl('Finale', Event))]
 df <- df[year(EventDate) %in% 2011:2020]
 
 # save data

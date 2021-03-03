@@ -37,7 +37,7 @@ output_path <- '../../_supplemential_files/2021-02-19-introducing-judgeai/output
 paired_colors4 <- brewer.pal(6, 'Paired')[c(6,5,2,1)]
 
 # load data
-full_df <- readRDS(paste0(data_path, 'round_decisions_and_stats_20210219.RDS'))
+full_df <- readRDS(paste0(data_path, 'round_decisions_and_stats_20210301.RDS'))
 
 # subset data to 1 row per round
 full_df <- full_df[F1_Name == First_in_Details]
@@ -73,7 +73,7 @@ The purpose of this post is twofold:
 1. Create a machine learning algorithm, JudgeAI, that utilizes publicly available round-level statistics and judging decisions to predict round scores. 
 2. Develop a methodologically sound framework to properly illustrate how JudgeAI would have performed had it been implemented in the past in order to provide a valid measure of how well the model will perform in the future.
 
-One final note before we get started: this post is primarily methodological in nature, which is admittedly off-putting to some. This post serves to illustrate what I did, how I did it, and how good or bad JudgeAI performs. I plan to use this post and the methodology described herein as a foundation for a number of derivative results and metrics that are hopefully much more accessible to those who enjoy the UFC but are not interested in these methodological details. It is my hope that this post will be a comprehensive reference for anyone interested in the details of JudgeAI.
+One final note before we get started: this post is primarily methodological in nature, which is admittedly off-putting to some. This post serves to illustrate what I did, how I did it, and how JudgeAI performs. I plan to use this post and the methodology described herein as a foundation for a number of derivative results and metrics that are hopefully much more accessible to those who enjoy the UFC but are not interested in these methodological details. It is my hope that this post will be a comprehensive reference for anyone interested in what's happening with JudgeAI under the hood.
 
 # UFC data exploration
 
@@ -101,13 +101,13 @@ ggplot(plot_df, aes(x = Year, y = N, color = Result_clean)) +
         plot.caption = element_text(hjust = 0, face = 'italic'))
 ```
 
-Using data from <http://www.mmadecisions.com/>, we explore how judges score fights by round. However, we first have to combine the judging data with the official UFC statistics data. As a result, we lose some fights. First, we drop all fights that do not end in a decision by the judges since scorecards are not publicly reported for any of the rounds in these fights. Then, we drop rounds where judging data was otherwise not available or where judges gave scores other than 10-8, 10-9, 9-10, or 8-10 since these potentially indicate a penalty where a point was deducted from one of the fighters (or other rare edge cases). By the end, of the `r num_fights_eligible_str` UFC fights between 2011-2020 where a winner was declared by the judges, `r num_fights_analysis_str` fights (containing `r num_rounds_analysis_str` rounds) are successfully merged with the judging decisions data and retained for analysis. Unless otherwise stated, all subsequent counts and statistics refer to this set of fights, which comprises `r paste0(100 * round(num_fights_analysis / num_fights_eligible, 3), '%')` of fights in which the judges selected a winner and `r paste0(100 * round(num_fights_analysis / num_fights_total, 3), '%')` of all UFC fights between 2011-2020.
+Using data from <http://www.mmadecisions.com/>, we explore how judges score fights by round. However, we first have to combine the judging data with the official UFC statistics data. As a result, we lose some fights. First, we drop all fights that do not end in a decision by the judges since scorecards are not publicly reported for any of the rounds in these fights. Then, we drop rounds where judging data was otherwise not available or where judges gave scores other than 10-8, 10-9, 9-10, or 8-10 since these potentially indicate a penalty where a point was deducted from one of the fighters (or other rare edge cases). By the end, of the `r num_fights_eligible_str` UFC fights between 2011-2020 where a winner was declared by the judges, `r num_fights_analysis_str` fights (containing `r num_rounds_analysis_str` rounds) are successfully merged with the judging decisions data and retained for analysis. Unless otherwise stated, all subsequent counts and statistics refer to this set of fights, which comprises `r paste0(format(100 * round(num_fights_analysis / num_fights_eligible, 3), nsmall = 1), '%')` of fights in which the judges selected a winner and `r paste0(format(100 * round(num_fights_analysis / num_fights_total, 3), nsmall = 1), '%')` of all UFC fights between 2011-2020.
 
 In order to predict round scores, we need to determine the "ground truth" score for each round. This is an inherently impossible task because if we had the ground truth then we would not need judges. Hence, we consider the "true" score of the round to be the score given by the *majority* of judges (i.e. at least 2 out of the 3 judges). Of the `r num_rounds_analysis_str` rounds under consideration, all 3 judges provided the same score for `r paste0(100 * round(num_rounds_analysis_unanimous / num_rounds_analysis, 3), '%')`, or `r num_rounds_analysis_unanimous_str` rounds.
 
-In the UFC, fighters are assigned to either the red corner or the blue corner. For title fights, the defending champion is always the red corner and the challenger is always the blue corner. For all other fights, the reasoning behind the corner assignments are not quite clear (at least not to me), but the red corner generally appears to be the more well-known and/or more experienced fighter. The figure below shows how rounds were scored between 2011-2020 (using the "true" round score), where the reported scores follow the convention: Red Corner Score - Blue Corner Score.
+In the UFC, fighters are assigned to either the red corner or the blue corner. For title fights, the defending champion is always the red corner and the challenger is always the blue corner. For all other fights, the reasoning behind the corner assignments is not quite clear (at least not to me), but the red corner generally appears to be the more well-known and/or more experienced fighter. The figure below shows how rounds were scored between 2011-2020 (using the "true" round score), where the reported scores follow the convention: Red Corner Score - Blue Corner Score.
 
-We see in the figure that red corners win more often than blue corners in each year. Over the entire period, the red corner won `r df[, paste0(100 * round(sum(Judges_F1_Round_Win) / .N, 3), '%')]` of all rounds considered. Also, we notice that 10-8 and 8-10 rounds are incredibly rare, comprising only `r df[, paste0(100 * round(sum(Judges_Round_Majority_Score %in% c('10-8', '8-10')) / .N, 3), '%')]` of all rounds considered.
+We see in the figure that red corners win more often than blue corners in each year. Over the entire period, the red corner won `r df[, paste0(100 * round(sum(Judges_F1_Round_Win) / .N, 3), '%')]` of all rounds considered. Also, notice that 10-8 and 8-10 rounds are incredibly rare, comprising only `r df[, paste0(100 * round(sum(Judges_Round_Majority_Score %in% c('10-8', '8-10')) / .N, 3), '%')]` of all rounds considered.
 
 ```{r, layout = 'l-body-outset'}
 # plot true score counts by year
@@ -120,8 +120,7 @@ ggplot(plot_df, aes(x = Year, y = N, color = Judges_Round_Majority_Score)) +
        y = 'Number of rounds\n', 
        title = 'UFC Round Scores by Year', 
        subtitle = 'Scores reported as: Red Corner Score - Blue Corner Score', 
-       caption = paste0('\n-The score given by the majority of judges for each round is shown.', 
-                        '\n-Round scores are displayed as: Red Corner Score - Blue Corner Score'), 
+       caption = paste0('\n-The score given by the majority of judges for each round is shown.'), 
        color = 'Round Score') + 
   scale_x_continuous(breaks = seq(2011, 2020, by = 1)) + 
   scale_y_continuous(breaks = seq(0, 400, 50), limits = c(0, 400), label = comma) + 
@@ -145,7 +144,7 @@ num_equal_strikes <- df[is.na(baseline_F1_pred), .N]
 df[is.na(baseline_F1_pred), baseline_F1_pred := T]
 ```
 
-Recall that our goal is to develop a machine learning model that predicts judges' scores using the statistics accumulated in each round. However, before we do that, we first consider a simple, baseline decision rule that predicts round winners to which we can compare our eventual model's performance. That is, the baseline decision rule predicts that whichever fighter landed more significant strikes in a round is the winner. Among rounds in which each fighter landed the same number of significant strikes, the fighter who landed more total strikes is predicted to be the winner. Finally, among the rounds remaining where each fighter landed the same number of significant and total strikes (only `r paste0(100 * round(num_equal_strikes / df[, .N], 3), '%')` of all rounds considered), the red corner is predicted to be the winner.
+Recall that our goal is to develop a machine learning algorithm that predicts judges' scores using the statistics accumulated in each round. However, before we do that, we first consider a simple, baseline decision rule that predicts round winners to which we can compare our eventual model's performance. That is, the baseline decision rule predicts that whichever fighter landed more significant strikes in a round is the winner. Among rounds in which each fighter landed the same number of significant strikes, the fighter who landed more total strikes is predicted to be the winner. Finally, among the rounds remaining where each fighter landed the same number of significant and total strikes (only `r paste0(100 * round(num_equal_strikes / df[, .N], 3), '%')` of all rounds considered), the red corner is predicted to be the winner.
 
 Table \@ref(tab:baseline-predictions) below shows how well our baseline decision rule is able to predict round winners across time. We see that the baseline rule performs relatively well in each year, which makes sense since the baseline only considers striking and since effective striking is the metric given the highest priority in the judges' decision making. Of all rounds considered, the baseline rule correctly predicts the winner `r df[, paste0(100 * round(sum(Judges_F1_Round_Win == baseline_F1_pred) / .N, 3), '%')]` of the time.
 
@@ -161,7 +160,7 @@ kable(tbl_df, format = 'html', caption = 'Baseline Round Winner Accuracy by Year
 
 ```
 
-Now that we have established a baseline decision rule, we proceed with building the predictive model, JudgeAI. The baseline decision rule only considers strikes landed, while the actual model will consider many more features for each round. If the eventual predictive model is any good, it will predict round winners more successfully than this simple decision rule.
+Now that we have established a baseline decision rule, we proceed with building the predictive model, JudgeAI. The baseline decision rule only considers strikes landed, while the actual model will consider many more features for each round. If the eventual predictive model is any good, it will predict round winners more successfully than this simple baseline rule.
 
 # Building JudgeAI
 
@@ -181,10 +180,10 @@ tbl_df <- data.table('Training Months' = c('January 2011 - December 2011', 'Janu
 
 kable(tbl_df, format = 'html', caption = 'Time Series Cross Validation Strategy', align = 'l', booktabs = T) %>%
   kable_styling(bootstrap_options = c('striped'), full_width = T, font_size = 24) %>% 
-  footnote('-Data in the Training Months are used to build each model. Predictions are then made on data in the "Evaluation Month".')
+  footnote('-Data in the "Training Months" are used to build each model. Predictions are then made on data in the "Evaluation Month".')
 ```
 
-This modeling strategy contains 3 primary advantages over a more simple approach of splitting the data into a training and test set - these advantages are:
+This modeling strategy contains 3 key advantages over a more simple approach of splitting the data into a training and test set - these advantages are:
 
 1.  All predictions are made on fights unseen by the model through which predictions are made (i.e. we use out-of-sample predictions only).
 
@@ -192,7 +191,7 @@ This modeling strategy contains 3 primary advantages over a more simple approach
 
 3.  We are not "cheating" by using a model trained on fights that come after the fights on which we are predicting. This more accurately simulates how successful JudgeAI would have performed had it been implemented in the past, and it gives us a better sense of how well JudgeAI will perform going forward.
 
-These 3 advantages are significant and essential to the validity of the model evaluation section. Without (1), we would be making predictions on rounds that the model has already seen, which would incorrectly inflate the performance. Further, advantage (2) is important because it provides us with a large sample by which to evaluate model performance, which provides us with a more robust estimate of future performance. Finally, without (3), the model would not accurately convey historical performance. For example, if the model is trying to predict round scores for fights in 2014 but is trained using rounds from 2018, the resulting performance would not be realistic because the model is using fights that have not happened yet to make predictions. 
+These 3 advantages are significant and essential to the validity of the model evaluation section. Without (1), we would be making predictions on rounds that the model has already seen, which would incorrectly inflate the performance. Further, advantage (2) is important because it provides us with a large sample by which to evaluate model performance, which gives us a more robust estimate of future performance. Finally, without (3), the model would not accurately convey historical performance. For example, if the model is trying to predict round scores for fights in 2014 but is trained using rounds from 2018, the resulting performance would not be realistic because the model is using fights that have not happened yet to make predictions. 
 
 The algorithm I've chosen to use is random forests since it quickly and efficiently builds an ensemble of decision trees to make predictions without overfitting. Also, decision trees are able to capture complex interactions between features, which means we do not have to specify which combinations of features should be considered in conjunction with one another; instead, the algorithm will detect these relationship automatically by design. Each algorithm in the time series cross validation is trained using 500 decision trees to grow a probability forest. Hence, for each round, the algorithm provides a predicted probability of each possible score out of the scores 10-9, 10-8, 9-10, and 8-10.
 
@@ -365,7 +364,7 @@ ggplot(plot_df, aes(x = Year, y = value, color = variable)) +
 
 Table \@ref(tab:baseline-comparisons) below compares the model's performance to the aforementioned baseline decision rule with respect to round winner accuracy. In each year considered, the model is more accurate at determining round winners, which is expected since it accounts for more than just strikes landed. Moreover, the model is significantly more valuable than the baseline because it makes predictions for each possible round score, instead of only the round winner, and it assigns a probability to each possible outcome, instead of just a binary prediction. Ultimately, the baseline decision rule is not a tough bar to clear, but it is nonetheless encouraging that our model is a drastic improvement over a hypothetical judge that only considers strikes landed and ignores all other aspects of the fight.
 
-```{r baseline-comparisons}
+```{r baseline-comparisons, layout = 'l-body-outset'}
 tbl_df <- cbind(df[, .('Number of Rounds' = formatC(.N, big.mark = ','), 
                        'Baseline Round Winner Accuracy' = paste0(format(100 * round(sum(Judges_F1_Round_Win == baseline_F1_pred) / .N, 3), nsmall = 1), '%')), 
                    by = .(Year = year(EventDate))][order(Year)][Year > 2011], 
@@ -380,7 +379,7 @@ kable(tbl_df, format = 'html', caption = 'Comparing Round Winner Predictions by 
 
 Finally, to unpack the model a bit more and see which statistics it relies upon the most to score rounds, we use feature importance. Table \@ref(tab:feature-importance) below displays the top 10 most important features in the model, where importance is essentially defined as how helpful the feature is in predicting the outcome. Again, when scoring a round, judges are supposed to consider effective striking, effective grappling, octagon control, aggressiveness, and effective defense - in that order. Examining the table below shows that JudgeAI appears to be capturing the exact same criteria in nearly the exact same order. This promising result suggests that both (a) judges generally follow the criteria with which they are provided, as expected, and (b) JudgeAI is able to use the round-level statistics to effectively capture this criteria when predicting round scores.
 
-```{r feature-importance}
+```{r feature-importance, layout = 'l-body-outset'}
 # run full model
 full_mod <- ranger(formula = rf_formula, 
                    data = df, 
@@ -430,7 +429,7 @@ I'd like to clearly state that JudgeAI is not perfect. I am not claiming that it
 
 While the consistently strong performance of JudgeAI over time is promising, this algorithm does have serious limitations. First and foremost, statistics do not perfectly convey damage dealt. Effective striking is the primary judging criteria, and even though accumulating many more significant strikes than one's opponent does correlate with dealing more damage, just looking at statistical differences will not replace what we can see from watching a fight. This issue is especially problematic in rounds that are close statistically but not as close when you watch it because one fighter clearly lands harder blows.
 
-Further, JudgeAI seeks to uncover longer-term trends in the relationship between round scores and the features included in the model. Therefore, JudgeAI uses these broader relationships to score every round no matter what, but in reality, many rounds include some sort of rare occurrence, like a devastating calf kick that leaves a fighter largely immobile, that can and perhaps should sway the judges but will not be considered by the model. Similarly, the model only sees the aggregate statistics for the round, so if a particular fighter starts slow in the first half but dominates the second half of a round, the judges might give this round to the strong finisher while the model might not.
+Further, JudgeAI seeks to uncover longer-term trends in the relationship between round scores and the features included in the model. Therefore, JudgeAI uses these broader relationships to score every round no matter what, but in reality, many rounds include some sort of rare occurrence, like a devastating calf kick that leaves a fighter largely immobile, that can and perhaps should sway the judges but will go unnoticed by the model. Similarly, the model only sees the aggregate statistics for each round, so if a particular fighter starts slow in the first half but dominates the second half of a round, the judges might give this round to the strong finisher while the model might not.
 
 Finally, the vast majority of rounds are scored 10-9 for the winner. As a result, JudgeAI struggles to predict 10-8 rounds with a high probability, even when the striking statistics are wildly lopsided. There are methodological adjustments that could be made to increase the model's precision in this regard, but I have not yet explored such changes.
 
@@ -440,7 +439,7 @@ The most obvious extension of JudgeAI would be aggregating the round-level predi
 
 While JudgeAI cannot be used to definitively say that a particular judge gave the wrong score for a particular round, it can be used to assess judges over a larger sample of fights. Since the model is calibrated to reflect the majority decision of judges and since it is largely successful in doing so over time, identifying any judges whose scores regularly deviate from JudgeAI's scores over a large sample of fights could be fruitful.
 
-Finally and most importantly, I believe JudgeAI can be leveraged to create brand new advanced metrics for MMA. Baseball has *expected runs* that uses statistics from within an inning to essentially compute the number of runs a team would expect to score on average after generating those statistics. Likewise, soccer has *expected goals* that uses the probability of scoring on each shot a team takes over the course of a game to essentially calculate the total number of goals a team would expect to score on average after taking shots from those locations. I believe JudgeAI's predicted round win probabilities can be used to create *expected rounds*, a metric that measures the number of rounds fighters would expect to win on average after compiling their observed round-level statistics. If successful, this new metric can move the sport away from looking at win percentages or finish percentages and towards a more informative metric that describes how dominant each fighter is on a round-by-round basis.
+Finally and most importantly, I believe JudgeAI can be leveraged to create brand new advanced metrics for MMA. Baseball has *expected runs* that uses statistics from within an inning to essentially compute the number of runs a team would expect to score, on average, after generating those statistics. Likewise, soccer has *expected goals* that uses the probability of scoring on each shot a team takes over the course of a game to calculate the total number of goals a team would expect to score, on average, after taking shots from those locations. I believe JudgeAI's predicted round win probabilities can be used to create *expected rounds*, a metric that measures the number of rounds fighters would expect to win, on average, after compiling their observed round-level statistics. If successful, this new metric can move the sport away from looking at win percents or finish percents and towards a more informative metric that describes how dominant each fighter is on a round-by-round basis.
 
 ```{r}
 # min and max dates in data

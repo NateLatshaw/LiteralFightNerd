@@ -7,12 +7,21 @@
     <description>Bringing rigorous quantitative analysis to MMA
 </description>
     <generator>Distill</generator>
-    <lastBuildDate>Thu, 25 Feb 2021 00:00:00 +0000</lastBuildDate>
+    <lastBuildDate>Tue, 02 Mar 2021 00:00:00 +0000</lastBuildDate>
+    <item>
+      <title>Introducing Expected Rounds (xR)</title>
+      <dc:creator>Nate Latshaw</dc:creator>
+      <link>https://literalfightnerd.com/posts/2021-03-02-introducing-expected-rounds-xr</link>
+      <description>A new advanced fighter evaluation metric that is interpretable, informative, predictive, robust, and stable</description>
+      <guid>https://literalfightnerd.com/posts/2021-03-02-introducing-expected-rounds-xr</guid>
+      <pubDate>Tue, 02 Mar 2021 00:00:00 +0000</pubDate>
+      <media:content url="https://literalfightnerd.com/posts/2021-03-02-introducing-expected-rounds-xr/introducing-expected-rounds-xr_files/figure-html5/unnamed-chunk-3-1.png" medium="image" type="image/png" width="1248" height="768"/>
+    </item>
     <item>
       <title>Extending JudgeAI</title>
       <dc:creator>Nate Latshaw</dc:creator>
       <link>https://literalfightnerd.com/posts/2021-02-25-extending-judgeai</link>
-      <description>Aggregating JudgeAI's round score predictions to generate final scorecard probability distributions with a case study on the judging decisions made during the main event of UFC 247: Jones vs Reyes</description>
+      <description>Aggregating JudgeAI's round score predictions to generate final scorecard probability distributions - with a case study on the judging decisions made during the main event of UFC 247: Jones vs Reyes</description>
       <guid>https://literalfightnerd.com/posts/2021-02-25-extending-judgeai</guid>
       <pubDate>Thu, 25 Feb 2021 00:00:00 +0000</pubDate>
       <media:content url="https://literalfightnerd.com/posts/2021-02-25-extending-judgeai/extending-judgeai_files/figure-html5/unnamed-chunk-7-1.png" medium="image" type="image/png" width="1248" height="768"/>
