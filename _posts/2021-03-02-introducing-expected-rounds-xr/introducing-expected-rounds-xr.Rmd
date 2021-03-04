@@ -247,7 +247,8 @@ all_fights[, F2_cu_FinishP := (cumsum(F2_Win & finish) - (F2_Win & finish)) / (c
 
 
 tbl_df <- all_fights[year(EventDate) %in% min_year:max_year, 
-           .(xRp_preds = sum(F1_cu_Xrp > F2_cu_Xrp, na.rm = T), 
+           .(UFC_fights = uniqueN(FightLink), 
+             xRp_preds = sum(F1_cu_Xrp > F2_cu_Xrp, na.rm = T), 
              xRp_correctP = sum(F1_cu_Xrp > F2_cu_Xrp & F1_Win, na.rm = T) / sum(F1_cu_Xrp > F2_cu_Xrp, na.rm = T), 
              winP_preds = sum(F1_cu_WinP > F2_cu_WinP, na.rm = T), 
              winP_correctP = sum(F1_cu_WinP > F2_cu_WinP & F1_Win, na.rm = T) / sum(F1_cu_WinP > F2_cu_WinP, na.rm = T), 
@@ -257,6 +258,7 @@ tbl_df <- all_fights[year(EventDate) %in% min_year:max_year,
 
 tbl_df <- rbind(tbl_df, 
                 data.table(year = 'Total', 
+                           UFC_fights = tbl_df[, format(sum(UFC_fights), big.mark = ',')], 
                            xRp_preds = tbl_df[, format(sum(xRp_preds), big.mark = ',')], 
                            xRp_correctP = all_fights[year(EventDate) %in% min_year:max_year, sum(F1_cu_Xrp > F2_cu_Xrp & F1_Win, na.rm = T) / sum(F1_cu_Xrp > F2_cu_Xrp, na.rm = T)], 
                            winP_preds = tbl_df[, format(sum(winP_preds), big.mark = ',')], 
@@ -268,13 +270,16 @@ tbl_df[, xRp_correctP := paste0(format(100 * round(xRp_correctP, 3), nsmall = 1)
 tbl_df[, winP_correctP := paste0(format(100 * round(winP_correctP, 3), nsmall = 1), '%')]
 tbl_df[, finishP_correctP := paste0(format(100 * round(finishP_correctP, 3), nsmall = 1), '%')]
 
-setnames(tbl_df, names(tbl_df), c('Year', 'xR% predictions', 'xR% accuracy', 
+stopifnot(num_fights_training == tbl_df[year == 'Total', UFC_fights])
+
+setnames(tbl_df, names(tbl_df), c('Year', 'UFC fights', 'xR% predictions', 'xR% accuracy', 
                                   'Win % predictions', 'Win % accuracy', 
                                   'Finish % predictions', 'Finish % accuracy'))
 
 kable(tbl_df, format = 'html', caption = 'Predicting UFC fights with xR%, win %, and finish %', align = 'c', booktabs = T) %>%
   kable_styling(bootstrap_options = c('striped'), full_width = T, font_size = 24) %>% 
-  row_spec(tbl_df[, .N], bold = T)
+  row_spec(tbl_df[, .N], bold = T) %>% 
+  footnote('-Predictions are not made on all UFC fights because either the metric is the same for both fighters or the metric is unavailable since at least one fighter is making a UFC debut.')
 
 ```
 

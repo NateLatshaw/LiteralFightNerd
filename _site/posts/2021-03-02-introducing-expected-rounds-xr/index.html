@@ -2728,7 +2728,7 @@ Colby Covington
 <p>We attempt to make predictions for all 4,399 UFC fights in 2011-2020. Table <a href="#tab:prediction-results">5</a> below shows the results. We see that xR% makes more predictions than win percent and finish percent (as a result of fewer ties in xR%) and correctly predicts a higher share of fights in nearly every single year under consideration. It is significant that xR% is able to both make more predictions and predict better. It is generally easier to find more predictive success by making predictions on a narrower subset of the data, but the promise of xR% does not rely on making fewer predictions.</p>
 <p>I am not claiming that xR% will get you rich in the betting markets. However, it is clear that xR% is a fighter evaluation metric that is more predictive of a given fight outcome than win percent and finish percent, and this has been true for essentially the entirety of the last decade.</p>
 <div class="layout-chunk" data-layout="l-body-outset">
-<table class="table table-striped" style="font-size: 24px; margin-left: auto; margin-right: auto;">
+<table class="table table-striped" style="font-size: 24px; margin-left: auto; margin-right: auto;border-bottom: 0;">
 <caption style="font-size: initial !important;">
 <span id="tab:prediction-results">Table 5: </span>Predicting UFC fights with xR%, win %, and finish %
 </caption>
@@ -2736,6 +2736,9 @@ Colby Covington
 <tr>
 <th style="text-align:center;">
 Year
+</th>
+<th style="text-align:center;">
+UFC fights
 </th>
 <th style="text-align:center;">
 xR% predictions
@@ -2763,6 +2766,9 @@ Finish % accuracy
 2011
 </td>
 <td style="text-align:center;">
+300
+</td>
+<td style="text-align:center;">
 206
 </td>
 <td style="text-align:center;">
@@ -2784,6 +2790,9 @@ Finish % accuracy
 <tr>
 <td style="text-align:center;">
 2012
+</td>
+<td style="text-align:center;">
+341
 </td>
 <td style="text-align:center;">
 252
@@ -2809,6 +2818,9 @@ Finish % accuracy
 2013
 </td>
 <td style="text-align:center;">
+386
+</td>
+<td style="text-align:center;">
 275
 </td>
 <td style="text-align:center;">
@@ -2830,6 +2842,9 @@ Finish % accuracy
 <tr>
 <td style="text-align:center;">
 2014
+</td>
+<td style="text-align:center;">
+503
 </td>
 <td style="text-align:center;">
 333
@@ -2855,6 +2870,9 @@ Finish % accuracy
 2015
 </td>
 <td style="text-align:center;">
+473
+</td>
+<td style="text-align:center;">
 391
 </td>
 <td style="text-align:center;">
@@ -2876,6 +2894,9 @@ Finish % accuracy
 <tr>
 <td style="text-align:center;">
 2016
+</td>
+<td style="text-align:center;">
+493
 </td>
 <td style="text-align:center;">
 386
@@ -2901,6 +2922,9 @@ Finish % accuracy
 2017
 </td>
 <td style="text-align:center;">
+457
+</td>
+<td style="text-align:center;">
 353
 </td>
 <td style="text-align:center;">
@@ -2922,6 +2946,9 @@ Finish % accuracy
 <tr>
 <td style="text-align:center;">
 2018
+</td>
+<td style="text-align:center;">
+474
 </td>
 <td style="text-align:center;">
 369
@@ -2947,6 +2974,9 @@ Finish % accuracy
 2019
 </td>
 <td style="text-align:center;">
+516
+</td>
+<td style="text-align:center;">
 393
 </td>
 <td style="text-align:center;">
@@ -2968,6 +2998,9 @@ Finish % accuracy
 <tr>
 <td style="text-align:center;">
 2020
+</td>
+<td style="text-align:center;">
+456
 </td>
 <td style="text-align:center;">
 351
@@ -2993,6 +3026,9 @@ Finish % accuracy
 Total
 </td>
 <td style="text-align:center;font-weight: bold;">
+4,399
+</td>
+<td style="text-align:center;font-weight: bold;">
 3,309
 </td>
 <td style="text-align:center;font-weight: bold;">
@@ -3012,6 +3048,18 @@ Total
 </td>
 </tr>
 </tbody>
+<tfoot>
+<tr>
+<td style="padding: 0; " colspan="100%">
+<span style="font-style: italic;">Note: </span>
+</td>
+</tr>
+<tr>
+<td style="padding: 0; " colspan="100%">
+<sup></sup> -Predictions are not made on all UFC fights because either the metric is the same for both fighters or the metric is unavailable since at least one fighter is making a UFC debut.
+</td>
+</tr>
+</tfoot>
 </table>
 </div>
 <h1 id="xr-is-robust">xR is robust</h1>
