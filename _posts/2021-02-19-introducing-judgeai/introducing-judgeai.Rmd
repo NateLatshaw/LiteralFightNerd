@@ -451,6 +451,7 @@ max_preds_dt <- rf_rounds[, gsub('-', '', max(EventDate))]
 
 # save full model
 saveRDS(full_mod, file = paste0(output_path, 'full_judging_model_', min_model_dt, '_', max_model_dt, '.RDS'))
+saveRDS(df, file = paste0(output_path, 'full_judging_model_data_', min_model_dt, '_', max_model_dt, '.RDS'))
 
 # save data
 saveRDS(rf_rounds, file = paste0(output_path, 'round_preds_time_series_cv_', min_preds_dt, '_', max_preds_dt, '.RDS'))

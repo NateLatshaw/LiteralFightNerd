@@ -32,6 +32,7 @@ library(scales)
 library(kableExtra)
 
 data_path <- '../../_supplemential_files/2021-03-02-introducing-expected-rounds-xr/input_files/'
+model_path <- '../../_supplemential_files/2021-02-19-introducing-judgeai/output_files/'
 
 # plot aesthetics
 paired_colors4 <- brewer.pal(6, 'Paired')[c(6,5,2,1)]
@@ -40,9 +41,13 @@ paired_colors4 <- brewer.pal(6, 'Paired')[c(6,5,2,1)]
 rounds <- readRDS(paste0(data_path, 'round_stats_20210301.RDS'))
 fights <- readRDS(paste0(data_path, 'fight_stats_20210301.RDS'))
 all_fights <- readRDS(paste0(data_path, 'all_fight_stats_20210301.RDS'))
+full_model_df <- readRDS(paste0(model_path, 'full_judging_model_data_20110101_20201219.RDS'))
 
 # create variables
-num_fights_training <- fights[grepl('UFC', Event) | (grepl('The Ultimate Fighter', Event) & grepl('Finale', Event)), format(uniqueN(FightLink), big.mark = ',')]
+min_year <- fights[, year(min(EventDate))]
+max_year <- fights[, year(max(EventDate))]
+num_fights_training <- full_model_df[, format(uniqueN(FightLink), big.mark = ',')]
+num_fights <- fights[year(EventDate) %in% min_year:max_year, format(uniqueN(FightLink), big.mark = ',')]
 
 # cumulative xR% and win %
 setkey(all_fights, F1_Link, EventDate, FightOfEvent)
@@ -172,8 +177,6 @@ Since xR uses well-calibrated round win probabilities, a fighter's xR and xR% fo
 # mean xR% of winners by result
 udec_avg_xr <- fights[F1_Win == T & Result_clean == 'Unanimous Decision', paste0(format(100 * round(mean(F1_xRp), 3), nsmall = 1), '%')]
 sdec_avg_xr <- fights[F1_Win == T & Result_clean == 'Unanimous Decision', paste0(format(100 * round(mean(F1_xRp), 3), nsmall = 1), '%')]
-min_year <- fights[, year(min(EventDate))]
-max_year <- fights[, year(max(EventDate))]
 
 tbl_df <- fights[F1_Win == T & Result_clean != 'Other', mean(F1_xRp), by = .('Method of Victory' = Result_clean)][order(V1)][, .('Method of Victory' = get('Method of Victory'), 'Average Winner\'s Earned xR%' = paste0(format(100 * round(V1, 3), nsmall = 1), '%'))]
 
@@ -227,7 +230,7 @@ Then, for xR%, I predict that the fighter with the higher xR% will win. For win 
 
 Note that predictions cannot be made for every UFC fight. If either fighter is making a UFC debut, then we do not have these metrics available for the debut fighter, so no prediction is made. Likewise, if the two fighters in a given fight have the same win percent, for instance, then no prediction is made based on win percent, but xR% and finish percent predictions will still be made (assuming there are no ties among these metrics).
 
-We attempt to make predictions for all `r fights[year(EventDate) %in% min_year:max_year, format(uniqueN(FightLink), big.mark = ',')]` UFC fights in `r min_year`-`r max_year`. Table \@ref(tab:prediction-results) below shows the results. We see that xR% makes more predictions than win percent and finish percent (as a result of fewer ties in xR%) and correctly predicts a higher share of fights in nearly every single year under consideration. It is significant that xR% is able to both make more predictions and predict better. It is generally easier to find more predictive success by making predictions on a narrower subset of the data, but the promise of xR% does not rely on making fewer predictions.
+We attempt to make predictions for all `r num_fights` UFC fights in `r min_year`-`r max_year`. Table \@ref(tab:prediction-results) below shows the results. We see that xR% makes more predictions than win percent and finish percent (as a result of fewer ties in xR%) and correctly predicts a higher share of fights in nearly every single year under consideration. It is significant that xR% is able to both make more predictions and predict better. It is generally easier to find more predictive success by making predictions on a narrower subset of the data, but the promise of xR% does not rely on making fewer predictions.
 
 I am not claiming that xR% will get you rich in the betting markets. However, it is clear that xR% is a fighter evaluation metric that is more predictive of a given fight outcome than win percent and finish percent, and this has been true for essentially the entirety of the last decade.
 
@@ -270,7 +273,7 @@ tbl_df[, xRp_correctP := paste0(format(100 * round(xRp_correctP, 3), nsmall = 1)
 tbl_df[, winP_correctP := paste0(format(100 * round(winP_correctP, 3), nsmall = 1), '%')]
 tbl_df[, finishP_correctP := paste0(format(100 * round(finishP_correctP, 3), nsmall = 1), '%')]
 
-stopifnot(num_fights_training == tbl_df[year == 'Total', UFC_fights])
+stopifnot(num_fights == tbl_df[year == 'Total', UFC_fights])
 
 setnames(tbl_df, names(tbl_df), c('Year', 'UFC fights', 'xR% predictions', 'xR% accuracy', 
                                   'Win % predictions', 'Win % accuracy', 
@@ -339,11 +342,11 @@ The xR% metric, on the other hand, is computed using each round as an observatio
 
 If the conceptual argument has not convinced you, let's look at the degree to which these metrics actually change over a fighter's career. This argument is a bit technical and in the weeds, so feel free to skip it if it does not interest you.
 
-Using every UFC fight in `r min_year`-`r max_year`, we first compute the difference in win percent and xR% from each fighter's 1st-2nd UFC fight. Then, we compute the standard deviation of these differences for each metric and plot those two values on the figure below corresponding to a value of 2 on the horizontal axis (to represent the change occurring after each fighter's 2nd UFC fight). Likewise, we take the difference in win percent and xR% from each fighter's 2nd-3rd UFC fight, compute the standard deviation of those differences, and plot those points along the horizontal axis at a value of 3. We continue this process up to the 10th fight of each fighter's UFC career.
+Using every UFC fight in `r min_year`-`r max_year`, we first compute the difference in win percent and xR% from each fighter's 1st-2nd UFC fight. Then, we compute the average of these differences for each metric and plot those two values on the figure below corresponding to a value of 2 on the horizontal axis (to represent the change occurring after each fighter's 2nd UFC fight). Likewise, we take the difference in win percent and xR% from each fighter's 2nd-3rd UFC fight, compute the average of those differences, and plot those points along the horizontal axis at a value of 3. We continue this process up to the 10th fight of each fighter's UFC career. Finally, we repeat the whole process again, except we compute the standard deviation, instead of the average, of all differences.
 
-The lines on the figure below essentially measure the magnitude of the variation in each metric (along the vertical axis) as the number of fights used to compute each metric increases (along the horizontal axis). Smaller values on the vertical axis represent an increase in stability. Eventually both metrics will stabilize. That is, after many fights, the win percent, for example, will not change much whether a fighter wins or loses. Thus, we are more concerned with the stability of the metrics after the first few fights of a fighter's career.
+The lines on the figure below essentially measure the magnitude of the variation in each metric (along the vertical axis) as the number of fights used to compute each metric increases (along the horizontal axis). Values measured on the vertical axis that are closer to 0 represent an increase in stability, or equivalently, less fight-to-fight variation in the metric. Eventually both metrics stabilize. That is, after many fights, a fighter's win percent, for example, does not change much whether he or she wins or loses. Thus, we are more concerned with the stability of the metrics after the first few fights of a fighter's career.
 
-While the actual values on the vertical axis do not need to be interpreted, what is important is how the two lines relate to one another. We see that the xR% line is always below that of win percent (especially after only a few fights), which means that the fight-by-fight change in xR% is generally less than that of win percent. Hence, xR% is mathematically the more stable metric, which aligns with the conceptual argument provided above.
+While the actual values on the vertical axis do not need to be interpreted, what is important is how the lines relate to one another. We see that the xR% lines are always closer to 0 than the win percent lines (especially after only a few fights), which means that the fight-by-fight change in xR% is generally less than that of win percent. Hence, xR% is mathematically the more stable metric, which aligns with the conceptual argument provided above.
 
 ```{r, layout = 'l-body-outset'}
 
@@ -355,25 +358,32 @@ all_fights[, F1_cumulative_WinP_lag := shift(F1_cumulative_WinP, type = 'lag', n
 all_fights[, winP_diff := F1_cumulative_WinP - F1_cumulative_WinP_lag]
 all_fights[, xRp_diff := F1_cumulative_Xrp - F1_cumulative_Xrp_lag]
 
-plot_df <- all_fights[year(EventDate) %in% min_year:max_year, .(WinP_sd = sd(winP_diff, na.rm = T), 
-                          xRP_sd = sd(xRp_diff, na.rm = T)), 
+plot_df <- all_fights[year(EventDate) %in% min_year:max_year, 
+                      .(WinP_mean = mean(winP_diff, na.rm = T), 
+                        xRP_mean = mean(xRp_diff, na.rm = T), 
+                        WinP_sd = sd(winP_diff, na.rm = T), 
+                        xRP_sd = sd(xRp_diff, na.rm = T)), 
                       by = .(FightOfCareer)]
 
 plot_df <- melt(plot_df, id.vars = 'FightOfCareer')
 
-plot_df[variable == 'WinP_sd', variable := 'Win %']
-plot_df[variable == 'xRP_sd', variable := 'xR%']
+plot_df[grepl('WinP', variable), variable_color := 'Win %']
+plot_df[grepl('xRP', variable), variable_color := 'xR%']
+plot_df[grepl('mean', variable), variable_line := 'Average']
+plot_df[grepl('sd', variable), variable_line := 'Standard deviation']
 
-ggplot(plot_df[FightOfCareer <= 10 & FightOfCareer > 0], aes(x = FightOfCareer, y = value, color = variable)) + 
+ggplot(plot_df[FightOfCareer <= 10 & FightOfCareer > 0], aes(x = FightOfCareer, y = value, color = variable_color, lty = variable_line)) + 
   geom_point(size = 2) + 
   geom_line(size = .8) + 
   scale_x_continuous(breaks = seq(1, 25, 1)) + 
-  scale_y_continuous(breaks = seq(0, 1, .05), limits = c(0, .4)) + 
-  labs(title = 'Stability of xR% and Win %', 
+  scale_y_continuous(breaks = seq(-1, 1, .05), limits = c(-.1, .4)) + 
+  labs(title = 'Stability measures of xR% and Win %', 
        x = '\nFight of career', 
-       y = 'Standard deviation of the fight-to-fight \nchange in the metric across all fighters\n', 
+       y = 'Average & standard deviation of the fight-to-fight \nchange in the metrics across all fighters\n', 
        color = 'Metric', 
-       caption = '\n-Note: For a horizontal axis value of 2, the vertical axis displays the standard deviation\n of the difference in each metric across all UFC fighters\' 1st-2nd fights.') + 
+       lty = 'Operation', 
+       caption = '\n-Note: For a horizontal axis value of 2, the vertical axis displays the average and \nstandard deviation of the difference in each metric across all fighters\' 1st-2nd fights.') + 
+  geom_hline(yintercept = 0, lty = 2) + 
   scale_color_brewer(palette = 'Set1') + 
   theme_bw() + 
   theme(text = element_text(size = 10), 
