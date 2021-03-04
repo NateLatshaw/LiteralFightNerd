@@ -165,6 +165,8 @@ kable(tbl_df, format = 'html', caption = 'xR for a hypothetical fight', align = 
 
 Again, if you are interested in understanding the technical details of how each fighter's round win probability is computed, feel free to check out my [previous blog post](https://literalfightnerd.com/posts/2021-02-19-introducing-judgeai/) that provides a detailed overview of the algorithm and its performance.
 
+Using this methodology, we are able to compute each fighter's xR and xR% for every single round in UFC history in which the round-level statistics are publicly available.
+
 # xR is informative
 
 The xR and xR% metrics are more informative fighter evaluation tools than mainstream metrics (like number of wins, number of finishes, win percent, and finish percent) because they value the characteristics of a fight that fighters strive to achieve. That is, xR rewards fighters for both dominance and finishing ability, and it can distinguish between fighters who just barely outperform their opponents and fighters who completely dominate their opponents. 
@@ -346,7 +348,7 @@ Using every UFC fight in `r min_year`-`r max_year`, we first compute the differe
 
 The lines on the figure below essentially measure the magnitude of the variation in each metric (along the vertical axis) as the number of fights used to compute each metric increases (along the horizontal axis). Values measured on the vertical axis that are closer to 0 represent an increase in stability, or equivalently, less fight-to-fight variation in the metric. Eventually both metrics stabilize. That is, after many fights, a fighter's win percent, for example, does not change much whether he or she wins or loses. Thus, we are more concerned with the stability of the metrics after the first few fights of a fighter's career.
 
-While the actual values on the vertical axis do not need to be interpreted, what is important is how the lines relate to one another. We see that the xR% lines are always closer to 0 than the win percent lines (especially after only a few fights), which means that the fight-by-fight change in xR% is generally less than that of win percent. Hence, xR% is mathematically the more stable metric, which aligns with the conceptual argument provided above.
+While the actual values on the vertical axis do not need to be interpreted, what is important is how the lines relate to one another. We see that the xR% lines are essentially always closer to 0 than the win percent lines (especially after only a few fights), which means that the fight-by-fight change in xR% is generally less than that of win percent. Hence, xR% is mathematically the more stable metric, which aligns with the conceptual argument provided above.
 
 ```{r, layout = 'l-body-outset'}
 
@@ -376,7 +378,7 @@ ggplot(plot_df[FightOfCareer <= 10 & FightOfCareer > 0], aes(x = FightOfCareer, 
   geom_point(size = 2) + 
   geom_line(size = .8) + 
   scale_x_continuous(breaks = seq(1, 25, 1)) + 
-  scale_y_continuous(breaks = seq(-1, 1, .05), limits = c(-.1, .4)) + 
+  scale_y_continuous(breaks = seq(-1, 1, .05), limits = c(-.05, .35)) + 
   labs(title = 'Stability measures of xR% and Win %', 
        x = '\nFight of career', 
        y = 'Average & standard deviation of the fight-to-fight \nchange in the metrics across all fighters\n', 
@@ -386,7 +388,7 @@ ggplot(plot_df[FightOfCareer <= 10 & FightOfCareer > 0], aes(x = FightOfCareer, 
   geom_hline(yintercept = 0, lty = 2) + 
   scale_color_brewer(palette = 'Set1') + 
   theme_bw() + 
-  theme(text = element_text(size = 10), 
+  theme(text = element_text(size = 9), 
         plot.caption = element_text(hjust = 0, face = 'italic'))
 
 ```
