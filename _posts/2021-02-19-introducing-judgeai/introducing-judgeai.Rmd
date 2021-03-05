@@ -2,6 +2,7 @@
 title: "Introducing JudgeAI"
 description: |
   A machine learning algorithm that predicts judges' scores by round in the UFC
+base_url: "https://literalfightnerd.com/"
 twitter:
   - site: "@NateLatshaw"
   - creator: "@NateLatshaw"

@@ -2,6 +2,7 @@
 title: "Introducing Expected Rounds (xR)"
 description: |
   A new advanced fighter evaluation metric that is interpretable, informative, predictive, robust, and stable
+base_url: "https://literalfightnerd.com/"
 twitter:
   - site: "@NateLatshaw"
   - creator: "@NateLatshaw"
