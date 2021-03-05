@@ -6,7 +6,6 @@ base_url: "https://literalfightnerd.com/"
 twitter:
   - site: "@NateLatshaw"
   - creator: "@NateLatshaw"
-preview: champions_xRp.png
 author:
   - name: Nate Latshaw
 date: 03-02-2021
