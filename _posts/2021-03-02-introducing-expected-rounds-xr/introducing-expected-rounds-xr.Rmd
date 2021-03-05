@@ -201,7 +201,7 @@ tbl_df <- rounds[F1_Name == 'Kamaru Usman' & F2_Name == 'Colby Covington', .(Rou
 
 kable(tbl_df, format = 'html', caption = 'xR of UFC 245 main event', align = 'c', booktabs = T) %>%
   kable_styling(bootstrap_options = c('striped'), full_width = T, font_size = 24) %>% 
-  footnote('-Usman won by KO in round 5.')
+  footnote('-Usman won by TKO in round 5.')
 
 ```
 
