@@ -6,6 +6,7 @@ base_url: "https://literalfightnerd.com/"
 twitter:
   - site: "@NateLatshaw"
   - creator: "@NateLatshaw"
+preview: champions_xRp.png
 author:
   - name: Nate Latshaw
 date: 03-02-2021
@@ -100,7 +101,7 @@ Before jumping into the methodology, below I've listed five reasons why I believ
 The first reason, interpretability, has already been covered. It is my goal in this post to justify the remaining four reasons while ensuring that all readers are able to understand and interpret the figure below, which shows the career xR% of all current UFC champions.
 
 ```{r, layout = 'l-body-outset', preview = T}
-# current top 5 xR%
+# current UFC champions' xR%
 top_names <- c('Khabib Nurmagomedov', 'Israel Adesanya', 'Kamaru Usman', 'Stipe Miocic', 
                'Alexander Volkanovski', 'Deiveson Figueiredo', 'Petr Yan', 'Jan Blachowicz', 
                'Amanda Nunes', 'Zhang Weili', 'Valentina Shevchenko')
