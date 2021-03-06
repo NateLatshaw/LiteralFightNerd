@@ -188,7 +188,7 @@ Using the aforementioned algorithm to aggregate round score probabilities, we se
 Further, Reyes' win probability (computed by adding up the appropriate final score probabilities) was 55%. Again, this means that over many fights with identical round-level statistics, JudgeAI predicts that Reyes would win via decision more often than not.
 
 ```{r, layout = 'l-body-outset', preview = T}
-Plot_Fight_Score_Probabilties(fight_df = rounds[FightLink == 'http://www.ufcstats.com/fight-details/fae99a4089f8abb0'],
+p <- Plot_Fight_Score_Probabilties(fight_df = rounds[FightLink == 'http://www.ufcstats.com/fight-details/fae99a4089f8abb0'],
                               n_samples = 100000,
                               use_dark_theme = F,
                               single_plot = T,
@@ -196,6 +196,7 @@ Plot_Fight_Score_Probabilties(fight_df = rounds[FightLink == 'http://www.ufcstat
                               single_plot_theme = custom_single_plot_theme,
                               multi_plot_theme = theme(),
                               dark_theme = theme())
+p
 ```
 
 Even though JudgeAI has Reyes winning this fight, notice that the win probability was barely over 50%. According to JudgeAI, the two most dominant rounds were 4 and 5, both of which went to Jones. This means that JudgeAI was more certain that the judges would also give these rounds to Jones, which turned out to be true as Jones won those rounds 10-9 on every scorecard. Since rounds are scored independently, once a fighter in a 5 round fight secures 2 dominant rounds, the math begins moving in that fighter's direction. As we saw, JudgeAI had Reyes winning the other 3 rounds, which should be enough to win the decision. However, since Reyes' round wins (according to JudgeAI) were less dominant, it was more likely that some judges would award some of those rounds to Jones, which is also what we saw.

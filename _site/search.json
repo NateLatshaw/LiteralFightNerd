@@ -6,14 +6,14 @@
       "description": "This blog seeks to bring rigorous quantitative analysis to the mixed martial arts world in a form that is approachable for non-technical audiences but still comprehensive for those who are more quantitatively inclined.",
       "author": [],
       "contents": "\r\nI am a Data Scientist currently living in the Washington, D.C. area. I’ve always been passionate about both math and sports. I was a collegiate soccer player at Dickinson College before earning an M.S. in Statistics from Carnegie Mellon University. Now I spend my free time combining my passions to conduct quantitative analysis primarily for mixed martial arts (MMA). I’ve witnessed most major American sports go through some sort of analytics revolution, but I have not yet seen the same growth in MMA. Hence, I think there’s room to use publicly available MMA data in new ways that are beneficial to anyone interested in the sport, from fighters and coaches to MMA experts and sports bettors to even casual fans.\r\nI invite feedback on all of my work. While all of my current plans for this blog involve quantitative MMA analysis, I am interested in branching out to other sports analytics or data science topics in the future. I’m always open to connecting with others to collaborate or just exchange ideas. The best way to connect with me is through Twitter.\r\nFor those wondering where the name LiteralFightNerd came from, I began sharing my early quantitative MMA analysis on Twitter and Reddit. In September 2020, I posted a long piece to Reddit on a machine learning algorithm I created that predicts judging decisions by round in the UFC. That post received over 100 comments. The very first comment, which came almost immediately, read “literal fight nerd” (proof). A couple months later this blog was born in honor of one of Reddit’s finest. I literally am a fight nerd. Through this blog I hope to show that fight nerds can make substantive contributions to the sport of MMA.\r\nEnjoy!\r\n-Nate\r\n\r\n\r\n\r\n",
-      "last_modified": "2021-03-05T10:23:46-05:00"
+      "last_modified": "2021-03-06T13:42:14-05:00"
     },
     {
       "path": "index.html",
       "title": "Posts",
       "author": [],
       "contents": "\r\n\r\n\r\n\r\n",
-      "last_modified": "2021-03-05T10:23:50-05:00"
+      "last_modified": "2021-03-06T13:42:18-05:00"
     },
     {
       "path": "ufc-stats-web-app.html",
@@ -21,7 +21,7 @@
       "description": "A web app containing a suite of comprehensive data visualization tools used to explore detailed historical statistics on all fighters on the upcoming UFC card",
       "author": [],
       "contents": "\r\nHere is the link, be sure to check it out on a desktop (rather than a mobile device): https://natelatshaw.shinyapps.io/ufc_fight_night_statistical_companion/.\r\nBefore starting this blog, I spent a lot of time working with publicly available UFC statistics. I found the sites available at that time to be severely lacking. I’d often have to click several times just to view a single fighter’s historical statistics spread out over many separate web pages. As a result, it was incredibly frustrating to simply try to view and compare statistics between the two fighters in each bout on the upcoming UFC card.\r\nEventually, around March 2020, I decided to make my own site that would enable me to quickly and cleanly visualize publicly available statistics on the fighters on the upcoming card. Soon after that I decided to share it with others in the form of a web app, which I’ve named the UFC Fight Night Statistical Companion. I update the web app regularly so it (almost) always reflects the upcoming UFC card. While it has no official affiliation with the UFC, I hope to continue to grow this web app into a valuable, comprehensive resource for UFC audiences of all types.\r\nEnjoy!\r\n\r\n\r\n\r\n",
-      "last_modified": "2021-03-05T10:23:52-05:00"
+      "last_modified": "2021-03-06T13:42:20-05:00"
     }
   ],
   "collections": ["posts/posts.json"]
