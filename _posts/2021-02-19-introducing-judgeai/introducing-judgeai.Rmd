@@ -31,6 +31,8 @@ library(scales)
 library(kableExtra)
 library(ranger)
 
+rand_seed <- 123
+
 data_path <- '../../_supplemential_files/2021-02-19-introducing-judgeai/input_files/'
 output_path <- '../../_supplemential_files/2021-02-19-introducing-judgeai/output_files/'
 
@@ -38,7 +40,7 @@ output_path <- '../../_supplemential_files/2021-02-19-introducing-judgeai/output
 paired_colors4 <- brewer.pal(6, 'Paired')[c(6,5,2,1)]
 
 # load data
-full_df <- readRDS(paste0(data_path, 'round_decisions_and_stats_20210301.RDS'))
+full_df <- readRDS(paste0(data_path, 'round_decisions_and_stats_20210623.RDS'))
 
 # subset data to 1 row per round
 full_df <- full_df[F1_Name == First_in_Details]
@@ -231,7 +233,7 @@ for(dt in training_dates){
     # print(paste0('Max test date: ', rf_rounds[year(EventDate) == year(dt) & month(EventDate) == month(dt), max(EventDate)]))
 
     # train model
-    set.seed(123)
+    set.seed(rand_seed)
     rf_mod <- ranger(formula = rf_formula,
                      data = rf_rounds[EventDate < dt & EventDate >= (dt %m-% months(num_months_to_train))],
                      probability = T,
@@ -272,16 +274,6 @@ rf_rounds[model_round_score %in% c('10-9', '10-8'), match_any_judge_winner := Ju
 rf_rounds[model_round_score %in% c('9-10', '8-10'), match_any_judge_winner := Judge1_Score %in% c('9-10', '8-10') | 
             Judge2_Score %in% c('9-10', '8-10') | Judge3_Score %in% c('9-10', '8-10')]
 match_any_winner_accuracy <- rf_rounds[, sum(match_any_judge_winner) / .N]
-
-# run full model
-set.seed(123)
-rf_mod <- ranger(formula = rf_formula,
-                 data = rf_rounds,
-                 probability = T,
-                 importance = 'impurity',
-                 num.trees = 500)
-# feature importance
-feature_importance_df <- data.table(Variable = names(rf_mod$variable.importance), Importance = rf_mod$variable.importance)[order(-Importance)]
 
 ```
 
@@ -382,6 +374,7 @@ Finally, to unpack the model a bit more and see which statistics it relies upon 
 
 ```{r feature-importance, layout = 'l-body-outset'}
 # run full model
+set.seed(rand_seed)
 full_mod <- ranger(formula = rf_formula, 
                    data = df, 
                    probability = T, 
@@ -450,11 +443,32 @@ max_model_dt <- df[, gsub('-', '', max(EventDate))]
 min_preds_dt <- rf_rounds[, gsub('-', '', min(EventDate))]
 max_preds_dt <- rf_rounds[, gsub('-', '', max(EventDate))]
 
+min_year <- 2011
+max_year <- 2020
+
 # save full model
 saveRDS(full_mod, file = paste0(output_path, 'full_judging_model_', min_model_dt, '_', max_model_dt, '.RDS'))
 saveRDS(df, file = paste0(output_path, 'full_judging_model_data_', min_model_dt, '_', max_model_dt, '.RDS'))
 
 # save data
 saveRDS(rf_rounds, file = paste0(output_path, 'round_preds_time_series_cv_', min_preds_dt, '_', max_preds_dt, '.RDS'))
+
+# train a series of models, each of which excludes a single year
+cv_mods <- list()
+for(yr in min_year:max_year){
+  element_name <- paste0('exclude', yr)
+  set.seed(rand_seed)
+  rf_mod <- ranger(formula = rf_formula, 
+                   data = df[year(EventDate) %in% min_year:max_year & year(EventDate) != yr], 
+                   probability = T, 
+                   importance = 'impurity', 
+                   num.trees = n_trees)
+  cv_mods[[element_name]] <- rf_mod
+  rm(rf_mod, element_name)
+  gc()
+}
+
+# save list of models
+saveRDS(cv_mods, paste0(output_path, 'round_predictions_model_', min_year, '_', max_year, '_loocv.RDS'))
 
 ```

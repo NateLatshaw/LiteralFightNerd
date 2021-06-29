@@ -20,6 +20,7 @@ rounds <- rounds[grepl('UFC', Event) | (grepl('The Ultimate Fighter', Event) & g
 fights <- fights[grepl('UFC', Event) | (grepl('The Ultimate Fighter', Event) & grepl('Finale', Event))]
 
 all_fights <- copy(fights)
+all_fights <- all_fights[EventDate <= '2021-03-02']
 rounds <- rounds[year(EventDate) %in% 2011:2020]
 fights <- fights[year(EventDate) %in% 2011:2020]
 

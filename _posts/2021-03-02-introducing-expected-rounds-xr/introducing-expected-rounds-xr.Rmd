@@ -39,9 +39,9 @@ model_path <- '../../_supplemential_files/2021-02-19-introducing-judgeai/output_
 paired_colors4 <- brewer.pal(6, 'Paired')[c(6,5,2,1)]
 
 # load data
-rounds <- readRDS(paste0(data_path, 'round_stats_20210301.RDS'))
-fights <- readRDS(paste0(data_path, 'fight_stats_20210301.RDS'))
-all_fights <- readRDS(paste0(data_path, 'all_fight_stats_20210301.RDS'))
+rounds <- readRDS(paste0(data_path, 'round_stats_20210624.RDS'))
+fights <- readRDS(paste0(data_path, 'fight_stats_20210624.RDS'))
+all_fights <- readRDS(paste0(data_path, 'all_fight_stats_20210624.RDS'))
 full_model_df <- readRDS(paste0(model_path, 'full_judging_model_data_20110101_20201219.RDS'))
 
 # create variables
@@ -128,7 +128,11 @@ ggplot(plot_df, aes(x = F1_Name, y = F1_cumulative_Xrp)) +
 
 # Methodology
 
-The xR metric is an extension of a machine learning algorithm I developed in a [previous blog post](https://literalfightnerd.com/posts/2021-02-19-introducing-judgeai/). That algorithm uses official UFC round-level striking and grappling statistics to predict judges' scores by round. The model used to create xR is trained on `r num_fights_training` UFC fights that all ended in a decision by the judges across 2011-2020. As demonstrated in my prior post, the model is able to predict round scores with a high degree of accuracy and generate well-calibrated probabilities for each possible round score. That is, for each round in the UFC, we use the algorithm to recover the probability that the judges will score the round 10-9, 10-8, 9-10, or 8-10. Then, using these round score probabilities, we compute the probability of each fighter winning that round.
+The xR metric is an extension of a machine learning algorithm I developed in a [previous blog post](https://literalfightnerd.com/posts/2021-02-19-introducing-judgeai/). That algorithm uses official UFC round-level striking and grappling statistics to predict judges' scores by round. The algorithm used to create xR is trained on `r num_fights_training` UFC fights that all ended in a decision by the judges across 2011-2020. 
+
+Note that to avoid overfitting, for each fight within a given year in 2011-2020, xR is computed using an algorithm trained on fights in all other years within 2011-2020. As an example, for each fight in 2014, xR is created using an algorithm trained on fights in 2011-2013 and 2015-2020. Then, for all fights outside of 2011-2020, xR is generated using all `r num_fights_training` fights in the 2011-2020 sample. This paradigm balances the need to avoid overfitting caused by training and predicting on the same fights with the consistency that comes from computing a metric using (nearly) the same algorithm over all of UFC history and into the future.
+
+As demonstrated in my prior post, the algorithm is able to predict round scores with a high degree of accuracy and generate well-calibrated probabilities for each possible round score. That is, for each round in the UFC, we use the algorithm to recover the probability that the judges will score the round 10-9, 10-8, 9-10, or 8-10. Then, using these round score probabilities, we compute the probability of each fighter winning that round.
 
 For each round that does not end via knockout or submission, xR is simply the probability that a particular fighter won the round. Hence, xR treats each round as a single point that is up for grabs and uses round win probabilities to partition that point between the two fighters. Then, for each round that ends in a knockout or submission, the winning fighter's xR for that round is 1 and the losing fighter's xR for that round is 0. The equation below defines xR for a given fighter as a piece-wise function.
 
@@ -190,7 +194,7 @@ kable(tbl_df, format = 'html', caption = 'Average earned fight xR% among winners
 
 As a more concrete example, Table \@ref(tab:ufc-245-xr) below shows the xR breakdown for the UFC 245 main event between Kamaru Usman and Colby Covington. The fight was close heading into the fifth round where Usman won by knockout. Conventional metrics like win percent and finish percent assigned this fight as a one for Usman and a zero for Covington. However, those metrics leave a lot to be desired in terms of descriptive value, which is exactly why we turn to xR. 
 
-According to the underlying xR algorithm, Covington had a 68.9% probability of winning the first round on the judges' scorecard, so his xR for this round was 0.689. No matter what happened in subsequent rounds, Covington would retain this xR for that round.
+According to the underlying xR algorithm, Covington had a 71.8% probability of winning the first round on the judges' scorecard, so his xR for this round was 0.718. No matter what happened in subsequent rounds, Covington would retain this xR for that round.
 
 ```{r ufc-245-xr}
 
@@ -331,7 +335,7 @@ kable(tbl_df, format = 'html', caption = 'Total xR and xR%', align = 'c', bookta
   footnote('-This table presents xR and xR% at the fight level.')
 ```
 
-Finally, while this does not necessarily fit into the argument on the robustness of xR% as metric, I wanted to comment on the xR distribution in this example. The xR for round 3 went almost entirely to Volkanovski, yet I believe it is safe to say that round 3 was particularly close in the eyes of all viewers. As one of those viewers, I personally disagree with the distribution of xR here. However, I went back and checked out the official statistics for each round of this fight, and Volkanovski had a clear edge in round 3 *on paper*. This illustrates a limitation of xR: sometimes statistics do no tell the whole story. If you look at the official statistics for round 3, you should clearly see why most of the xR was given to Volkanovski. When the statistics are misleading, like in round 3 of this fight, xR may sometimes struggle to properly reflect reality. Nevertheless, while xR is not a perfect metric, I would argue that the judges are not perfect either. Both are wrong at times, but as I argued in this section, xR% is closer to the truth than the judges when it is wrong since it essentially awards partial credit to each fighter.
+Finally, while this does not necessarily fit into the argument on the robustness of xR% as metric, I wanted to comment on the xR distribution in this example. The xR for round 3 went almost entirely to Volkanovski, yet I believe it is safe to say that round 3 was particularly close in the eyes of all viewers. As one of those viewers, I personally disagree with the distribution of xR here. However, I went back and checked out the official statistics for each round of this fight, and Volkanovski had a clear edge in round 3 *on paper*. This illustrates a limitation of xR: sometimes statistics do not tell the whole story. If you look at the official statistics for round 3, you should clearly see why most of the xR was given to Volkanovski. When the statistics are misleading, like in round 3 of this fight, xR may sometimes struggle to properly reflect reality. Nevertheless, while xR is not a perfect metric, I would argue that the judges are not perfect either. Both are wrong at times, but as I argued in this section, xR% is closer to the truth than the judges when it is wrong since it essentially awards partial credit to each fighter.
 
 # xR is stable
 
