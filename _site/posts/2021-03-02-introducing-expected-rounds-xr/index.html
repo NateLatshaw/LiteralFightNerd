@@ -2415,7 +2415,9 @@ d-appendix d-footnote-list a.footnote-backlink {
 <p><img src="introducing-expected-rounds-xr_files/figure-html5/unnamed-chunk-2-1.png" width="624" data-distill-preview=1 /></p>
 </div>
 <h1 id="methodology">Methodology</h1>
-<p>The xR metric is an extension of a machine learning algorithm I developed in a <a href="https://literalfightnerd.com/posts/2021-02-19-introducing-judgeai/">previous blog post</a>. That algorithm uses official UFC round-level striking and grappling statistics to predict judges’ scores by round. The model used to create xR is trained on 1,670 UFC fights that all ended in a decision by the judges across 2011-2020. As demonstrated in my prior post, the model is able to predict round scores with a high degree of accuracy and generate well-calibrated probabilities for each possible round score. That is, for each round in the UFC, we use the algorithm to recover the probability that the judges will score the round 10-9, 10-8, 9-10, or 8-10. Then, using these round score probabilities, we compute the probability of each fighter winning that round.</p>
+<p>The xR metric is an extension of a machine learning algorithm I developed in a <a href="https://literalfightnerd.com/posts/2021-02-19-introducing-judgeai/">previous blog post</a>. That algorithm uses official UFC round-level striking and grappling statistics to predict judges’ scores by round. The algorithm used to create xR is trained on 1,670 UFC fights that all ended in a decision by the judges across 2011-2020.</p>
+<p>Note that to avoid overfitting, for each fight within a given year in 2011-2020, xR is computed using an algorithm trained on fights in all other years within 2011-2020. As an example, for each fight in 2014, xR is created using an algorithm trained on fights in 2011-2013 and 2015-2020. Then, for all fights outside of 2011-2020, xR is generated using all 1,670 fights in the 2011-2020 sample. This paradigm balances the need to avoid overfitting caused by training and predicting on the same fights with the consistency that comes from computing a metric using (nearly) the same algorithm over all of UFC history and into the future.</p>
+<p>As demonstrated in my prior post, the algorithm is able to predict round scores with a high degree of accuracy and generate well-calibrated probabilities for each possible round score. That is, for each round in the UFC, we use the algorithm to recover the probability that the judges will score the round 10-9, 10-8, 9-10, or 8-10. Then, using these round score probabilities, we compute the probability of each fighter winning that round.</p>
 <p>For each round that does not end via knockout or submission, xR is simply the probability that a particular fighter won the round. Hence, xR treats each round as a single point that is up for grabs and uses round win probabilities to partition that point between the two fighters. Then, for each round that ends in a knockout or submission, the winning fighter’s xR for that round is 1 and the losing fighter’s xR for that round is 0. The equation below defines xR for a given fighter as a piece-wise function.</p>
 <p><strong>xR for a given fighter and round:</strong> <span class="math display">\[\begin{equation}
 xR = 
@@ -2531,7 +2533,7 @@ Average Winner’s Earned xR%
 Split Decision
 </td>
 <td style="text-align:center;">
-59.6%
+56.1%
 </td>
 </tr>
 <tr>
@@ -2539,7 +2541,7 @@ Split Decision
 Unanimous Decision
 </td>
 <td style="text-align:center;">
-78.5%
+74.5%
 </td>
 </tr>
 <tr>
@@ -2555,7 +2557,7 @@ Submission
 Knockout
 </td>
 <td style="text-align:center;">
-90.1%
+90.0%
 </td>
 </tr>
 </tbody>
@@ -2574,7 +2576,7 @@ Knockout
 </table>
 </div>
 <p>As a more concrete example, Table <a href="#tab:ufc-245-xr">3</a> below shows the xR breakdown for the UFC 245 main event between Kamaru Usman and Colby Covington. The fight was close heading into the fifth round where Usman won by knockout. Conventional metrics like win percent and finish percent assigned this fight as a one for Usman and a zero for Covington. However, those metrics leave a lot to be desired in terms of descriptive value, which is exactly why we turn to xR.</p>
-<p>According to the underlying xR algorithm, Covington had a 68.9% probability of winning the first round on the judges’ scorecard, so his xR for this round was 0.689. No matter what happened in subsequent rounds, Covington would retain this xR for that round.</p>
+<p>According to the underlying xR algorithm, Covington had a 71.8% probability of winning the first round on the judges’ scorecard, so his xR for this round was 0.718. No matter what happened in subsequent rounds, Covington would retain this xR for that round.</p>
 <div class="layout-chunk" data-layout="l-body">
 <table class="table table-striped" style="font-size: 24px; margin-left: auto; margin-right: auto;border-bottom: 0;">
 <caption style="font-size: initial !important;">
@@ -2599,10 +2601,10 @@ Covington xR
 1
 </td>
 <td style="text-align:center;">
-0.311
+0.282
 </td>
 <td style="text-align:center;">
-0.689
+0.718
 </td>
 </tr>
 <tr>
@@ -2610,10 +2612,10 @@ Covington xR
 2
 </td>
 <td style="text-align:center;">
-0.347
+0.308
 </td>
 <td style="text-align:center;">
-0.653
+0.692
 </td>
 </tr>
 <tr>
@@ -2621,10 +2623,10 @@ Covington xR
 3
 </td>
 <td style="text-align:center;">
-0.975
+0.974
 </td>
 <td style="text-align:center;">
-0.025
+0.026
 </td>
 </tr>
 <tr>
@@ -2632,10 +2634,10 @@ Covington xR
 4
 </td>
 <td style="text-align:center;">
-0.313
+0.284
 </td>
 <td style="text-align:center;">
-0.687
+0.716
 </td>
 </tr>
 <tr>
@@ -2689,10 +2691,10 @@ xR%
 Kamaru Usman
 </td>
 <td style="text-align:center;">
-2.95
+2.85
 </td>
 <td style="text-align:center;">
-58.9%
+57.0%
 </td>
 </tr>
 <tr>
@@ -2700,10 +2702,10 @@ Kamaru Usman
 Colby Covington
 </td>
 <td style="text-align:center;">
-2.05
+2.15
 </td>
 <td style="text-align:center;">
-41.1%
+43.0%
 </td>
 </tr>
 </tbody>
@@ -2799,7 +2801,7 @@ Finish % accuracy
 252
 </td>
 <td style="text-align:center;">
-55.6%
+55.2%
 </td>
 <td style="text-align:center;">
 213
@@ -2877,7 +2879,7 @@ Finish % accuracy
 391
 </td>
 <td style="text-align:center;">
-55.8%
+55.2%
 </td>
 <td style="text-align:center;">
 324
@@ -2903,7 +2905,7 @@ Finish % accuracy
 386
 </td>
 <td style="text-align:center;">
-58.3%
+56.5%
 </td>
 <td style="text-align:center;">
 340
@@ -2929,7 +2931,7 @@ Finish % accuracy
 353
 </td>
 <td style="text-align:center;">
-56.7%
+57.2%
 </td>
 <td style="text-align:center;">
 310
@@ -2955,7 +2957,7 @@ Finish % accuracy
 369
 </td>
 <td style="text-align:center;">
-55.6%
+57.5%
 </td>
 <td style="text-align:center;">
 330
@@ -2981,7 +2983,7 @@ Finish % accuracy
 393
 </td>
 <td style="text-align:center;">
-55.7%
+55.0%
 </td>
 <td style="text-align:center;">
 350
@@ -3007,7 +3009,7 @@ Finish % accuracy
 351
 </td>
 <td style="text-align:center;">
-55.0%
+54.1%
 </td>
 <td style="text-align:center;">
 325
@@ -3033,7 +3035,7 @@ Total
 3,309
 </td>
 <td style="text-align:center;font-weight: bold;">
-56.2%
+56.0%
 </td>
 <td style="text-align:center;font-weight: bold;">
 2,873
@@ -3090,10 +3092,10 @@ Holloway xR
 1
 </td>
 <td style="text-align:center;">
-0.184
+0.307
 </td>
 <td style="text-align:center;">
-0.816
+0.693
 </td>
 </tr>
 <tr>
@@ -3101,10 +3103,10 @@ Holloway xR
 2
 </td>
 <td style="text-align:center;">
-0.300
+0.484
 </td>
 <td style="text-align:center;">
-0.700
+0.516
 </td>
 </tr>
 <tr>
@@ -3112,10 +3114,10 @@ Holloway xR
 3
 </td>
 <td style="text-align:center;">
-0.967
+0.909
 </td>
 <td style="text-align:center;">
-0.033
+0.091
 </td>
 </tr>
 <tr>
@@ -3123,10 +3125,10 @@ Holloway xR
 4
 </td>
 <td style="text-align:center;">
-0.922
+0.849
 </td>
 <td style="text-align:center;">
-0.078
+0.151
 </td>
 </tr>
 <tr>
@@ -3134,10 +3136,10 @@ Holloway xR
 5
 </td>
 <td style="text-align:center;">
-0.974
+0.949
 </td>
 <td style="text-align:center;">
-0.026
+0.051
 </td>
 </tr>
 </tbody>
@@ -3185,10 +3187,10 @@ xR%
 Alexander Volkanovski
 </td>
 <td style="text-align:center;">
-3.35
+3.50
 </td>
 <td style="text-align:center;">
-66.9%
+70.0%
 </td>
 </tr>
 <tr>
@@ -3196,10 +3198,10 @@ Alexander Volkanovski
 Max Holloway
 </td>
 <td style="text-align:center;">
-1.65
+1.50
 </td>
 <td style="text-align:center;">
-33.1%
+30.0%
 </td>
 </tr>
 </tbody>
@@ -3217,7 +3219,7 @@ Max Holloway
 </tfoot>
 </table>
 </div>
-<p>Finally, while this does not necessarily fit into the argument on the robustness of xR% as metric, I wanted to comment on the xR distribution in this example. The xR for round 3 went almost entirely to Volkanovski, yet I believe it is safe to say that round 3 was particularly close in the eyes of all viewers. As one of those viewers, I personally disagree with the distribution of xR here. However, I went back and checked out the official statistics for each round of this fight, and Volkanovski had a clear edge in round 3 <em>on paper</em>. This illustrates a limitation of xR: sometimes statistics do no tell the whole story. If you look at the official statistics for round 3, you should clearly see why most of the xR was given to Volkanovski. When the statistics are misleading, like in round 3 of this fight, xR may sometimes struggle to properly reflect reality. Nevertheless, while xR is not a perfect metric, I would argue that the judges are not perfect either. Both are wrong at times, but as I argued in this section, xR% is closer to the truth than the judges when it is wrong since it essentially awards partial credit to each fighter.</p>
+<p>Finally, while this does not necessarily fit into the argument on the robustness of xR% as metric, I wanted to comment on the xR distribution in this example. The xR for round 3 went almost entirely to Volkanovski, yet I believe it is safe to say that round 3 was particularly close in the eyes of all viewers. As one of those viewers, I personally disagree with the distribution of xR here. However, I went back and checked out the official statistics for each round of this fight, and Volkanovski had a clear edge in round 3 <em>on paper</em>. This illustrates a limitation of xR: sometimes statistics do not tell the whole story. If you look at the official statistics for round 3, you should clearly see why most of the xR was given to Volkanovski. When the statistics are misleading, like in round 3 of this fight, xR may sometimes struggle to properly reflect reality. Nevertheless, while xR is not a perfect metric, I would argue that the judges are not perfect either. Both are wrong at times, but as I argued in this section, xR% is closer to the truth than the judges when it is wrong since it essentially awards partial credit to each fighter.</p>
 <h1 id="xr-is-stable">xR is stable</h1>
 <p>When I discuss a fighter evaluation metric’s stability, I am really referring to the degree to which the metric can swing on a fight-to-fight basis. Stability is important because a fighter evaluation metric should represent the quality of a fighter and then only improve or degrade as quickly as the fighter it is measuring improves or degrades. Fighters can have a bad fight, so we do not want a metric to overreact to a single performance - that would make the metric unstable.</p>
 <p>To defend the claim that xR% is a more stable metric than win percent, I will first use a conceptual argument and then provide a mathematical argument.</p>
