@@ -73,7 +73,7 @@ Currently, fighters are frequently evaluated on their win percent (number of fig
 
 ### Pushing the envelope with xR
 
-Enter expected rounds (xR) and expected round percent (xR%), new advanced metrics that aim to address the sample size and nuance issues that typically plague other fighter evaluation measures. There are many reasons why I believe the MMA community could benefit from these metrics.
+Enter Expected Rounds (xR) and Expected Round Percent (xR%), new advanced metrics that aim to address the sample size and nuance issues that typically plague other fighter evaluation measures. There are many reasons why I believe the MMA community could benefit from these metrics.
 
 First and foremost, as an advanced metric, xR is interpretable and easy to understand: 
 

@@ -2,26 +2,30 @@
 <urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://www.sitemaps.org/schemas/sitemap/0.9 http://www.sitemaps.org/schemas/sitemap/0.9/sitemap.xsd" version="1.0">
   <url>
     <loc>https://literalfightnerd.com/about.html</loc>
-    <lastmod>2021-04-27T22:37:08-04:00</lastmod>
+    <lastmod>2021-04-27T23:37:08-04:00</lastmod>
   </url>
   <url>
     <loc>https://literalfightnerd.com/</loc>
-    <lastmod>2021-02-04T22:44:14-05:00</lastmod>
+    <lastmod>2021-02-04T23:44:14-05:00</lastmod>
   </url>
   <url>
     <loc>https://literalfightnerd.com/ufc-stats-web-app.html</loc>
-    <lastmod>2021-02-25T22:34:30-05:00</lastmod>
+    <lastmod>2021-02-25T23:34:30-05:00</lastmod>
+  </url>
+  <url>
+    <loc>https://literalfightnerd.com/posts/2022-01-05-visualizing-fighter-styles/</loc>
+    <lastmod>2022-01-05T22:56:24-05:00</lastmod>
   </url>
   <url>
     <loc>https://literalfightnerd.com/posts/2021-03-02-introducing-expected-rounds-xr/</loc>
-    <lastmod>2021-06-28T23:55:44-04:00</lastmod>
+    <lastmod>2022-01-02T11:34:50-05:00</lastmod>
   </url>
   <url>
     <loc>https://literalfightnerd.com/posts/2021-02-25-extending-judgeai/</loc>
-    <lastmod>2021-06-24T11:47:16-04:00</lastmod>
+    <lastmod>2021-06-24T12:47:16-04:00</lastmod>
   </url>
   <url>
     <loc>https://literalfightnerd.com/posts/2021-02-19-introducing-judgeai/</loc>
-    <lastmod>2021-06-24T11:32:00-04:00</lastmod>
+    <lastmod>2021-06-24T12:32:00-04:00</lastmod>
   </url>
 </urlset>

@@ -7,7 +7,16 @@
     <description>Bringing rigorous quantitative analysis to MMA
 </description>
     <generator>Distill</generator>
-    <lastBuildDate>Tue, 02 Mar 2021 00:00:00 +0000</lastBuildDate>
+    <lastBuildDate>Wed, 05 Jan 2022 00:00:00 +0000</lastBuildDate>
+    <item>
+      <title>Visualizing Fighter Styles</title>
+      <dc:creator>Nate Latshaw</dc:creator>
+      <link>https://literalfightnerd.com/posts/2022-01-05-visualizing-fighter-styles</link>
+      <description>An exploratory look at how modern UFC athletes fight</description>
+      <guid>https://literalfightnerd.com/posts/2022-01-05-visualizing-fighter-styles</guid>
+      <pubDate>Wed, 05 Jan 2022 00:00:00 +0000</pubDate>
+      <media:content url="https://literalfightnerd.com/posts/2022-01-05-visualizing-fighter-styles/visualizing-fighter-styles_files/figure-html5/unnamed-chunk-9-1.png" medium="image" type="image/png" width="1248" height="768"/>
+    </item>
     <item>
       <title>Introducing Expected Rounds (xR)</title>
       <dc:creator>Nate Latshaw</dc:creator>
