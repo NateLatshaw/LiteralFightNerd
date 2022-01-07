@@ -199,7 +199,7 @@ ggplot(plot_df, aes(x = Distance_Percent)) +
   annotate('text', size = 2.5, label = 'Distance Striking Heavy\n(highest 33% of fighters)', 
            x = distance_percent_p67 + ((1 - distance_percent_p67) / 2), 
            y = 115) + 
-  labs(title = 'Distribution of UFC fighter career Distance %', 
+  labs(title = 'Distribution of UFC Fighter Career Distance %', 
        x = '\nDistance %', 
        y = 'Number of fighters\n', 
        caption = '\n-Note: Figure includes UFC fighters who fought at least once since 2019 and have at least 10 minutes of career fight time.') + 
@@ -262,7 +262,7 @@ ggplot(plot_df, aes(x = Control_Rate)) +
   annotate('text', size = 2.5, label = 'Dominant Wrestling/Grappling\n(highest 33% of fighters)', 
            x = control_rate_p67 + ((1 - control_rate_p67) / 2), 
            y = 66) + 
-  labs(title = 'Distribution of UFC fighter career Control Rate', 
+  labs(title = 'Distribution of UFC Fighter Career Control Rate', 
        x = '\nControl Rate', 
        y = 'Number of fighters\n', 
        caption = '\n-Note: Figure includes UFC fighters who fought at least once since 2019 and have at least 5 minutes of career clinch/ground time.') + 
@@ -392,7 +392,7 @@ ggplot(careers[F1_Name %in% fnames], aes(x = Distance_Percent, y = Control_Rate)
   annotate('rect', xmin = distance_percent_p67, xmax = 1, ymin = control_rate_p67, ymax = 1, fill = 'gray60', alpha = .4) + 
   annotate('rect', xmin = 0, xmax = distance_percent_p33, ymin = 0, ymax = control_rate_p33, fill = 'gray60', alpha = .4) + 
   annotate('rect', xmin = distance_percent_p67, xmax = 1, ymin = 0, ymax = control_rate_p33, fill = 'gray60', alpha = .4) + 
-  labs(title = 'Styles of Notable UFC Fighters', 
+  labs(title = 'Fighter Styles of Notable UFC Athletes', 
        subtitle = 'January 5, 2022', 
        x = '\nDistance %', 
        y = 'Control Rate\n') + 
