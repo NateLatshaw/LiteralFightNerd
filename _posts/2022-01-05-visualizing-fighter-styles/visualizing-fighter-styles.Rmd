@@ -42,8 +42,8 @@ seed <- 123
 paired_colors4 <- brewer.pal(6, 'Paired')[c(6,2,5,1)]
 
 # load data
-rounds <- readRDS(paste0(data_path, 'round_stats_20211230.RDS'))
-fights <- readRDS(paste0(data_path, 'fight_stats_20211230.RDS'))
+rounds <- readRDS(paste0(data_path, 'round_stats_20220106.RDS'))
+fights <- readRDS(paste0(data_path, 'fight_stats_20220106.RDS'))
 
 # create variables
 min_year <- fights[, year(min(EventDate))]
@@ -99,23 +99,23 @@ As more young athletes are introduced to MMA earlier in life and have more time 
 
 ```{r, layout = 'l-body-outset'}
 # format data
-tbl <- fights[WeightClass_clean != 'Catchweight' & F1_NoContest == F, 
+tbl <- fights[WeightClass_clean != 'Catchweight' & F1_NoContest == F & year(EventDate) %in% 2012:2021, 
               .(DistPct = sum(FightDur_Min - F1_CtrlMin - F2_CtrlMin) / sum(FightDur_Min)), 
               by = .(WeightClass = WeightClass_clean, Year = year(EventDate))][order(Year)]
 
 tbl <- rbind(tbl, 
-             fights[WeightClass_clean != 'Catchweight' & F1_NoContest == F & 
+             fights[WeightClass_clean != 'Catchweight' & F1_NoContest == F & year(EventDate) %in% 2012:2021 & 
                       WeightClass_clean %in% c('Flyweight', 'Bantamweight', 'Featherweight', 'Lightweight', 'Welterweight', 
                                              'Middleweight', 'Light Heavyweight', 'Heavyweight'), 
                     .(DistPct = sum(FightDur_Min - F1_CtrlMin - F2_CtrlMin) / sum(FightDur_Min), 
                       WeightClass = "Men's Weight Classes"), 
                     by = .(Year = year(EventDate))], 
-             fights[WeightClass_clean != 'Catchweight' & F1_NoContest == F & 
+             fights[WeightClass_clean != 'Catchweight' & F1_NoContest == F & year(EventDate) %in% 2012:2021 & 
                       WeightClass_clean %in% c("Women\'s Strawweight", "Women's Flyweight", "Women's Bantamweight", "Women's Featherweight"), 
                     .(DistPct = sum(FightDur_Min - F1_CtrlMin - F2_CtrlMin) / sum(FightDur_Min), 
                       WeightClass = "Women's Weight Classes"), 
                     by = .(Year = year(EventDate))], 
-             fights[WeightClass_clean != 'Catchweight' & F1_NoContest == F, 
+             fights[WeightClass_clean != 'Catchweight' & F1_NoContest == F & year(EventDate) %in% 2012:2021, 
                     .(DistPct = sum(FightDur_Min - F1_CtrlMin - F2_CtrlMin) / sum(FightDur_Min), 
                         WeightClass = 'All UFC Weight Classes'), 
                     by = .(Year = year(EventDate))])
@@ -352,7 +352,7 @@ The fighters at the top left of the figure are known for their suffocating wrest
 ```{r, layout = 'l-body-outset'}
 fnames <- c('Merab Dvalishvili', 'Bryce Mitchell', 'Curtis Blaydes', 'Islam Makhachev', 
             'Justin Gaethje', 'Pedro Munhoz', 'TJ Dillashaw', 'Henry Cejudo', 
-            'Kevin Holland', 'Charles Rosa', 'Darren Stewart', 'Ed Herman', 
+            'Kevin Holland', 'Charles Rosa', 'Darren Stewart', 'John Phillips', 
             'Giga Chikadze', 'Edson Barboza', 'Stephen Thompson', 'Paulo Costa')
 
 ggplot(careers[F1_Name %in% fnames], aes(x = Distance_Percent, y = Control_Rate)) + 

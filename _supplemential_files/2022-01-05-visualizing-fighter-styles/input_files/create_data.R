@@ -21,8 +21,8 @@ fights <- fights[grepl('UFC', Event) | (grepl('The Ultimate Fighter', Event) & g
 
 all_fights <- copy(fights)
 all_fights <- all_fights[EventDate <= '2021-12-31']
-rounds <- rounds[year(EventDate) %in% 2012:2021]
-fights <- fights[year(EventDate) %in% 2012:2021]
+rounds <- rounds[EventDate <= '2021-12-31']
+fights <- fights[EventDate <= '2021-12-31']
 
 # save data
 current_dt <- gsub('-', '', Sys.Date())
