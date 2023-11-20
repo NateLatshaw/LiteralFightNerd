@@ -1,0 +1,40 @@
+project:
+  type: website
+  output-dir: _site
+
+website:
+  title: "LiteralFightNerd"
+  site-url: https://literalfightnerd.com/
+  description: "Bringing rigorous quantitative analysis to combat sports in a form that is approachable for non-technical audiences"
+  twitter-card:
+    creator: "@NateLatshaw"
+  open-graph: true
+  navbar:
+    right:
+    - text: About Me
+      href: about.qmd
+    - text: My Other Websites
+      menu: 
+        - text: UFC Fight Night Statistical Companion
+          href: https://natelatshaw.shinyapps.io/ufc_fight_night_statistical_companion/
+        - text: UFC DFS Simulator & Optimizer
+          href: https://natelatshaw.shinyapps.io/ufc-dfs-simulator-and-optimizer/
+        - text: MMAOB Tale of the Tape
+          href: https://www.mmaoddsbreaker.com/mmaoddsbreaker-tale-of-the-tape/
+        - text: Linktree
+          href: https://linktr.ee/natelatshaw
+    - icon: twitter
+      text: Twitter
+      href: https://twitter.com/NateLatshaw
+    - icon: linkedin
+      text: LinkedIn
+      href: https://www.linkedin.com/in/nathaniel-latshaw/
+theme:
+    dark: darkly
+    light: flatly
+format:
+  html:
+    css: styles.css
+
+
+

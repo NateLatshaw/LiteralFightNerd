@@ -1,0 +1,1097 @@
+<!DOCTYPE html>
+<html xmlns="http://www.w3.org/1999/xhtml" lang="en" xml:lang="en"><head>
+
+<meta charset="utf-8">
+<meta name="generator" content="quarto-1.3.353">
+
+<meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=yes">
+
+<meta name="author" content="Nate Latshaw">
+<meta name="dcterms.date" content="2021-03-02">
+<meta name="description" content="A new advanced fighter evaluation metric that is interpretable, informative, predictive, robust, and stable">
+
+<title>LiteralFightNerd - Introducing Expected Rounds (xR)</title>
+<style>
+code{white-space: pre-wrap;}
+span.smallcaps{font-variant: small-caps;}
+div.columns{display: flex; gap: min(4vw, 1.5em);}
+div.column{flex: auto; overflow-x: auto;}
+div.hanging-indent{margin-left: 1.5em; text-indent: -1.5em;}
+ul.task-list{list-style: none;}
+ul.task-list li input[type="checkbox"] {
+  width: 0.8em;
+  margin: 0 0.8em 0.2em -1em; /* quarto-specific, see https://github.com/quarto-dev/quarto-cli/issues/4556 */ 
+  vertical-align: middle;
+}
+</style>
+
+
+<script src="../../site_libs/quarto-nav/quarto-nav.js"></script>
+<script src="../../site_libs/quarto-nav/headroom.min.js"></script>
+<script src="../../site_libs/clipboard/clipboard.min.js"></script>
+<script src="../../site_libs/quarto-search/autocomplete.umd.js"></script>
+<script src="../../site_libs/quarto-search/fuse.min.js"></script>
+<script src="../../site_libs/quarto-search/quarto-search.js"></script>
+<meta name="quarto:offset" content="../../">
+<script src="../../site_libs/quarto-html/quarto.js"></script>
+<script src="../../site_libs/quarto-html/popper.min.js"></script>
+<script src="../../site_libs/quarto-html/tippy.umd.min.js"></script>
+<script src="../../site_libs/quarto-html/anchor.min.js"></script>
+<link href="../../site_libs/quarto-html/tippy.css" rel="stylesheet">
+<link href="../../site_libs/quarto-html/quarto-syntax-highlighting.css" rel="stylesheet" class="quarto-color-scheme" id="quarto-text-highlighting-styles">
+<link href="../../site_libs/quarto-html/quarto-syntax-highlighting-dark.css" rel="stylesheet" class="quarto-color-scheme quarto-color-alternate" id="quarto-text-highlighting-styles">
+<script src="../../site_libs/bootstrap/bootstrap.min.js"></script>
+<link href="../../site_libs/bootstrap/bootstrap-icons.css" rel="stylesheet">
+<link href="../../site_libs/bootstrap/bootstrap.min.css" rel="stylesheet" class="quarto-color-scheme" id="quarto-bootstrap" data-mode="light">
+<link href="../../site_libs/bootstrap/bootstrap-dark.min.css" rel="stylesheet" class="quarto-color-scheme quarto-color-alternate" id="quarto-bootstrap" data-mode="dark">
+<script id="quarto-search-options" type="application/json">{
+  "location": "navbar",
+  "copy-button": false,
+  "collapse-after": 3,
+  "panel-placement": "end",
+  "type": "overlay",
+  "limit": 20,
+  "language": {
+    "search-no-results-text": "No results",
+    "search-matching-documents-text": "matching documents",
+    "search-copy-link-title": "Copy link to search",
+    "search-hide-matches-text": "Hide additional matches",
+    "search-more-match-text": "more match in this document",
+    "search-more-matches-text": "more matches in this document",
+    "search-clear-button-title": "Clear",
+    "search-detached-cancel-button-title": "Cancel",
+    "search-submit-button-title": "Submit"
+  }
+}</script>
+
+<script src="../../site_libs/kePrint-0.0.1/kePrint.js"></script>
+<link href="../../site_libs/lightable-0.0.1/lightable.css" rel="stylesheet">
+
+  <script src="https://polyfill.io/v3/polyfill.min.js?features=es6"></script>
+  <script src="https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-chtml-full.js" type="text/javascript"></script>
+
+<link rel="stylesheet" href="../../styles.css">
+<meta property="og:title" content="LiteralFightNerd - Introducing Expected Rounds (xR)">
+<meta property="og:description" content="A new advanced fighter evaluation metric that is interpretable, informative, predictive, robust, and stable">
+<meta property="og:image" content="https://literalfightnerd.com/posts/2021-03-02-introducing-expected-rounds-xr/introducing-expected-rounds-xr_files/figure-html/unnamed-chunk-4-1.png">
+<meta property="og:site-name" content="LiteralFightNerd">
+<meta property="og:image:height" content="960">
+<meta property="og:image:width" content="1344">
+<meta name="twitter:title" content="LiteralFightNerd - Introducing Expected Rounds (xR)">
+<meta name="twitter:description" content="A new advanced fighter evaluation metric that is interpretable, informative, predictive, robust, and stable">
+<meta name="twitter:image" content="https://literalfightnerd.com/posts/2021-03-02-introducing-expected-rounds-xr/introducing-expected-rounds-xr_files/figure-html/unnamed-chunk-4-1.png">
+<meta name="twitter:creator" content="@NateLatshaw">
+<meta name="twitter:image-height" content="960">
+<meta name="twitter:image-width" content="1344">
+<meta name="twitter:card" content="summary_large_image">
+</head>
+
+<body class="nav-fixed">
+
+<div id="quarto-search-results"></div>
+  <header id="quarto-header" class="headroom fixed-top">
+    <nav class="navbar navbar-expand-lg navbar-dark ">
+      <div class="navbar-container container-fluid">
+      <div class="navbar-brand-container">
+    <a class="navbar-brand" href="../../index.html">
+    <span class="navbar-title">LiteralFightNerd</span>
+    </a>
+  </div>
+            <div id="quarto-search" class="" title="Search"></div>
+          <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarCollapse" aria-controls="navbarCollapse" aria-expanded="false" aria-label="Toggle navigation" onclick="if (window.quartoToggleHeadroom) { window.quartoToggleHeadroom(); }">
+  <span class="navbar-toggler-icon"></span>
+</button>
+          <div class="collapse navbar-collapse" id="navbarCollapse">
+            <ul class="navbar-nav navbar-nav-scroll ms-auto">
+  <li class="nav-item">
+    <a class="nav-link" href="../../about.html" rel="" target="">
+ <span class="menu-text">About Me</span></a>
+  </li>  
+  <li class="nav-item dropdown ">
+    <a class="nav-link dropdown-toggle" href="#" id="nav-menu-my-other-websites" role="button" data-bs-toggle="dropdown" aria-expanded="false" rel="" target="">
+ <span class="menu-text">My Other Websites</span>
+    </a>
+    <ul class="dropdown-menu dropdown-menu-end" aria-labelledby="nav-menu-my-other-websites">    
+        <li>
+    <a class="dropdown-item" href="https://natelatshaw.shinyapps.io/ufc_fight_night_statistical_companion/" rel="" target="">
+ <span class="dropdown-text">UFC Fight Night Statistical Companion</span></a>
+  </li>  
+        <li>
+    <a class="dropdown-item" href="https://natelatshaw.shinyapps.io/ufc-dfs-simulator-and-optimizer/" rel="" target="">
+ <span class="dropdown-text">UFC DFS Simulator &amp; Optimizer</span></a>
+  </li>  
+        <li>
+    <a class="dropdown-item" href="https://www.mmaoddsbreaker.com/mmaoddsbreaker-tale-of-the-tape/" rel="" target="">
+ <span class="dropdown-text">MMAOB Tale of the Tape</span></a>
+  </li>  
+        <li>
+    <a class="dropdown-item" href="https://linktr.ee/natelatshaw" rel="" target="">
+ <span class="dropdown-text">Linktree</span></a>
+  </li>  
+    </ul>
+  </li>
+  <li class="nav-item">
+    <a class="nav-link" href="https://twitter.com/NateLatshaw" rel="" target=""><i class="bi bi-twitter" role="img">
+</i> 
+ <span class="menu-text">Twitter</span></a>
+  </li>  
+  <li class="nav-item">
+    <a class="nav-link" href="https://www.linkedin.com/in/nathaniel-latshaw/" rel="" target=""><i class="bi bi-linkedin" role="img">
+</i> 
+ <span class="menu-text">LinkedIn</span></a>
+  </li>  
+</ul>
+            <div class="quarto-navbar-tools">
+  <a href="" class="quarto-color-scheme-toggle quarto-navigation-tool  px-1" onclick="window.quartoToggleColorScheme(); return false;" title="Toggle dark mode"><i class="bi"></i></a>
+</div>
+          </div> <!-- /navcollapse -->
+      </div> <!-- /container-fluid -->
+    </nav>
+</header>
+<!-- content -->
+<header id="title-block-header" class="quarto-title-block default page-columns page-full">
+  <div class="quarto-title-banner page-columns page-full">
+    <div class="quarto-title column-body">
+      <h1 class="title">Introducing Expected Rounds (xR)</h1>
+                  <div>
+        <div class="description">
+          <p>A new advanced fighter evaluation metric that is interpretable, informative, predictive, robust, and stable</p>
+        </div>
+      </div>
+                </div>
+  </div>
+    
+  
+  <div class="quarto-title-meta">
+
+      <div>
+      <div class="quarto-title-meta-heading">Author</div>
+      <div class="quarto-title-meta-contents">
+               <p>Nate Latshaw </p>
+            </div>
+    </div>
+      
+      <div>
+      <div class="quarto-title-meta-heading">Published</div>
+      <div class="quarto-title-meta-contents">
+        <p class="date">March 2, 2021</p>
+      </div>
+    </div>
+    
+      
+    </div>
+    
+  
+  </header><div id="quarto-content" class="quarto-container page-columns page-rows-contents page-layout-article page-navbar">
+<!-- sidebar -->
+<!-- margin-sidebar -->
+    <div id="quarto-margin-sidebar" class="sidebar margin-sidebar">
+        <nav id="TOC" role="doc-toc" class="toc-active">
+    <h2 id="toc-title">On this page</h2>
+   
+  <ul>
+  <li><a href="#introduction" id="toc-introduction" class="nav-link active" data-scroll-target="#introduction">Introduction</a>
+  <ul class="collapse">
+  <li><a href="#current-quantitative-fighter-evaluation-limitations" id="toc-current-quantitative-fighter-evaluation-limitations" class="nav-link" data-scroll-target="#current-quantitative-fighter-evaluation-limitations">Current quantitative fighter evaluation limitations</a></li>
+  <li><a href="#pushing-the-envelope-with-xr" id="toc-pushing-the-envelope-with-xr" class="nav-link" data-scroll-target="#pushing-the-envelope-with-xr">Pushing the envelope with xR</a></li>
+  <li><a href="#why-you-should-care-about-xr" id="toc-why-you-should-care-about-xr" class="nav-link" data-scroll-target="#why-you-should-care-about-xr">Why you should care about xR</a></li>
+  </ul></li>
+  <li><a href="#methodology" id="toc-methodology" class="nav-link" data-scroll-target="#methodology">Methodology</a></li>
+  <li><a href="#xr-is-informative" id="toc-xr-is-informative" class="nav-link" data-scroll-target="#xr-is-informative">xR is informative</a></li>
+  <li><a href="#xr-is-predictive" id="toc-xr-is-predictive" class="nav-link" data-scroll-target="#xr-is-predictive">xR is predictive</a></li>
+  <li><a href="#xr-is-robust" id="toc-xr-is-robust" class="nav-link" data-scroll-target="#xr-is-robust">xR is robust</a></li>
+  <li><a href="#xr-is-stable" id="toc-xr-is-stable" class="nav-link" data-scroll-target="#xr-is-stable">xR is stable</a></li>
+  <li><a href="#limitations-of-xr" id="toc-limitations-of-xr" class="nav-link" data-scroll-target="#limitations-of-xr">Limitations of xR</a></li>
+  <li><a href="#extensions-of-xr" id="toc-extensions-of-xr" class="nav-link" data-scroll-target="#extensions-of-xr">Extensions of xR</a></li>
+  <li><a href="#conclusion" id="toc-conclusion" class="nav-link" data-scroll-target="#conclusion">Conclusion</a></li>
+  </ul>
+</nav>
+    </div>
+<!-- main -->
+<main class="content quarto-banner-title-block" id="quarto-document-content">
+
+
+
+
+<section id="introduction" class="level1">
+<h1>Introduction</h1>
+<section id="current-quantitative-fighter-evaluation-limitations" class="level3">
+<h3 class="anchored" data-anchor-id="current-quantitative-fighter-evaluation-limitations">Current quantitative fighter evaluation limitations</h3>
+<p>Quantitative mixed martial arts (MMA) analysis features two recurring challenges: dealing with small samples sizes and capturing the nuance that is inherent to the sport. Mainstream fighter evaluation metrics do not properly address these challenges.</p>
+<p>In general, fighters do not have many professional MMA fights, and among their limited number of fights, the Ultimate Fighting Championship (UFC) is really the only MMA promotion that publicly tracks striking and grappling statistics from within each fight (though there are some exceptions). Hence, the amount of data that can be collected on each professional UFC fighter is limited, which makes quantitative analysis difficult.</p>
+<p>Further, MMA is a sport that features many different fighting styles and techniques that are difficult to quantify. Fights can end at any moment via knockout or submission, so there are a number of paths to victory for fighters that possess expertise in multiple MMA disciplines. However, finishing ability is not the only signal of dominance in MMA. Proper fighter evaluation metrics should not only measure finishing ability but should also capture other forms of dominance inside the octagon.</p>
+<p>Currently, fighters are frequently evaluated on their win percent (number of fights won divided by total number of fights) and finish percent (number of fights won via knockout or submission divided by number of fights won). However, both of these metrics are limited. In addition to small sample size issues, win percent fails to differentiate between close wins, dominant wins, and judging blunders. Finish percent measures a fighter’s ability to finish a fight, but as a broader measure of fighter dominance, it does not account for dominant wins by decision, which are arguably just as impressive as finishes.</p>
+</section>
+<section id="pushing-the-envelope-with-xr" class="level3">
+<h3 class="anchored" data-anchor-id="pushing-the-envelope-with-xr">Pushing the envelope with xR</h3>
+<p>Enter Expected Rounds (xR) and Expected Round Percent (xR%), new advanced metrics that aim to address the sample size and nuance issues that typically plague other fighter evaluation measures. There are many reasons why I believe the MMA community could benefit from these metrics.</p>
+<p>First and foremost, as an advanced metric, xR is interpretable and easy to understand:</p>
+<p><strong>xR is the number of rounds a fighter would expect to have won, on average, given his or her round-by-round performances</strong>.</p>
+<p>That’s it. Anyone who can understand that is capable of adopting this metric. The accompanying metric xR% is then just as straightforward:</p>
+<p><strong>xR% is the percent of rounds a fighter would expect to have won, on average, given his or her round-by-round performances</strong>.</p>
+<p>The rest of this post will cover the methodological details of these metrics and then step through a number of reasons why MMA audiences of all types should care about xR and xR%. However, I want it to be stated clearly up front that these are advanced metrics that are approachable for everyone. If the methodological details of these metrics do not interest you, feel free to skip over that section.</p>
+<p><em>You do not need to understand precisely how these metrics are computed in order to understand what they seek to measure and how they improve on current mainstream fighter evaluation metrics like win percent and finish percent.</em></p>
+</section>
+<section id="why-you-should-care-about-xr" class="level3">
+<h3 class="anchored" data-anchor-id="why-you-should-care-about-xr">Why you should care about xR</h3>
+<p>Before jumping into the methodology, below I’ve listed five reasons why I believe xR and xR% should be embraced by the MMA community.</p>
+<ol type="1">
+<li>xR and xR% are interpretable</li>
+<li>xR% is more informative than win percent and finish percent</li>
+<li>xR% is more predictive than win percent and finish percent</li>
+<li>xR% is more robust to judging blunders than win percent</li>
+<li>xR% is more stable than win percent</li>
+</ol>
+<p>The first reason, interpretability, has already been covered. It is my goal in this post to justify the remaining four reasons while ensuring that all readers are able to understand and interpret the figure below, which shows the career xR% of all current UFC champions.</p>
+<div class="cell preview-image" data-layout-align="center">
+<div class="cell-output-display">
+<div class="quarto-figure quarto-figure-center">
+<figure class="figure">
+<p><img src="introducing-expected-rounds-xr_files/figure-html/unnamed-chunk-4-1.png" class="img-fluid figure-img" width="672"></p>
+</figure>
+</div>
+</div>
+</div>
+</section>
+</section>
+<section id="methodology" class="level1">
+<h1>Methodology</h1>
+<p>The xR metric is an extension of a machine learning algorithm I developed in a <a href="https://literalfightnerd.com/posts/2021-02-19-introducing-judgeai/">previous blog post</a>. That algorithm uses official UFC round-level striking and grappling statistics to predict judges’ scores by round. The algorithm used to create xR is trained on 1,670 UFC fights that all ended in a decision by the judges across 2011-2020.</p>
+<p>Note that to avoid overfitting, for each fight within a given year in 2011-2020, xR is computed using an algorithm trained on fights in all other years within 2011-2020. As an example, for each fight in 2014, xR is created using an algorithm trained on fights in 2011-2013 and 2015-2020. Then, for all fights outside of 2011-2020, xR is generated using all 1,670 fights in the 2011-2020 sample. This paradigm balances the need to avoid overfitting caused by training and predicting on the same fights with the consistency that comes from computing a metric using (nearly) the same algorithm over all of UFC history and into the future.</p>
+<p>As demonstrated in my prior post, the algorithm is able to predict round scores with a high degree of accuracy and generate well-calibrated probabilities for each possible round score. That is, for each round in the UFC, we use the algorithm to recover the probability that the judges will score the round 10-9, 10-8, 9-10, or 8-10. Then, using these round score probabilities, we compute the probability of each fighter winning that round.</p>
+<p>For each round that does not end via knockout or submission, xR is simply the probability that a particular fighter won the round. Hence, xR treats each round as a single point that is up for grabs and uses round win probabilities to partition that point between the two fighters. Then, for each round that ends in a knockout or submission, the winning fighter’s xR for that round is 1 and the losing fighter’s xR for that round is 0. The equation below defines xR for a given fighter as a piece-wise function.</p>
+<p><strong>xR for a given fighter and round:</strong> <span class="math display">\[\begin{equation}
+xR =
+\begin{cases}
+0 &amp; \text{if fighter loses by knockout/submission} \\
+\text{round win probability} &amp; \text{if round goes the distance} \\
+1 &amp; \text{if fighter wins by knockout/submission}
+\end{cases}
+\end{equation}\]</span></p>
+<p>Notice that xR is computed by round, so for instance, a fighter who wins a fight via a second round submission will likely not capture all available xR for that fight. Instead, the first round’s xR will be partitioned according to each fighter’s round win probability, and then all of the second round’s xR will be given to the fighter who won by submission.</p>
+<p>More concretely, consider <a href="#tbl-hypothetical-xr">Table&nbsp;1</a> below of a hypothetical fight between Fighter A and Fighter B where Fighter A lands fewer strikes in the first round than his opponent but then wins by submission in the second. Here we see that xR is computed for each round independently of all other rounds. Then, aggregating xR up to the fight level yields the number of rounds each fighter could expect to have won, on average, given their performances in each round.</p>
+<p>Even though Fighter B landed more strikes in the first round, there is uncertainty in how the judges would have scored this round, so Fighter A still gets some credit for that round. However, since Fighter A earned a submission in the second round, the entire round’s worth of xR goes to him. Thus, on average, Fighter A could expect to win 1.4 rounds if this exact fight was fought many times - sometimes he would lose the first round on the judges’ scorecard but other times he would win it. The xR metric attempts to capture the uncertainty in how rounds are scored by the judges, which separates it from traditional metrics like win percent and finish percent.</p>
+<p>Finally, we see below that xR% is computed by adding each fighter’s xR across rounds and then dividing by the number of rounds fought. At the fight level, this tells us what percent of rounds each fighter could expect to have won given their round-level performances. Computing xR% over a fighter’s career would then describe how dominant that fighter has been by round, which again separates xR from win percent and finish percent.</p>
+<p>In the hypothetical example below, if this was Fighter A’s first fight, his win and finish percents would be 100%, but his xR would only be 70%, which would better reflect his body of work since it accounts for the first round where he likely lost.</p>
+<div class="cell">
+<div class="cell-output-display">
+<div id="tbl-hypothetical-xr" class="anchored">
+
+<table data-quarto-disable-processing="true" class="table table-striped" style="font-size: 16px; width: auto !important; margin-left: auto; margin-right: auto;border-bottom: 0;"><caption>Table&nbsp;1:  <p>xR for a hypothetical fight</p> </caption>
+ <thead>
+  <tr>
+   <th style="text-align:center;"> Fighter </th>
+   <th style="text-align:center;"> Round 1 xR </th>
+   <th style="text-align:center;"> Round 2 xR </th>
+   <th style="text-align:center;"> Fight xR </th>
+   <th style="text-align:center;"> Fight xR% </th>
+  </tr>
+ </thead>
+<tbody>
+  <tr>
+   <td style="text-align:center;"> A </td>
+   <td style="text-align:center;"> 0.4 </td>
+   <td style="text-align:center;"> 1.0 </td>
+   <td style="text-align:center;"> 0.4 + 1.0 = 1.4 </td>
+   <td style="text-align:center;"> 1.4 / 2 = 0.7 = 70% </td>
+  </tr>
+  <tr>
+   <td style="text-align:center;"> B </td>
+   <td style="text-align:center;"> 0.6 </td>
+   <td style="text-align:center;"> 0.0 </td>
+   <td style="text-align:center;"> 0.6 + 0.0 = 0.6 </td>
+   <td style="text-align:center;"> 0.6 / 2 = 0.3 = 30% </td>
+  </tr>
+</tbody>
+<tfoot>
+<tr><td style="padding: 0; " colspan="100%"><span style="font-style: italic;">Note: </span></td></tr>
+<tr><td style="padding: 0; " colspan="100%">
+<sup></sup> -In this example, Fighter A wins in the second round via submission.</td></tr>
+</tfoot>
+</table>
+
+</div>
+</div>
+</div>
+<p>Again, if you are interested in understanding the technical details of how each fighter’s round win probability is computed, feel free to check out my <a href="https://literalfightnerd.com/posts/2021-02-19-introducing-judgeai/">previous blog post</a> that provides a detailed overview of the algorithm and its performance.</p>
+<p>Using this methodology, we are able to compute each fighter’s xR and xR% for every single round in UFC history in which the round-level statistics are publicly available.</p>
+</section>
+<section id="xr-is-informative" class="level1">
+<h1>xR is informative</h1>
+<p>The xR and xR% metrics are more informative fighter evaluation tools than mainstream metrics (like number of wins, number of finishes, win percent, and finish percent) because they value the characteristics of a fight that fighters strive to achieve. That is, xR rewards fighters for both dominance and finishing ability, and it can distinguish between fighters who just barely outperform their opponents and fighters who completely dominate their opponents.</p>
+<p>Earning a finish is not the only way to signal dominance in the octagon, so finish percent clearly does not tell the whole story. Further, win percent does not account for the difference between a close split decision win and a clear unanimous decision win, but everyone who watches these fights can often immediately tell the difference between the two.</p>
+<p>Since xR uses well-calibrated round win probabilities, a fighter’s xR and xR% for a close split decision is much lower, on average, than that of a dominant win. <a href="#tbl-winner-xr-percent">Table&nbsp;2</a> below shows the average xR% earned by the winning fighter based on the method of victory. Not only is there a large difference between split and unanimous decisions, which further suggests that xR is being awarded appropriately, but we see that submissions and knockouts tend to result in even higher xR%. Hence, xR rewards both dominance and finishing ability in the octagon, unlike traditional fighter evaluation metrics.</p>
+<div class="cell">
+<div class="cell-output-display">
+<div id="tbl-winner-xr-percent" class="anchored">
+
+<table data-quarto-disable-processing="true" class="table table-striped" style="font-size: 16px; width: auto !important; margin-left: auto; margin-right: auto;border-bottom: 0;"><caption>Table&nbsp;2:  <p>Average earned fight xR% among winners</p> </caption>
+ <thead>
+  <tr>
+   <th style="text-align:center;"> Method of Victory </th>
+   <th style="text-align:center;"> Average Winner's Earned xR% </th>
+  </tr>
+ </thead>
+<tbody>
+  <tr>
+   <td style="text-align:center;"> Split Decision </td>
+   <td style="text-align:center;"> 56.1% </td>
+  </tr>
+  <tr>
+   <td style="text-align:center;"> Unanimous Decision </td>
+   <td style="text-align:center;"> 74.5% </td>
+  </tr>
+  <tr>
+   <td style="text-align:center;"> Submission </td>
+   <td style="text-align:center;"> 88.8% </td>
+  </tr>
+  <tr>
+   <td style="text-align:center;"> Knockout </td>
+   <td style="text-align:center;"> 90.0% </td>
+  </tr>
+</tbody>
+<tfoot>
+<tr><td style="padding: 0; " colspan="100%"><span style="font-style: italic;">Note: </span></td></tr>
+<tr><td style="padding: 0; " colspan="100%">
+<sup></sup> -This table includes all UFC fights between 2011-2020.</td></tr>
+</tfoot>
+</table>
+
+</div>
+</div>
+</div>
+<p>As a more concrete example, <a href="#tbl-ufc-245-xr">Table&nbsp;3</a> below shows the xR breakdown for the UFC 245 main event between Kamaru Usman and Colby Covington. The fight was close heading into the fifth round where Usman won by knockout. Conventional metrics like win percent and finish percent assigned this fight as a one for Usman and a zero for Covington. However, those metrics leave a lot to be desired in terms of descriptive value, which is exactly why we turn to xR.</p>
+<p>According to the underlying xR algorithm, Covington had a 71.8% probability of winning the first round on the judges’ scorecard, so his xR for this round was 0.718. No matter what happened in subsequent rounds, Covington would retain this xR for that round.</p>
+<div class="cell">
+<div class="cell-output-display">
+<div id="tbl-ufc-245-xr" class="anchored">
+
+<table data-quarto-disable-processing="true" class="table table-striped" style="font-size: 16px; width: auto !important; margin-left: auto; margin-right: auto;border-bottom: 0;"><caption>Table&nbsp;3:  <p>xR for UFC 245 main event by round</p> </caption>
+ <thead>
+  <tr>
+   <th style="text-align:center;"> Round </th>
+   <th style="text-align:center;"> Usman xR </th>
+   <th style="text-align:center;"> Covington xR </th>
+  </tr>
+ </thead>
+<tbody>
+  <tr>
+   <td style="text-align:center;"> 1 </td>
+   <td style="text-align:center;"> 0.282 </td>
+   <td style="text-align:center;"> 0.718 </td>
+  </tr>
+  <tr>
+   <td style="text-align:center;"> 2 </td>
+   <td style="text-align:center;"> 0.308 </td>
+   <td style="text-align:center;"> 0.692 </td>
+  </tr>
+  <tr>
+   <td style="text-align:center;"> 3 </td>
+   <td style="text-align:center;"> 0.974 </td>
+   <td style="text-align:center;"> 0.026 </td>
+  </tr>
+  <tr>
+   <td style="text-align:center;"> 4 </td>
+   <td style="text-align:center;"> 0.284 </td>
+   <td style="text-align:center;"> 0.716 </td>
+  </tr>
+  <tr>
+   <td style="text-align:center;"> 5 </td>
+   <td style="text-align:center;"> 1.000 </td>
+   <td style="text-align:center;"> 0.000 </td>
+  </tr>
+</tbody>
+<tfoot>
+<tr><td style="padding: 0; " colspan="100%"><span style="font-style: italic;">Note: </span></td></tr>
+<tr><td style="padding: 0; " colspan="100%">
+<sup></sup> -Usman won by TKO in round 5.</td></tr>
+</tfoot>
+</table>
+
+</div>
+</div>
+</div>
+<p>The aggregate xR and xR% for the fight are displayed in <a href="#tbl-ufc-245-xr-percent">Table&nbsp;4</a> below. We see that the xR% metric had this as a competitive fight. While Usman walked away with the majority of the available xR after earning the knockout, Covington also left with some xR for his efforts.</p>
+<div class="cell">
+<div class="cell-output-display">
+<div id="tbl-ufc-245-xr-percent" class="anchored">
+
+<table data-quarto-disable-processing="true" class="table table-striped" style="font-size: 16px; width: auto !important; margin-left: auto; margin-right: auto;border-bottom: 0;"><caption>Table&nbsp;4:  <p>Total xR and xR% for UFC 245 main event</p> </caption>
+ <thead>
+  <tr>
+   <th style="text-align:center;"> Fighter </th>
+   <th style="text-align:center;"> xR </th>
+   <th style="text-align:center;"> xR% </th>
+  </tr>
+ </thead>
+<tbody>
+  <tr>
+   <td style="text-align:center;"> Kamaru Usman </td>
+   <td style="text-align:center;"> 2.85 </td>
+   <td style="text-align:center;"> 57.0% </td>
+  </tr>
+  <tr>
+   <td style="text-align:center;"> Colby Covington </td>
+   <td style="text-align:center;"> 2.15 </td>
+   <td style="text-align:center;"> 43.0% </td>
+  </tr>
+</tbody>
+<tfoot>
+<tr><td style="padding: 0; " colspan="100%"><span style="font-style: italic;">Note: </span></td></tr>
+<tr><td style="padding: 0; " colspan="100%">
+<sup></sup> -This table presents xR and xR% at the fight level.</td></tr>
+</tfoot>
+</table>
+
+</div>
+</div>
+</div>
+<p>Notice how tight this fight was and how xR% reflected that while win percent and finish percent did not. The amount of information lost using conventional metrics is significant. Now imagine how wide that information gap could grow when you consider an entire fighter’s career. Relative to win percent and finish percent, xR% paints a much clearer picture of a fighter’s body of work across his or her career.</p>
+</section>
+<section id="xr-is-predictive" class="level1">
+<h1>xR is predictive</h1>
+<p>To justify my claim that xR% is more predictive than win percent and finish percent, I calculate each UFC fighter’s cumulative xR%, win percent, and finish percent <em>prior to each fight in his or her UFC career</em>. Note that I only use UFC statistics (not professional MMA statistics) to compute these metrics.</p>
+<p>Then, for xR%, I predict that the fighter with the higher xR% will win. For win percent, I predict that the fighter with the higher UFC win percent will win (and so on). Hence, each prediction is made using only information from each fighter’s prior UFC fights.</p>
+<p>Note that predictions cannot be made for every UFC fight. If either fighter is making a UFC debut, then we do not have these metrics available for the debut fighter, so no prediction is made. Likewise, if the two fighters in a given fight have the same win percent, for instance, then no prediction is made based on win percent, but xR% and finish percent predictions will still be made (assuming there are no ties among these metrics).</p>
+<p>We attempt to make predictions for all 4,399 UFC fights in 2011-2020. <a href="#tbl-prediction-results">Table&nbsp;5</a> below shows the results. We see that xR% makes more predictions than win percent and finish percent (as a result of fewer ties in xR%) and correctly predicts a higher share of fights in nearly every single year under consideration. It is significant that xR% is able to both make more predictions and predict better. It is generally easier to find more predictive success by making predictions on a narrower subset of the data, but the promise of xR% does not rely on making fewer predictions.</p>
+<p>I am not claiming that xR% will get you rich in the betting markets. However, it is clear that xR% is a fighter evaluation metric that is more predictive of a given fight outcome than win percent and finish percent, and this has been true for essentially the entirety of the last decade.</p>
+<div class="cell">
+<div class="cell-output-display">
+<div id="tbl-prediction-results" class="anchored">
+
+<table data-quarto-disable-processing="true" class="table table-striped" style="font-size: 16px; margin-left: auto; margin-right: auto;border-bottom: 0;"><caption>Table&nbsp;5:  <p>Predicting UFC fights with xR%, win %, and finish %</p> </caption>
+ <thead>
+  <tr>
+   <th style="text-align:center;"> Year </th>
+   <th style="text-align:center;"> UFC fights </th>
+   <th style="text-align:center;"> xR% predictions </th>
+   <th style="text-align:center;"> xR% accuracy </th>
+   <th style="text-align:center;"> Win % predictions </th>
+   <th style="text-align:center;"> Win % accuracy </th>
+   <th style="text-align:center;"> Finish % predictions </th>
+   <th style="text-align:center;"> Finish % accuracy </th>
+  </tr>
+ </thead>
+<tbody>
+  <tr>
+   <td style="text-align:center;"> 2011 </td>
+   <td style="text-align:center;"> 300 </td>
+   <td style="text-align:center;"> 206 </td>
+   <td style="text-align:center;"> 53.9% </td>
+   <td style="text-align:center;"> 173 </td>
+   <td style="text-align:center;"> 53.8% </td>
+   <td style="text-align:center;"> 150 </td>
+   <td style="text-align:center;"> 49.3% </td>
+  </tr>
+  <tr>
+   <td style="text-align:center;"> 2012 </td>
+   <td style="text-align:center;"> 341 </td>
+   <td style="text-align:center;"> 252 </td>
+   <td style="text-align:center;"> 55.2% </td>
+   <td style="text-align:center;"> 213 </td>
+   <td style="text-align:center;"> 53.5% </td>
+   <td style="text-align:center;"> 170 </td>
+   <td style="text-align:center;"> 42.9% </td>
+  </tr>
+  <tr>
+   <td style="text-align:center;"> 2013 </td>
+   <td style="text-align:center;"> 386 </td>
+   <td style="text-align:center;"> 275 </td>
+   <td style="text-align:center;"> 56.4% </td>
+   <td style="text-align:center;"> 234 </td>
+   <td style="text-align:center;"> 56.8% </td>
+   <td style="text-align:center;"> 195 </td>
+   <td style="text-align:center;"> 49.2% </td>
+  </tr>
+  <tr>
+   <td style="text-align:center;"> 2014 </td>
+   <td style="text-align:center;"> 503 </td>
+   <td style="text-align:center;"> 333 </td>
+   <td style="text-align:center;"> 58.0% </td>
+   <td style="text-align:center;"> 274 </td>
+   <td style="text-align:center;"> 56.6% </td>
+   <td style="text-align:center;"> 236 </td>
+   <td style="text-align:center;"> 50.8% </td>
+  </tr>
+  <tr>
+   <td style="text-align:center;"> 2015 </td>
+   <td style="text-align:center;"> 473 </td>
+   <td style="text-align:center;"> 391 </td>
+   <td style="text-align:center;"> 55.2% </td>
+   <td style="text-align:center;"> 324 </td>
+   <td style="text-align:center;"> 52.2% </td>
+   <td style="text-align:center;"> 273 </td>
+   <td style="text-align:center;"> 53.1% </td>
+  </tr>
+  <tr>
+   <td style="text-align:center;"> 2016 </td>
+   <td style="text-align:center;"> 493 </td>
+   <td style="text-align:center;"> 386 </td>
+   <td style="text-align:center;"> 56.5% </td>
+   <td style="text-align:center;"> 340 </td>
+   <td style="text-align:center;"> 58.5% </td>
+   <td style="text-align:center;"> 293 </td>
+   <td style="text-align:center;"> 51.9% </td>
+  </tr>
+  <tr>
+   <td style="text-align:center;"> 2017 </td>
+   <td style="text-align:center;"> 457 </td>
+   <td style="text-align:center;"> 353 </td>
+   <td style="text-align:center;"> 57.2% </td>
+   <td style="text-align:center;"> 310 </td>
+   <td style="text-align:center;"> 52.6% </td>
+   <td style="text-align:center;"> 274 </td>
+   <td style="text-align:center;"> 44.5% </td>
+  </tr>
+  <tr>
+   <td style="text-align:center;"> 2018 </td>
+   <td style="text-align:center;"> 474 </td>
+   <td style="text-align:center;"> 369 </td>
+   <td style="text-align:center;"> 57.5% </td>
+   <td style="text-align:center;"> 330 </td>
+   <td style="text-align:center;"> 53.6% </td>
+   <td style="text-align:center;"> 282 </td>
+   <td style="text-align:center;"> 47.9% </td>
+  </tr>
+  <tr>
+   <td style="text-align:center;"> 2019 </td>
+   <td style="text-align:center;"> 516 </td>
+   <td style="text-align:center;"> 393 </td>
+   <td style="text-align:center;"> 55.0% </td>
+   <td style="text-align:center;"> 350 </td>
+   <td style="text-align:center;"> 52.6% </td>
+   <td style="text-align:center;"> 286 </td>
+   <td style="text-align:center;"> 54.2% </td>
+  </tr>
+  <tr>
+   <td style="text-align:center;"> 2020 </td>
+   <td style="text-align:center;"> 456 </td>
+   <td style="text-align:center;"> 351 </td>
+   <td style="text-align:center;"> 54.1% </td>
+   <td style="text-align:center;"> 325 </td>
+   <td style="text-align:center;"> 52.9% </td>
+   <td style="text-align:center;"> 249 </td>
+   <td style="text-align:center;"> 49.4% </td>
+  </tr>
+  <tr>
+   <td style="text-align:center;font-weight: bold;"> Total </td>
+   <td style="text-align:center;font-weight: bold;"> 4,399 </td>
+   <td style="text-align:center;font-weight: bold;"> 3,309 </td>
+   <td style="text-align:center;font-weight: bold;"> 56.0% </td>
+   <td style="text-align:center;font-weight: bold;"> 2,873 </td>
+   <td style="text-align:center;font-weight: bold;"> 54.3% </td>
+   <td style="text-align:center;font-weight: bold;"> 2,408 </td>
+   <td style="text-align:center;font-weight: bold;"> 49.6% </td>
+  </tr>
+</tbody>
+<tfoot>
+<tr><td style="padding: 0; " colspan="100%"><span style="font-style: italic;">Note: </span></td></tr>
+<tr><td style="padding: 0; " colspan="100%">
+<sup></sup> -Predictions are not made on all UFC fights because either the metric is the same for both fighters or the metric is unavailable since at least one fighter is making a UFC debut.</td></tr>
+</tfoot>
+</table>
+
+</div>
+</div>
+</div>
+</section>
+<section id="xr-is-robust" class="level1">
+<h1>xR is robust</h1>
+<p>To illustrate how xR is more robust against judging blunders than win percent, let’s consider Volkanovski vs Holloway 2 from UFC 251. According to many in the MMA community, Volkanovski’s split decision win was controversial. In fact, 67% of the media members whose scores were reported on <a href="http://mmadecisions.com/decision/11126/Alexander-Volkanovski-vs-Max-Holloway">MMADecisions</a> had Holloway winning the decision.</p>
+<p><a href="#tbl-volk-2-xr">Table&nbsp;6</a> below shows xR by round for this fight. We see that the machine learning algorithm used to generate xR agrees with the judges that Volkanovski won the fight. Our purpose here is not to argue whether xR is correct or incorrect for each round. Instead, I argue that either way, whether xR and the judges correctly scored the fight or not, the xR% metric does a better job than win percent at accurately representing each fighter’s performance in this fight.</p>
+<div class="cell">
+<div class="cell-output-display">
+<div id="tbl-volk-2-xr" class="anchored">
+
+<table data-quarto-disable-processing="true" class="table table-striped" style="font-size: 16px; width: auto !important; margin-left: auto; margin-right: auto;border-bottom: 0;"><caption>Table&nbsp;6:  <p>xR for Volkanovski vs Holloway 2 by round</p> </caption>
+ <thead>
+  <tr>
+   <th style="text-align:center;"> Round </th>
+   <th style="text-align:center;"> Volkanovski xR </th>
+   <th style="text-align:center;"> Holloway xR </th>
+  </tr>
+ </thead>
+<tbody>
+  <tr>
+   <td style="text-align:center;"> 1 </td>
+   <td style="text-align:center;"> 0.307 </td>
+   <td style="text-align:center;"> 0.693 </td>
+  </tr>
+  <tr>
+   <td style="text-align:center;"> 2 </td>
+   <td style="text-align:center;"> 0.484 </td>
+   <td style="text-align:center;"> 0.516 </td>
+  </tr>
+  <tr>
+   <td style="text-align:center;"> 3 </td>
+   <td style="text-align:center;"> 0.909 </td>
+   <td style="text-align:center;"> 0.091 </td>
+  </tr>
+  <tr>
+   <td style="text-align:center;"> 4 </td>
+   <td style="text-align:center;"> 0.849 </td>
+   <td style="text-align:center;"> 0.151 </td>
+  </tr>
+  <tr>
+   <td style="text-align:center;"> 5 </td>
+   <td style="text-align:center;"> 0.949 </td>
+   <td style="text-align:center;"> 0.051 </td>
+  </tr>
+</tbody>
+<tfoot>
+<tr><td style="padding: 0; " colspan="100%"><span style="font-style: italic;">Note: </span></td></tr>
+<tr><td style="padding: 0; " colspan="100%">
+<sup></sup> -Volkanovski won the fight by split decision.</td></tr>
+</tfoot>
+</table>
+
+</div>
+</div>
+</div>
+<p><a href="#tbl-volk-2-xr-percent">Table&nbsp;7</a> below shows the xR and xR% earned by each fighter for the fight. With respect to the official judging of this fight, there are two possible scenarios - either (a) the judges scored the fight correctly and Volkanovski deserved to win, or (b) the judges scored the fight incorrectly and Holloway deserved to win. Let’s examine each scenario in turn.</p>
+<ol type="a">
+<li><p>If the judges scored the fight correctly and Volkanovski deserved to win, then the xR% metric correctly awarded the majority of the xR available for the fight to Volkanovski. However, since this fight was close and since seemingly the majority of the MMA community had Holloway winning, it seems safe to say that a metric like win percent that leaves Holloway with nothing for his efforts is not representative of what occurred in the octagon. Instead, with xR%, Holloway earns xR equal to the amount of rounds he could have expected to win, on average, given his performance. Hence, in this case, xR% correctly scored the fight and more appropriately rewarded each fighter for his efforts.</p></li>
+<li><p>Alternatively, if the judges scored the fight incorrectly and Holloway deserved to win, then the xR% metric also incorrectly assigned xR to each fighter (since Volkanovski earned more xR for the fight). In this instance, Holloway unjustly takes a loss and his win percent suffers. If this had been a fight early in his career, Holloway’s win percent could have decreased significantly due to a mistake by the judges. However, even though xR is assigned poorly under this scenario, Holloway still receives around one-third of the available xR for the fight, which mitigates the hit to his career xR%. Therefore, even though both the judges and the underlying xR model incorrectly scored the fight, xR% at least provides Holloway with some credit.</p></li>
+</ol>
+<p>We see that in either scenario xR% is both more informative (which we also discussed in a prior section) and more robust to judging blunders than win percent. In general, during tight fights that could go either way on the judges’ scorecard, xR% typically partitions the fight relatively evenly, but a fighter’s win percent is either getting a zero for a loss or a one for a win with no in between.</p>
+<div class="cell">
+<div class="cell-output-display">
+<div id="tbl-volk-2-xr-percent" class="anchored">
+
+<table data-quarto-disable-processing="true" class="table table-striped" style="font-size: 16px; width: auto !important; margin-left: auto; margin-right: auto;border-bottom: 0;"><caption>Table&nbsp;7:  <p>Total xR and xR% for Volkanovski vs Holloway 2</p> </caption>
+ <thead>
+  <tr>
+   <th style="text-align:center;"> Fighter </th>
+   <th style="text-align:center;"> xR </th>
+   <th style="text-align:center;"> xR% </th>
+  </tr>
+ </thead>
+<tbody>
+  <tr>
+   <td style="text-align:center;"> Alexander Volkanovski </td>
+   <td style="text-align:center;"> 3.50 </td>
+   <td style="text-align:center;"> 70.0% </td>
+  </tr>
+  <tr>
+   <td style="text-align:center;"> Max Holloway </td>
+   <td style="text-align:center;"> 1.50 </td>
+   <td style="text-align:center;"> 30.0% </td>
+  </tr>
+</tbody>
+<tfoot>
+<tr><td style="padding: 0; " colspan="100%"><span style="font-style: italic;">Note: </span></td></tr>
+<tr><td style="padding: 0; " colspan="100%">
+<sup></sup> -This table presents xR and xR% at the fight level.</td></tr>
+</tfoot>
+</table>
+
+</div>
+</div>
+</div>
+<p>Finally, while this does not necessarily fit into the argument on the robustness of xR% as metric, I wanted to comment on the xR distribution in this example. The xR for round 3 went almost entirely to Volkanovski, yet I believe it is safe to say that round 3 was particularly close in the eyes of all viewers. As one of those viewers, I personally disagree with the distribution of xR here. However, I went back and checked out the official statistics for each round of this fight, and Volkanovski had a clear edge in round 3 <em>on paper</em>. This illustrates a limitation of xR: sometimes statistics do not tell the whole story. If you look at the official statistics for round 3, you should clearly see why most of the xR was given to Volkanovski. When the statistics are misleading, like in round 3 of this fight, xR may sometimes struggle to properly reflect reality. Nevertheless, while xR is not a perfect metric, I would argue that the judges are not perfect either. Both are wrong at times, but as I argued in this section, xR% is closer to the truth than the judges when it is wrong since it essentially awards partial credit to each fighter.</p>
+</section>
+<section id="xr-is-stable" class="level1">
+<h1>xR is stable</h1>
+<p>When I discuss a fighter evaluation metric’s stability, I am really referring to the degree to which the metric can swing on a fight-to-fight basis. Stability is important because a fighter evaluation metric should represent the quality of a fighter and then only improve or degrade as quickly as the fighter it is measuring improves or degrades. Fighters can have a bad fight, so we do not want a metric to overreact to a single performance - that would make the metric unstable.</p>
+<p>To defend the claim that xR% is a more stable metric than win percent, I will first use a conceptual argument and then provide a mathematical argument.</p>
+<p>First, sample size is a particularly troubling issue in MMA, and small samples cause instability. Win percent utilizes each fight once, and as a result, it can be an unstable metric for fighters that do not have many fights. Judging errors, for example, can cause large, unjust deviations in a fighter’s win percent during the early part of his or her career. Hence, intuitively, we see that only drawing from a handful of fight outcomes coupled with the judging volatility ingrained in those outcomes can make win percent a relatively unstable metric, especially early in a fighter’s career.</p>
+<p>The xR% metric, on the other hand, is computed using each round as an observation. Thus, after only 4-5 fights, a fighter will generally have fought 10 or more rounds. Utilizing these additional observations from each fight allows xR% to essentially observe each fighter’s dominance (or lack thereof) in the octagon more often than win percent, which only considers each fight once. The metric generated from more observations should vary less over time because the stability of the metrics under consideration is generally correlated with sample size. Therefore, conceptually, we can see how xR% should be able to produce a more stable measure of fighter quality in fewer fights than win percent.</p>
+<p>If the conceptual argument has not convinced you, let’s look at the degree to which these metrics actually change over a fighter’s career. This argument is a bit technical and in the weeds, so feel free to skip it if it does not interest you.</p>
+<p>Using every UFC fight in 2011-2020, we first compute the difference in win percent and xR% from each fighter’s 1st-2nd UFC fight. Then, we compute the average of these differences for each metric and plot those two values on the figure below corresponding to a value of 2 on the horizontal axis (to represent the change occurring after each fighter’s 2nd UFC fight). Likewise, we take the difference in win percent and xR% from each fighter’s 2nd-3rd UFC fight, compute the average of those differences, and plot those points along the horizontal axis at a value of 3. We continue this process up to the 10th fight of each fighter’s UFC career. Finally, we repeat the whole process again, except we compute the standard deviation, instead of the average, of all differences.</p>
+<p>The lines on the figure below essentially measure the magnitude of the variation in each metric (along the vertical axis) as the number of fights used to compute each metric increases (along the horizontal axis). Values measured on the vertical axis that are closer to 0 represent an increase in stability, or equivalently, less fight-to-fight variation in the metric. Eventually both metrics stabilize. That is, after many fights, a fighter’s win percent, for example, does not change much whether he or she wins or loses. Thus, we are more concerned with the stability of the metrics after the first few fights of a fighter’s career.</p>
+<p>While the actual values on the vertical axis do not need to be interpreted, what is important is how the lines relate to one another. We see that the xR% lines are essentially always closer to 0 than the win percent lines (especially after only a few fights), which means that the fight-by-fight change in xR% is generally less than that of win percent. Hence, xR% is mathematically the more stable metric, which aligns with the conceptual argument provided above.</p>
+<div class="cell" data-layout-align="center">
+<div class="cell-output-display">
+<div class="quarto-figure quarto-figure-center">
+<figure class="figure">
+<p><img src="introducing-expected-rounds-xr_files/figure-html/unnamed-chunk-13-1.png" class="img-fluid figure-img" width="672"></p>
+</figure>
+</div>
+</div>
+</div>
+</section>
+<section id="limitations-of-xr" class="level1">
+<h1>Limitations of xR</h1>
+<p>While I have done my best to show the value of xR and xR% as fighter evaluation metrics, especially compared to convention metrics like win percent and finish percent, xR is far from perfect.</p>
+<p>First, xR does not account for the quality of an opponent. Therefore, it rewards high-quality fighters who resist the urge to climb the rankings quickly and instead dominate many unranked opponents.</p>
+<p>Further, xR is computed using an imperfect machine learning algorithm that is developed using imperfect official UFC statistics and imperfect judging decisions. All machine learning models make errors. This model struggles the most when a fighter outperforms his or her opponent in the major statistical categories tracked but ends up taking more damage throughout the fight. Also, the official UFC statistics can be misleading, or even incorrect, at times, and lastly, the judges do make mistakes. Fortunately, the model still performs well even with all of these issues.</p>
+</section>
+<section id="extensions-of-xr" class="level1">
+<h1>Extensions of xR</h1>
+<p>While I believe xR in its current state is incredibly valuable, I think there are a number of ways in which it can be improved or extended.</p>
+<p>An opponent-adjusted xR that properly accounts for the quality of the opponent should noticeably improve the metric. If done correctly, a ranking system based on opponent-adjusted xR% could be useful.</p>
+<p>Perhaps most importantly, xR could be extended to other promotions <em>if the round-level statistics and judging decisions were tracked and made publicly available</em>. I believe this would greatly improve the value of xR and xR% in terms of both their informational and predictive value. Accounting for each fighter’s entire professional MMA career would, at the very least, increase the sample size and lead to better prospect identification and evaluation.</p>
+</section>
+<section id="conclusion" class="level1">
+<h1>Conclusion</h1>
+<p>Quantitative MMA analysis is challenging. Conventional fighter evaluation metrics like win percent and finish percent are easy to understand but leave a lot to be desired in terms of value.</p>
+<p>While certainly not perfect, xR and xR% provide noticeable improvements over these conventional metrics while not compromising on perhaps the most important aspect of an advanced metric: interpretability.</p>
+<p>The figure below shows the cumulative xR% of the current top 5 men’s UFC pound-for-pound fighters. It is my hope that, after reading this post, everyone is able to fully understand what the lines on this figure represent.</p>
+<div class="cell" data-layout-align="center">
+<div class="cell-output-display">
+<div class="quarto-figure quarto-figure-center">
+<figure class="figure">
+<p><img src="introducing-expected-rounds-xr_files/figure-html/unnamed-chunk-15-1.png" class="img-fluid figure-img" width="672"></p>
+</figure>
+</div>
+</div>
+</div>
+<p>As fighter evaluation metrics, xR and xR% are interpretable, informative, predictive, robust, and stable - which I believe makes them valuable tools that may be leveraged by the entire MMA community.</p>
+
+
+</section>
+
+</main> <!-- /main -->
+<script id="quarto-html-after-body" type="application/javascript">
+window.document.addEventListener("DOMContentLoaded", function (event) {
+  const toggleBodyColorMode = (bsSheetEl) => {
+    const mode = bsSheetEl.getAttribute("data-mode");
+    const bodyEl = window.document.querySelector("body");
+    if (mode === "dark") {
+      bodyEl.classList.add("quarto-dark");
+      bodyEl.classList.remove("quarto-light");
+    } else {
+      bodyEl.classList.add("quarto-light");
+      bodyEl.classList.remove("quarto-dark");
+    }
+  }
+  const toggleBodyColorPrimary = () => {
+    const bsSheetEl = window.document.querySelector("link#quarto-bootstrap");
+    if (bsSheetEl) {
+      toggleBodyColorMode(bsSheetEl);
+    }
+  }
+  toggleBodyColorPrimary();  
+  const disableStylesheet = (stylesheets) => {
+    for (let i=0; i < stylesheets.length; i++) {
+      const stylesheet = stylesheets[i];
+      stylesheet.rel = 'prefetch';
+    }
+  }
+  const enableStylesheet = (stylesheets) => {
+    for (let i=0; i < stylesheets.length; i++) {
+      const stylesheet = stylesheets[i];
+      stylesheet.rel = 'stylesheet';
+    }
+  }
+  const manageTransitions = (selector, allowTransitions) => {
+    const els = window.document.querySelectorAll(selector);
+    for (let i=0; i < els.length; i++) {
+      const el = els[i];
+      if (allowTransitions) {
+        el.classList.remove('notransition');
+      } else {
+        el.classList.add('notransition');
+      }
+    }
+  }
+  const toggleColorMode = (alternate) => {
+    // Switch the stylesheets
+    const alternateStylesheets = window.document.querySelectorAll('link.quarto-color-scheme.quarto-color-alternate');
+    manageTransitions('#quarto-margin-sidebar .nav-link', false);
+    if (alternate) {
+      enableStylesheet(alternateStylesheets);
+      for (const sheetNode of alternateStylesheets) {
+        if (sheetNode.id === "quarto-bootstrap") {
+          toggleBodyColorMode(sheetNode);
+        }
+      }
+    } else {
+      disableStylesheet(alternateStylesheets);
+      toggleBodyColorPrimary();
+    }
+    manageTransitions('#quarto-margin-sidebar .nav-link', true);
+    // Switch the toggles
+    const toggles = window.document.querySelectorAll('.quarto-color-scheme-toggle');
+    for (let i=0; i < toggles.length; i++) {
+      const toggle = toggles[i];
+      if (toggle) {
+        if (alternate) {
+          toggle.classList.add("alternate");     
+        } else {
+          toggle.classList.remove("alternate");
+        }
+      }
+    }
+    // Hack to workaround the fact that safari doesn't
+    // properly recolor the scrollbar when toggling (#1455)
+    if (navigator.userAgent.indexOf('Safari') > 0 && navigator.userAgent.indexOf('Chrome') == -1) {
+      manageTransitions("body", false);
+      window.scrollTo(0, 1);
+      setTimeout(() => {
+        window.scrollTo(0, 0);
+        manageTransitions("body", true);
+      }, 40);  
+    }
+  }
+  const isFileUrl = () => { 
+    return window.location.protocol === 'file:';
+  }
+  const hasAlternateSentinel = () => {  
+    let styleSentinel = getColorSchemeSentinel();
+    if (styleSentinel !== null) {
+      return styleSentinel === "alternate";
+    } else {
+      return false;
+    }
+  }
+  const setStyleSentinel = (alternate) => {
+    const value = alternate ? "alternate" : "default";
+    if (!isFileUrl()) {
+      window.localStorage.setItem("quarto-color-scheme", value);
+    } else {
+      localAlternateSentinel = value;
+    }
+  }
+  const getColorSchemeSentinel = () => {
+    if (!isFileUrl()) {
+      const storageValue = window.localStorage.getItem("quarto-color-scheme");
+      return storageValue != null ? storageValue : localAlternateSentinel;
+    } else {
+      return localAlternateSentinel;
+    }
+  }
+  let localAlternateSentinel = 'alternate';
+  // Dark / light mode switch
+  window.quartoToggleColorScheme = () => {
+    // Read the current dark / light value 
+    let toAlternate = !hasAlternateSentinel();
+    toggleColorMode(toAlternate);
+    setStyleSentinel(toAlternate);
+  };
+  // Ensure there is a toggle, if there isn't float one in the top right
+  if (window.document.querySelector('.quarto-color-scheme-toggle') === null) {
+    const a = window.document.createElement('a');
+    a.classList.add('top-right');
+    a.classList.add('quarto-color-scheme-toggle');
+    a.href = "";
+    a.onclick = function() { try { window.quartoToggleColorScheme(); } catch {} return false; };
+    const i = window.document.createElement("i");
+    i.classList.add('bi');
+    a.appendChild(i);
+    window.document.body.appendChild(a);
+  }
+  // Switch to dark mode if need be
+  if (hasAlternateSentinel()) {
+    toggleColorMode(true);
+  } else {
+    toggleColorMode(false);
+  }
+  const icon = "";
+  const anchorJS = new window.AnchorJS();
+  anchorJS.options = {
+    placement: 'right',
+    icon: icon
+  };
+  anchorJS.add('.anchored');
+  const isCodeAnnotation = (el) => {
+    for (const clz of el.classList) {
+      if (clz.startsWith('code-annotation-')) {                     
+        return true;
+      }
+    }
+    return false;
+  }
+  const clipboard = new window.ClipboardJS('.code-copy-button', {
+    text: function(trigger) {
+      const codeEl = trigger.previousElementSibling.cloneNode(true);
+      for (const childEl of codeEl.children) {
+        if (isCodeAnnotation(childEl)) {
+          childEl.remove();
+        }
+      }
+      return codeEl.innerText;
+    }
+  });
+  clipboard.on('success', function(e) {
+    // button target
+    const button = e.trigger;
+    // don't keep focus
+    button.blur();
+    // flash "checked"
+    button.classList.add('code-copy-button-checked');
+    var currentTitle = button.getAttribute("title");
+    button.setAttribute("title", "Copied!");
+    let tooltip;
+    if (window.bootstrap) {
+      button.setAttribute("data-bs-toggle", "tooltip");
+      button.setAttribute("data-bs-placement", "left");
+      button.setAttribute("data-bs-title", "Copied!");
+      tooltip = new bootstrap.Tooltip(button, 
+        { trigger: "manual", 
+          customClass: "code-copy-button-tooltip",
+          offset: [0, -8]});
+      tooltip.show();    
+    }
+    setTimeout(function() {
+      if (tooltip) {
+        tooltip.hide();
+        button.removeAttribute("data-bs-title");
+        button.removeAttribute("data-bs-toggle");
+        button.removeAttribute("data-bs-placement");
+      }
+      button.setAttribute("title", currentTitle);
+      button.classList.remove('code-copy-button-checked');
+    }, 1000);
+    // clear code selection
+    e.clearSelection();
+  });
+  function tippyHover(el, contentFn) {
+    const config = {
+      allowHTML: true,
+      content: contentFn,
+      maxWidth: 500,
+      delay: 100,
+      arrow: false,
+      appendTo: function(el) {
+          return el.parentElement;
+      },
+      interactive: true,
+      interactiveBorder: 10,
+      theme: 'quarto',
+      placement: 'bottom-start'
+    };
+    window.tippy(el, config); 
+  }
+  const noterefs = window.document.querySelectorAll('a[role="doc-noteref"]');
+  for (var i=0; i<noterefs.length; i++) {
+    const ref = noterefs[i];
+    tippyHover(ref, function() {
+      // use id or data attribute instead here
+      let href = ref.getAttribute('data-footnote-href') || ref.getAttribute('href');
+      try { href = new URL(href).hash; } catch {}
+      const id = href.replace(/^#\/?/, "");
+      const note = window.document.getElementById(id);
+      return note.innerHTML;
+    });
+  }
+      let selectedAnnoteEl;
+      const selectorForAnnotation = ( cell, annotation) => {
+        let cellAttr = 'data-code-cell="' + cell + '"';
+        let lineAttr = 'data-code-annotation="' +  annotation + '"';
+        const selector = 'span[' + cellAttr + '][' + lineAttr + ']';
+        return selector;
+      }
+      const selectCodeLines = (annoteEl) => {
+        const doc = window.document;
+        const targetCell = annoteEl.getAttribute("data-target-cell");
+        const targetAnnotation = annoteEl.getAttribute("data-target-annotation");
+        const annoteSpan = window.document.querySelector(selectorForAnnotation(targetCell, targetAnnotation));
+        const lines = annoteSpan.getAttribute("data-code-lines").split(",");
+        const lineIds = lines.map((line) => {
+          return targetCell + "-" + line;
+        })
+        let top = null;
+        let height = null;
+        let parent = null;
+        if (lineIds.length > 0) {
+            //compute the position of the single el (top and bottom and make a div)
+            const el = window.document.getElementById(lineIds[0]);
+            top = el.offsetTop;
+            height = el.offsetHeight;
+            parent = el.parentElement.parentElement;
+          if (lineIds.length > 1) {
+            const lastEl = window.document.getElementById(lineIds[lineIds.length - 1]);
+            const bottom = lastEl.offsetTop + lastEl.offsetHeight;
+            height = bottom - top;
+          }
+          if (top !== null && height !== null && parent !== null) {
+            // cook up a div (if necessary) and position it 
+            let div = window.document.getElementById("code-annotation-line-highlight");
+            if (div === null) {
+              div = window.document.createElement("div");
+              div.setAttribute("id", "code-annotation-line-highlight");
+              div.style.position = 'absolute';
+              parent.appendChild(div);
+            }
+            div.style.top = top - 2 + "px";
+            div.style.height = height + 4 + "px";
+            let gutterDiv = window.document.getElementById("code-annotation-line-highlight-gutter");
+            if (gutterDiv === null) {
+              gutterDiv = window.document.createElement("div");
+              gutterDiv.setAttribute("id", "code-annotation-line-highlight-gutter");
+              gutterDiv.style.position = 'absolute';
+              const codeCell = window.document.getElementById(targetCell);
+              const gutter = codeCell.querySelector('.code-annotation-gutter');
+              gutter.appendChild(gutterDiv);
+            }
+            gutterDiv.style.top = top - 2 + "px";
+            gutterDiv.style.height = height + 4 + "px";
+          }
+          selectedAnnoteEl = annoteEl;
+        }
+      };
+      const unselectCodeLines = () => {
+        const elementsIds = ["code-annotation-line-highlight", "code-annotation-line-highlight-gutter"];
+        elementsIds.forEach((elId) => {
+          const div = window.document.getElementById(elId);
+          if (div) {
+            div.remove();
+          }
+        });
+        selectedAnnoteEl = undefined;
+      };
+      // Attach click handler to the DT
+      const annoteDls = window.document.querySelectorAll('dt[data-target-cell]');
+      for (const annoteDlNode of annoteDls) {
+        annoteDlNode.addEventListener('click', (event) => {
+          const clickedEl = event.target;
+          if (clickedEl !== selectedAnnoteEl) {
+            unselectCodeLines();
+            const activeEl = window.document.querySelector('dt[data-target-cell].code-annotation-active');
+            if (activeEl) {
+              activeEl.classList.remove('code-annotation-active');
+            }
+            selectCodeLines(clickedEl);
+            clickedEl.classList.add('code-annotation-active');
+          } else {
+            // Unselect the line
+            unselectCodeLines();
+            clickedEl.classList.remove('code-annotation-active');
+          }
+        });
+      }
+  const findCites = (el) => {
+    const parentEl = el.parentElement;
+    if (parentEl) {
+      const cites = parentEl.dataset.cites;
+      if (cites) {
+        return {
+          el,
+          cites: cites.split(' ')
+        };
+      } else {
+        return findCites(el.parentElement)
+      }
+    } else {
+      return undefined;
+    }
+  };
+  var bibliorefs = window.document.querySelectorAll('a[role="doc-biblioref"]');
+  for (var i=0; i<bibliorefs.length; i++) {
+    const ref = bibliorefs[i];
+    const citeInfo = findCites(ref);
+    if (citeInfo) {
+      tippyHover(citeInfo.el, function() {
+        var popup = window.document.createElement('div');
+        citeInfo.cites.forEach(function(cite) {
+          var citeDiv = window.document.createElement('div');
+          citeDiv.classList.add('hanging-indent');
+          citeDiv.classList.add('csl-entry');
+          var biblioDiv = window.document.getElementById('ref-' + cite);
+          if (biblioDiv) {
+            citeDiv.innerHTML = biblioDiv.innerHTML;
+          }
+          popup.appendChild(citeDiv);
+        });
+        return popup.innerHTML;
+      });
+    }
+  }
+});
+</script>
+</div> <!-- /content -->
+
+
+
+</body></html>
