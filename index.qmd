@@ -17,13 +17,5 @@ redirects <- c("https://literalfightnerd.com/posts/2021-03-02-introducing-expect
 "https://literalfightnerd.com/posts/2021-02-25-extending-judgeai/ https://literalfightnerd.com/posts/2021-02-25-extending-judgeai/extending-judgeai", 
 "https://literalfightnerd.com/posts/2021-02-19-introducing-judgeai/ https://literalfightnerd.com/posts/2021-02-19-introducing-judgeai/introducing-judgeai")
 
-redirects <- c("https://literalfightnerd.com/posts/2021-03-02-introducing-expected-rounds-xr/introducing-expected-rounds-xr https://literalfightnerd.com/posts/2021-03-02-introducing-expected-rounds-xr/", 
-               
-"https://literalfightnerd.com/posts/2022-01-05-visualizing-fighter-styles/visualizing-fighter-styles https://literalfightnerd.com/posts/2022-01-05-visualizing-fighter-styles/", 
-
-"https://literalfightnerd.com/posts/2021-02-25-extending-judgeai/extending-judgeai https://literalfightnerd.com/posts/2021-02-25-extending-judgeai/", 
-
-"https://literalfightnerd.com/posts/2021-02-19-introducing-judgeai/introducing-judgeai https://literalfightnerd.com/posts/2021-02-19-introducing-judgeai/")
-
 writeLines(redirects, here::here("_site", "_redirects"))
 ```
