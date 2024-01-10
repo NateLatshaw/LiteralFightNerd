@@ -17,7 +17,7 @@ website:
       menu: 
         - text: UFC Fight Night Statistical Companion
           href: https://natelatshaw.shinyapps.io/ufc_fight_night_statistical_companion/
-        - text: UFC DFS Simulator & Optimizer
+        - text: FightPickSim - A Premium UFC DFS Tool
           href: https://natelatshaw.shinyapps.io/ufc-dfs-simulator-and-optimizer/
         - text: MMAOB Tale of the Tape
           href: https://www.mmaoddsbreaker.com/mmaoddsbreaker-tale-of-the-tape/
