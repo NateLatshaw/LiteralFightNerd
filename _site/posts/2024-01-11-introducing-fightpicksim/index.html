@@ -6,8 +6,11 @@
 
 <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=yes">
 
+<meta name="author" content="Nate Latshaw">
+<meta name="dcterms.date" content="2024-01-11">
+<meta name="description" content="A UFC DraftKings DFS Projection, Simulation, &amp; Optimization Tool">
 
-<title>LiteralFightNerd - Blog Posts</title>
+<title>LiteralFightNerd - Introducing FightPickSim</title>
 <style>
 code{white-space: pre-wrap;}
 span.smallcaps{font-variant: small-caps;}
@@ -23,26 +26,24 @@ ul.task-list li input[type="checkbox"] {
 </style>
 
 
-<script src="site_libs/quarto-nav/quarto-nav.js"></script>
-<script src="site_libs/quarto-nav/headroom.min.js"></script>
-<script src="site_libs/clipboard/clipboard.min.js"></script>
-<script src="site_libs/quarto-search/autocomplete.umd.js"></script>
-<script src="site_libs/quarto-search/fuse.min.js"></script>
-<script src="site_libs/quarto-search/quarto-search.js"></script>
-<meta name="quarto:offset" content="./">
-<script src="site_libs/quarto-listing/list.min.js"></script>
-<script src="site_libs/quarto-listing/quarto-listing.js"></script>
-<script src="site_libs/quarto-html/quarto.js"></script>
-<script src="site_libs/quarto-html/popper.min.js"></script>
-<script src="site_libs/quarto-html/tippy.umd.min.js"></script>
-<script src="site_libs/quarto-html/anchor.min.js"></script>
-<link href="site_libs/quarto-html/tippy.css" rel="stylesheet">
-<link href="site_libs/quarto-html/quarto-syntax-highlighting.css" rel="stylesheet" class="quarto-color-scheme" id="quarto-text-highlighting-styles">
-<link href="site_libs/quarto-html/quarto-syntax-highlighting-dark.css" rel="stylesheet" class="quarto-color-scheme quarto-color-alternate" id="quarto-text-highlighting-styles">
-<script src="site_libs/bootstrap/bootstrap.min.js"></script>
-<link href="site_libs/bootstrap/bootstrap-icons.css" rel="stylesheet">
-<link href="site_libs/bootstrap/bootstrap.min.css" rel="stylesheet" class="quarto-color-scheme" id="quarto-bootstrap" data-mode="light">
-<link href="site_libs/bootstrap/bootstrap-dark.min.css" rel="stylesheet" class="quarto-color-scheme quarto-color-alternate" id="quarto-bootstrap" data-mode="dark">
+<script src="../../site_libs/quarto-nav/quarto-nav.js"></script>
+<script src="../../site_libs/quarto-nav/headroom.min.js"></script>
+<script src="../../site_libs/clipboard/clipboard.min.js"></script>
+<script src="../../site_libs/quarto-search/autocomplete.umd.js"></script>
+<script src="../../site_libs/quarto-search/fuse.min.js"></script>
+<script src="../../site_libs/quarto-search/quarto-search.js"></script>
+<meta name="quarto:offset" content="../../">
+<script src="../../site_libs/quarto-html/quarto.js"></script>
+<script src="../../site_libs/quarto-html/popper.min.js"></script>
+<script src="../../site_libs/quarto-html/tippy.umd.min.js"></script>
+<script src="../../site_libs/quarto-html/anchor.min.js"></script>
+<link href="../../site_libs/quarto-html/tippy.css" rel="stylesheet">
+<link href="../../site_libs/quarto-html/quarto-syntax-highlighting.css" rel="stylesheet" class="quarto-color-scheme" id="quarto-text-highlighting-styles">
+<link href="../../site_libs/quarto-html/quarto-syntax-highlighting-dark.css" rel="stylesheet" class="quarto-color-scheme quarto-color-alternate" id="quarto-text-highlighting-styles">
+<script src="../../site_libs/bootstrap/bootstrap.min.js"></script>
+<link href="../../site_libs/bootstrap/bootstrap-icons.css" rel="stylesheet">
+<link href="../../site_libs/bootstrap/bootstrap.min.css" rel="stylesheet" class="quarto-color-scheme" id="quarto-bootstrap" data-mode="light">
+<link href="../../site_libs/bootstrap/bootstrap-dark.min.css" rel="stylesheet" class="quarto-color-scheme quarto-color-alternate" id="quarto-bootstrap" data-mode="dark">
 <script id="quarto-search-options" type="application/json">{
   "location": "navbar",
   "copy-button": false,
@@ -62,46 +63,17 @@ ul.task-list li input[type="checkbox"] {
     "search-submit-button-title": "Submit"
   }
 }</script>
-<script>
 
-  window.document.addEventListener("DOMContentLoaded", function (_event) {
-    const listingTargetEl = window.document.querySelector('#listing-listing .list');
-    if (!listingTargetEl) {
-      // No listing discovered, do not attach.
-      return; 
-    }
 
-    const options = {
-      valueNames: ['listing-date','listing-title','listing-author','listing-image','listing-description',{ data: ['index'] },{ data: ['categories'] },{ data: ['listing-date-sort'] },{ data: ['listing-file-modified-sort'] }],
-      
-      searchColumns: ["listing-date","listing-title","listing-author","listing-image","listing-description"],
-    };
-
-    window['quarto-listings'] = window['quarto-listings'] || {};
-    window['quarto-listings']['listing-listing'] = new List('listing-listing', options);
-
-    if (window['quarto-listing-loaded']) {
-      window['quarto-listing-loaded']();
-    }
-  });
-
-  window.addEventListener('hashchange',() => {
-    if (window['quarto-listing-loaded']) {
-      window['quarto-listing-loaded']();
-    }
-  })
-  </script>
-
-  <script src="https://polyfill.io/v3/polyfill.min.js?features=es6"></script>
-  <script src="https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-chtml-full.js" type="text/javascript"></script>
-
-<link rel="stylesheet" href="styles.css">
-<meta property="og:title" content="LiteralFightNerd - Blog Posts">
+<link rel="stylesheet" href="../../styles.css">
+<meta property="og:title" content="LiteralFightNerd - Introducing FightPickSim">
+<meta property="og:description" content="A UFC DraftKings DFS Projection, Simulation, &amp; Optimization Tool">
 <meta property="og:image" content="https://literalfightnerd.com/posts/2024-01-11-introducing-fightpicksim/img/optimal-lineup-percent-calibration-annotated.png">
 <meta property="og:site-name" content="LiteralFightNerd">
 <meta property="og:image:height" content="712">
 <meta property="og:image:width" content="1000">
-<meta name="twitter:title" content="LiteralFightNerd - Blog Posts">
+<meta name="twitter:title" content="LiteralFightNerd - Introducing FightPickSim">
+<meta name="twitter:description" content="A UFC DraftKings DFS Projection, Simulation, &amp; Optimization Tool">
 <meta name="twitter:image" content="https://literalfightnerd.com/posts/2024-01-11-introducing-fightpicksim/img/optimal-lineup-percent-calibration-annotated.png">
 <meta name="twitter:creator" content="@NateLatshaw">
 <meta name="twitter:image-height" content="712">
@@ -116,7 +88,7 @@ ul.task-list li input[type="checkbox"] {
     <nav class="navbar navbar-expand-lg navbar-dark ">
       <div class="navbar-container container-fluid">
       <div class="navbar-brand-container">
-    <a class="navbar-brand" href="./index.html">
+    <a class="navbar-brand" href="../../index.html">
     <span class="navbar-title">LiteralFightNerd</span>
     </a>
   </div>
@@ -127,7 +99,7 @@ ul.task-list li input[type="checkbox"] {
           <div class="collapse navbar-collapse" id="navbarCollapse">
             <ul class="navbar-nav navbar-nav-scroll ms-auto">
   <li class="nav-item">
-    <a class="nav-link" href="./about.html" rel="" target="">
+    <a class="nav-link" href="../../about.html" rel="" target="">
  <span class="menu-text">About Me</span></a>
   </li>  
   <li class="nav-item dropdown ">
@@ -174,181 +146,128 @@ ul.task-list li input[type="checkbox"] {
 <!-- content -->
 <header id="title-block-header" class="quarto-title-block default page-columns page-full">
   <div class="quarto-title-banner page-columns page-full">
-    <div class="quarto-title column-page">
-      <h1 class="title">Blog Posts</h1>
-                      </div>
+    <div class="quarto-title column-body">
+      <h1 class="title">Introducing FightPickSim</h1>
+                  <div>
+        <div class="description">
+          <p>A UFC DraftKings DFS Projection, Simulation, &amp; Optimization Tool</p>
+        </div>
+      </div>
+                </div>
   </div>
     
   
   <div class="quarto-title-meta">
 
+      <div>
+      <div class="quarto-title-meta-heading">Author</div>
+      <div class="quarto-title-meta-contents">
+               <p>Nate Latshaw </p>
+            </div>
+    </div>
       
+      <div>
+      <div class="quarto-title-meta-heading">Published</div>
+      <div class="quarto-title-meta-contents">
+        <p class="date">January 11, 2024</p>
+      </div>
+    </div>
     
       
     </div>
     
   
-  </header><div id="quarto-content" class="quarto-container page-columns page-rows-contents page-layout-full page-navbar">
+  </header><div id="quarto-content" class="quarto-container page-columns page-rows-contents page-layout-article page-navbar">
 <!-- sidebar -->
 <!-- margin-sidebar -->
-    
+    <div id="quarto-margin-sidebar" class="sidebar margin-sidebar">
+        <nav id="TOC" role="doc-toc" class="toc-active">
+    <h2 id="toc-title">On this page</h2>
+   
+  <ul>
+  <li><a href="#introduction" id="toc-introduction" class="nav-link active" data-scroll-target="#introduction">Introduction</a></li>
+  <li><a href="#how-fightpicksim-works" id="toc-how-fightpicksim-works" class="nav-link" data-scroll-target="#how-fightpicksim-works">How FightPickSim works</a></li>
+  <li><a href="#how-fightpicksim-performs" id="toc-how-fightpicksim-performs" class="nav-link" data-scroll-target="#how-fightpicksim-performs">How FightPickSim performs</a>
+  <ul class="collapse">
+  <li><a href="#precise-fantasy-point-projections" id="toc-precise-fantasy-point-projections" class="nav-link" data-scroll-target="#precise-fantasy-point-projections">Precise fantasy point projections</a></li>
+  <li><a href="#reliable-projection-uncertainty-intervals" id="toc-reliable-projection-uncertainty-intervals" class="nav-link" data-scroll-target="#reliable-projection-uncertainty-intervals">Reliable projection uncertainty intervals</a></li>
+  <li><a href="#accurate-optimal-lineup-forecasts" id="toc-accurate-optimal-lineup-forecasts" class="nav-link" data-scroll-target="#accurate-optimal-lineup-forecasts">Accurate optimal lineup forecasts</a></li>
+  <li><a href="#well-calibrated-optimal-lineup-probabilities" id="toc-well-calibrated-optimal-lineup-probabilities" class="nav-link" data-scroll-target="#well-calibrated-optimal-lineup-probabilities">Well-calibrated optimal lineup probabilities</a></li>
+  </ul></li>
+  <li><a href="#conclusion" id="toc-conclusion" class="nav-link" data-scroll-target="#conclusion">Conclusion</a></li>
+  </ul>
+</nav>
+    </div>
 <!-- main -->
-<main class="content quarto-banner-title-block column-page" id="quarto-document-content">
+<main class="content quarto-banner-title-block" id="quarto-document-content">
 
 
 
 
+<section id="introduction" class="level1">
+<h1>Introduction</h1>
+<p>This post introduces FightPickSim, a new UFC DraftKings Daily Fantasy Sports (DFS) tool I built to perform fantasy point projections, event simulations, and lineup optimization. FightPickSim is an interactive website built using R and R Shiny that can be found <a href="https://natelatshaw.shinyapps.io/ufc-dfs-simulator-and-optimizer/">here</a>. This post documents how the tool works and how it has performed historically.</p>
+<p>First, for those unfamiliar with DFS, DraftKings hosts contests in which players construct a lineup of fighters for an upcoming UFC event, and each player’s objective is to build the lineup that scores the most fantasy points.</p>
+<p>Each lineup consists of six fighters, and each fighter has a different salary. When selecting a lineup, each DFS player is free to select any combination of fighters as long as the total salary for all six fighters does not exceed a fixed salary cap.</p>
+<p>Then, as the event plays out, fighters earn points for accumulating statistics, like significant strikes landed and control time, and for winning. Additional bonus points are awarded for finishes, and finishes in earlier rounds earn more points than finishes in later rounds.</p>
+<p><strong>The goal of FightPickSim is to help users construct lineups that outperform their peers by providing precise fantasy point projections, reliable projection uncertainty intervals, accurate optimal lineup forecasts, and well-calibrated optimal lineup probabilities.</strong></p>
+</section>
+<section id="how-fightpicksim-works" class="level1">
+<h1>How FightPickSim works</h1>
+<p>FightPickSim requires a user to enter a pick for every bout in an upcoming UFC card. That is, each user must select which fighter will win and what the method of victory will be in each bout. Then, using those picks, FightPickSim performs the following:</p>
+<ol type="1">
+<li><p><strong>Monte Carlo simulations</strong>: The entire card is simulated 10,000 times.</p></li>
+<li><p><strong>Fantasy point projections</strong>: A DraftKings fantasy points projection for each fighter is generated in each iteration of the simulation. An uncertainty interval is computed alongside each projection to denote the probability that each fighter’s actual fantasy points land within that interval.</p></li>
+<li><p><strong>Lineup optimization</strong>: The projected optimal lineup is found by taking each fighter’s median projection across all iterations. Each fighter’s optimal lineup percent is calculated by generating an optimal lineup within each iteration and then computing the percent of all iterations in which each fighter appeared in an optimal lineup. Optimal lineup percent measures the probability that each fighter will appear in the true optimal lineup based on the user’s picks.</p></li>
+</ol>
+</section>
+<section id="how-fightpicksim-performs" class="level1">
+<h1>How FightPickSim performs</h1>
+<p>Unlike DFS for most team sports, selecting a lineup of winners is crucial in UFC DFS. In the NFL, for example, selecting a quarterback from a team that loses can actually be an advantage if that team trails the entire game and decides to throw the ball more often than they otherwise would. The same does not hold for UFC DFS due to fighter win bonuses.</p>
+<p>Hence, FightPickSim’s performance is dependent on a user entering high-quality picks, which is an unavoidable limitation. All performance metrics and figures in this post assume a user entered perfect picks. That of course is a very strong assumption but is the only way to reasonably quantify this tool’s potential performance. It should still hold in the long run that if a user enters imperfect but above average picks, then FightPickSim will return above average projections and lineup suggestions.</p>
+<section id="precise-fantasy-point-projections" class="level2">
+<h2 class="anchored" data-anchor-id="precise-fantasy-point-projections">Precise fantasy point projections</h2>
+<p>Rather than generating a single fantasy point projection for each fighter, FightPickSim performs a Monte Carlo simulation of a UFC event using the user’s picks. That is, FightPickSim simulates the entire card 10,000 times and draws a projection for each fighter in each iteration of the simulation. This yields a distribution of projected fantasy points for each fighter, which unlocks deeper insight into the number of points each fighter may earn and allows us to quantify the uncertainty around these projections.</p>
+<p>Using all 2023 UFC events as an evaluation period, the median absolute deviation between each fighter’s actual fantasy points and FightPickSim’s median projected fantasy points was 7.6, as seen in the figure below. Likewise, among winning fighters (i.e.&nbsp;the fighters we care the most about), the median absolute percentage difference between each fighter’s actual fantasy points and FightPickSim’s projected points was 9.6%. The figure below shows the distribution of differences between actual and projected fantasy points for all fighters.</p>
+<p>This distribution is relatively centered around 0, which means projections overestimate actual performance nearly as often as they underestimate it. Given the variability in fighter performances in the UFC, I believe these performance metrics show that FightPickSim’s projections are strong.</p>
+<p><img src="img/actual-vs-projected-points-annotated.png" class="img-fluid" style="width:100.0%"></p>
+</section>
+<section id="reliable-projection-uncertainty-intervals" class="level2">
+<h2 class="anchored" data-anchor-id="reliable-projection-uncertainty-intervals">Reliable projection uncertainty intervals</h2>
+<p>FightPickSim leverages the distribution of projections generated in the Monte Carlo simulation to construct uncertainty intervals around each fighter’s projection. That is, based on the user’s picks, each fighter is given an interval such that there is, say, an 80% chance that the fighter’s actual fantasy points land within that interval.</p>
+<p>In the FightPickSim tool, users can adjust the coverage of the uncertainty interval, so if a user wants an interval that has a 90% chance of containing the fighter’s actual fantasy points, that may be selected. However, there is no free lunch – an interval that has a 90% chance of containing a fighter’s actual fantasy points will be wider than an interval with an 80% chance. As the likelihood of containing the actual value increases, the width of the interval increases as well, so there is a tradeoff between coverage and precision.</p>
+<p>The most important aspect of FightPickSim’s uncertainty intervals is that they are reliable and well calibrated. That is, among all uncertainty intervals that claim to contain a fighter’s actual fantasy points with 80% probability, we see in the figure below that ~80.5% of these intervals contained the actual value. The same holds for intervals with different expected coverage. Hence, users can trust the coverage claimed by these intervals.</p>
+<p><img src="img/uncertainty-interval-coverage-annotated.png" class="img-fluid" style="width:100.0%"></p>
+</section>
+<section id="accurate-optimal-lineup-forecasts" class="level2">
+<h2 class="anchored" data-anchor-id="accurate-optimal-lineup-forecasts">Accurate optimal lineup forecasts</h2>
+<p>In DFS, the optimal lineup is the set of six fighters who scored the most total fantasy points with a total salary that does not exceed the salary cap. Put more simply, the optimal lineup is the best possible lineup a DFS player could select. Since there are so many possible combinations of lineups, most lineups that win money in DFS are suboptimal lineups, but the optimal lineup is still what every DFS player seeks.</p>
+<p>FightPickSim leverages a user’s picks and the subsequent fantasy point projections to forecast the optimal lineup. Methodologically, this is a relatively straightforward optimization problem where the projections are maximized subject to the constraints of having to select six fighters with a total salary that does not exceed the salary cap.</p>
+<p>In practice, FightPickSim reliably forecasts optimal lineups. The figure below shows the frequency in which each number of possible optimal lineup fighters was correctly predicted for a UFC event. That is, all six optimal lineup fighters were correctly predicted by FightPickSim in 16.3% of 2023 UFC events, so if a user had input perfect picks for those events, FightPickSim would have provided the full optimal lineup. For nearly half of the 2023 UFC events, FightPickSim was able to forecast at least five of the six optimal lineup fighters, and it never correctly forecasted fewer than three. Therefore, users that bring correct picks to FightPickSim can expect to build lineups with optimal lineup fighters.</p>
+<p><img src="img/optimal-fighters-per-event-annotated.png" class="img-fluid" style="width:100.0%"></p>
+</section>
+<section id="well-calibrated-optimal-lineup-probabilities" class="level2">
+<h2 class="anchored" data-anchor-id="well-calibrated-optimal-lineup-probabilities">Well-calibrated optimal lineup probabilities</h2>
+<p>The aforementioned optimal lineup forecasts consist of binary predictions denoting whether or not each fighter will land in the optimal lineup, but perhaps more importantly, FightPickSim is able to provide a well-calibrated probability that each fighter will appear in the optimal lineup based on a user’s picks. That is, in the FightPickSim Monte Carlo simulation, 10,000 optimal lineups are computed, and the percent of optimal lineups that include a given fighter, known as optimal lineup percent, is calculated.</p>
+<p>The figure below shows that optimal lineup percent is well calibrated. For instance, among all fighters with an optimal lineup percent between 80-90%, 87% appear in the actual optimal lineup. A similar relationship exists for every other bin between 0-100%, which shows that optimal lineup percent can be treated as a reliable probability that a fighter will appear in the true optimal lineup.</p>
+<p><img src="img/optimal-lineup-percent-calibration-annotated.png" class="img-fluid" style="width:100.0%"></p>
+</section>
+</section>
+<section id="conclusion" class="level1">
+<h1>Conclusion</h1>
+<p>To recap, FightPickSim is a UFC DraftKings DFS projection, simulation, and optimization tool. For users that input correct picks into the tool, FightPickSim provides:</p>
+<ul>
+<li>Precise fantasy point projections</li>
+<li>Reliable projection uncertainty intervals</li>
+<li>Accurate optimal lineup forecasts</li>
+<li>Well-calibrated optimal lineup probabilities</li>
+</ul>
+<p>FightPickSim was built using R and R Shiny and is available to check out <a href="https://natelatshaw.shinyapps.io/ufc-dfs-simulator-and-optimizer/">here</a>, and if you have any questions or feedback, feel free to reach out to me on <a href="https://twitter.com/NateLatshaw">Twitter</a>.</p>
 
 
+</section>
 
-
-<div class="quarto-listing quarto-listing-container-default" id="listing-listing">
-<div class="list quarto-listing-default">
-<div class="quarto-post image-right" data-index="0" data-listing-date-sort="1704949200000" data-listing-file-modified-sort="1705025631497" data-listing-date-modified-sort="NaN" data-listing-reading-time-sort="7">
-<div class="thumbnail">
-<p><a href="./posts/2024-01-11-introducing-fightpicksim/index.html"> <img src="./posts/2024-01-11-introducing-fightpicksim/img/optimal-lineup-percent-calibration-annotated.png" class="thumbnail-image"> </a></p>
-</div>
-<div class="body">
-<a href="./posts/2024-01-11-introducing-fightpicksim/index.html">
-<h3 class="no-anchor listing-title">
-Introducing FightPickSim
-</h3>
-<div class="listing-subtitle">
-
-</div>
-<div class="listing-description">
-<p>A UFC DraftKings DFS Projection, Simulation, &amp; Optimization Tool</p>
-</div>
-</a>
-</div>
-<div class="metadata">
-<a href="./posts/2024-01-11-introducing-fightpicksim/index.html">
-<div class="listing-date">
-Jan 11, 2024
-</div>
-<div class="listing-author">
-Nate Latshaw
-</div>
-</a>
-</div>
-</div>
-<div class="quarto-post image-right" data-index="1" data-listing-date-sort="1641358800000" data-listing-file-modified-sort="1700011900076" data-listing-date-modified-sort="NaN" data-listing-reading-time-sort="32">
-<div class="thumbnail">
-<p><a href="./posts/2022-01-05-visualizing-fighter-styles/index.html"> <p class="card-img-top"><img src="posts\2022-01-05-visualizing-fighter-styles\index_files\figure-html\unnamed-chunk-18-1.png"  class="thumbnail-image card-img"/></p> </a></p>
-</div>
-<div class="body">
-<a href="./posts/2022-01-05-visualizing-fighter-styles/index.html">
-<h3 class="no-anchor listing-title">
-Visualizing Fighter Styles
-</h3>
-<div class="listing-subtitle">
-
-</div>
-<div class="listing-description">
-<p>An exploratory look at how modern UFC athletes fight</p>
-</div>
-</a>
-</div>
-<div class="metadata">
-<a href="./posts/2022-01-05-visualizing-fighter-styles/index.html">
-<div class="listing-date">
-Jan 5, 2022
-</div>
-<div class="listing-author">
-Nate Latshaw
-</div>
-</a>
-</div>
-</div>
-<div class="quarto-post image-right" data-index="2" data-listing-date-sort="1614661200000" data-listing-file-modified-sort="1700011820111" data-listing-date-modified-sort="NaN" data-listing-reading-time-sort="37">
-<div class="thumbnail">
-<p><a href="./posts/2021-03-02-introducing-expected-rounds-xr/index.html"> <p class="card-img-top"><img src="posts\2021-03-02-introducing-expected-rounds-xr\index_files\figure-html\unnamed-chunk-4-1.png"  class="thumbnail-image card-img"/></p> </a></p>
-</div>
-<div class="body">
-<a href="./posts/2021-03-02-introducing-expected-rounds-xr/index.html">
-<h3 class="no-anchor listing-title">
-Introducing Expected Rounds (xR)
-</h3>
-<div class="listing-subtitle">
-
-</div>
-<div class="listing-description">
-<p>A new advanced fighter evaluation metric that is interpretable, informative, predictive, robust, and stable</p>
-</div>
-</a>
-</div>
-<div class="metadata">
-<a href="./posts/2021-03-02-introducing-expected-rounds-xr/index.html">
-<div class="listing-date">
-Mar 2, 2021
-</div>
-<div class="listing-author">
-Nate Latshaw
-</div>
-</a>
-</div>
-</div>
-<div class="quarto-post image-right" data-index="3" data-listing-date-sort="1614229200000" data-listing-file-modified-sort="1700011200667" data-listing-date-modified-sort="NaN" data-listing-reading-time-sort="20">
-<div class="thumbnail">
-<p><a href="./posts/2021-02-25-extending-judgeai/index.html"> <p class="card-img-top"><img src="posts\2021-02-25-extending-judgeai\index_files\figure-html\unnamed-chunk-14-1.png"  class="thumbnail-image card-img"/></p> </a></p>
-</div>
-<div class="body">
-<a href="./posts/2021-02-25-extending-judgeai/index.html">
-<h3 class="no-anchor listing-title">
-Extending JudgeAI
-</h3>
-<div class="listing-subtitle">
-
-</div>
-<div class="listing-description">
-<p>Aggregating JudgeAI’s round score predictions to generate final scorecard probability distributions - with a case study on the judging decisions made during the main event of UFC 247: Jones vs Reyes</p>
-</div>
-</a>
-</div>
-<div class="metadata">
-<a href="./posts/2021-02-25-extending-judgeai/index.html">
-<div class="listing-date">
-Feb 25, 2021
-</div>
-<div class="listing-author">
-Nate Latshaw
-</div>
-</a>
-</div>
-</div>
-<div class="quarto-post image-right" data-index="4" data-listing-date-sort="1613710800000" data-listing-file-modified-sort="1700010775648" data-listing-date-modified-sort="NaN" data-listing-reading-time-sort="37">
-<div class="thumbnail">
-<p><a href="./posts/2021-02-19-introducing-judgeai/index.html"> <p class="card-img-top"><img src="posts\2021-02-19-introducing-judgeai\index_files\figure-html\unnamed-chunk-14-1.png"  class="thumbnail-image card-img"/></p> </a></p>
-</div>
-<div class="body">
-<a href="./posts/2021-02-19-introducing-judgeai/index.html">
-<h3 class="no-anchor listing-title">
-Introducing JudgeAI
-</h3>
-<div class="listing-subtitle">
-
-</div>
-<div class="listing-description">
-<p>A machine learning algorithm that predicts judges’ scores by round in the UFC</p>
-</div>
-</a>
-</div>
-<div class="metadata">
-<a href="./posts/2021-02-19-introducing-judgeai/index.html">
-<div class="listing-date">
-Feb 19, 2021
-</div>
-<div class="listing-author">
-Nate Latshaw
-</div>
-</a>
-</div>
-</div>
-</div>
-<div class="listing-no-matching d-none">
-No matching items
-</div>
-</div></main> <!-- /main -->
+</main> <!-- /main -->
 <script id="quarto-html-after-body" type="application/javascript">
 window.document.addEventListener("DOMContentLoaded", function (event) {
   const toggleBodyColorMode = (bsSheetEl) => {
