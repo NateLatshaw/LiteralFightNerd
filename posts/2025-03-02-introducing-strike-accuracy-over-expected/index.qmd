@@ -1,0 +1,526 @@
+---
+title: "Introducing Strike Accuracy over Expected (SAOE)"
+description: |
+  An advanced striking metric that is easily interpreted, offers new insights, and facilitates meangingful comparisons between fighters
+base_url: "https://literalfightnerd.com/"
+twitter:
+  - site: "@NateLatshaw"
+  - creator: "@NateLatshaw"
+author:
+  - name: Nate Latshaw
+date: 3-2-2025
+format:
+  html:
+    toc: true
+---
+
+```{r setup, include=FALSE}
+knitr::opts_chunk$set(echo = FALSE, warning = FALSE, message = FALSE)
+```
+
+```{r}
+#| include: false
+#| echo: false
+
+rm(list = ls())
+gc()
+
+library(data.table)
+library(lubridate)
+library(ggplot2)
+library(RColorBrewer)
+library(scales)
+library(kableExtra)
+library(reactablefmtr)
+library(webshot2)
+library(ggrepel)
+library(htmltools)
+
+#setwd('D:/LiteralFightNerd/posts/2025-03-02-introducing-strike-accuracy-over-expected/')
+data_path <- '../../_supplemential_files/2025-03-02-introducing-strike-accuracy-over-expected/input_files/'
+
+seed <- 123
+all_blue_colors <- brewer.pal(9, 'Blues')[1:8]
+all_red_colors <- brewer.pal(9, 'Reds')[1:8]
+all_green_colors <- brewer.pal(9, 'Greens')[1:8]
+all_grey_colors <- brewer.pal(9, 'Greys')[1:8]
+paired_colors4 <- brewer.pal(6, 'Paired')[c(6,5,2,1)]
+paired_red <- paired_colors4[1]
+paired_blue <- paired_colors4[3]
+paired_green <- brewer.pal(6, 'Paired')[4]
+paired_blue_light <- paired_colors4[4]
+span_value <- F
+
+# plot aesthetics
+paired_colors4 <- brewer.pal(6, 'Paired')[c(6,2,5,1)]
+
+# load data
+fights <- readRDS(paste0(data_path, 'fight_stats_20250302.RDS'))
+careers <- readRDS(paste0(data_path, 'career_stats_20250302.RDS'))
+
+# set parameters for this post
+min_year <- 2022
+min_strike_attempts <- 300
+max_date <- fights[, format.Date(max(EventDate), format = '%B %d, %Y')]
+
+careers[year(Last_Bout) >= min_year & SS_Attempted >= 300, 
+        .(Name, SAOE, SS_Accuracy, SS_Attempted, SS_Attempt_Dist_Pct)][order(-SS_Accuracy)]
+
+careers[year(Last_Bout) >= min_year & SS_Attempted >= 300, 
+        .(Name, SAOE, SS_Accuracy, SS_Attempted, SS_Attempt_Dist_Pct)][order(-SAOE)]
+
+
+careers[year(Last_Bout) >= min_year & SS_Landed >= 100, .(Name, round(SS_Accuracy, 3), round(SAOE, 3), round(SAOE_Distance, 2), round(SAOE_Clinch, 2), round(SAOE_Ground, 2))][order(-V3)]
+
+```
+
+# Introduction
+
+The Ultimate Fighting Championship (UFC) recently introduced a [new strike accuracy-related metric](https://www.ufc.com/news/does-striking-accuracy-accurately-measure-striking) for broadcasts. In short, certain types of strikes (e.g. power punches to the body from a mounted position) are easier to land than others (e.g. head kicks from distance). Since these different types of strikes land at significantly different rates, a fighter's strike accuracy can be more a function of striking tendencies than an actual, informative measure of a fighter's ability to land strikes.
+
+To solve this limitation of strike accuracy as a metric, the UFC computes an expected strike accuracy based on both (a) the types of strikes that each fighter throws and (b) the rate at which each type of strike has landed historically across all fighters. Then, the difference between a fighter's observed and expected strike accuracy is computed to serve as a more meaningful measure of accuracy.
+
+This blog post utilizes this concept to formally introduce Strike Accuracy Over Expected (SAOE), a new metric that aims to quantify a fighter's striking precision in a manner that improves upon the traditional strike accuracy metric. The details are provided below in this post, but put simply, SAOE has three desirable properties:
+
+1. **SAOE is easily interpreted** - it is interpreted as the percentage point difference between a fighter's observed and expected strike accuracy.
+
+2. **SAOE offers new insights** - it contains a frame of reference for strike accuracy against which to compare to a fighter's performance and wraps that up into a single, composite metric that quantifies striking precision.
+
+3. **SAOE facilitates meaningful comparisons between fighters with different styles** - it is correlated with strike accuracy but uncorrelated with striking tendencies.
+
+As a final note, the concept of SAOE is grounded in advanced analytics work from other sports. For instance, within the last couple years, National Football League (NFL) analysts have shown that a quarterback's raw completion percentage is not strongly correlated with performance. In fact, some lower-quality quarterbacks have high completion percentages because they often throw short, safe passes. To improve upon completion percentage as a metric, [Completion Percentage Over Expected (CPOE)](https://www.the33rdteam.com/cpoe-explained/) was developed. CPOE calculates the probability that a pass will be completed based on a number of factors (e.g. how far the ball travels in the air, the down and yards to go for a first down, etc.) and then computes the difference between a quarterback's observed and expected completion percentage. Completing a high percentage of safe throws is not equivalent to completing the same percentage of challenging throws, and since CPOE is able to distinguish between the two, it has been shown to be a much more meaningful measure of quarterback performance.
+
+With this blog post, we now have an advanced metric that is similar in concept and function to better quantify striking precision in the UFC.
+
+# Motivation: why strike accuracy is limited
+
+Strike accuracy, defined as the number of significant strikes a fighter lands divided by the number attempted, is easy to understand but is often not informative as a single measure of striking ability. Consider the figure below, which shows that distance strike accuracy is significantly lower than clinch and ground accuracy. Hence, an average fighter who only throws strikes from distance will have a lower strike accuracy than an average fighter who only throws strikes from the clinch and on the ground, and this difference would be purely due to striking tendencies rather than skill differences.
+
+```{r}
+#| echo: false
+#| fig-align: center
+
+# Show accuracy in dist/clinch/ground strikes
+
+plot_df <- melt(fights[year(EventDate) >= min_year, 
+                       .(Distance = sum(F1_SSl_Dist) / sum(F1_SSa_Dist), 
+                         Clinch = sum(F1_SSl_Clnch) / sum(F1_SSa_Clnch), 
+                         Ground = sum(F1_SSl_Grnd) / sum(F1_SSa_Grnd))])
+plot_df[, variable := factor(variable, levels = rev(levels(variable)))]
+
+ggplot(plot_df, aes(x = variable, y = value, fill = paired_colors4[2], color = paired_colors4[2])) + 
+  geom_bar(stat = 'identity') + 
+  geom_text(aes(label = paste0(format(round(100 * value, 1), nsmall = 1), '%')), hjust = -.2, fontface = 'bold', size = 5, color = 'black') + 
+  scale_y_continuous(limits = c(0,1), breaks = NULL) + 
+  scale_fill_identity() + 
+  scale_color_identity() + 
+  labs(title = 'UFC Strike Accuracy by Type of Strike', 
+       subtitle = paste0('Among all UFC fights from ', min_year, ' to ', max_date), 
+       x = '', 
+       y = 'Strike accuracy (significant strikes landed / attempted)') + 
+  theme_minimal() + 
+  theme(plot.title = element_text(size = 18, face = 'bold', color = 'black'), 
+        plot.title.position = 'plot', 
+        plot.subtitle = element_text(size = 14, face = 'italic', color = 'black'), 
+        axis.text = element_text(size = 14, face = 'bold', color = 'black'), 
+        axis.title = element_text(size = 14, face = 'bold', color = 'black'), 
+        axis.ticks = element_blank()) + 
+  coord_flip()
+```
+
+To further illustrate the point, the most common comparative use case of strike accuracy is (presumably) to determine which fighter is the more precise overall striker, and as such, strike accuracy as a metric can be problematic. The figure below shows that strike accuracy is negatively correlated with a fighter's percent of significant strikes thrown at distance. Further, strike accuracy is positively correlated with a fighter's percent of significant strikes thrown both from the clinch and on the ground. Thus, fighters who throw more strikes from distance tend to have lower strike accuracy, so when a kickboxer fights a grappler, comparing strike accuracy as a proxy for overall striking ability is likely to show the opposite of what is actually true.
+
+::: {.panel-tabset}
+
+## Distance
+
+```{r}
+#| echo: false
+#| fig-align: center
+
+# Show correlation between strike accuracy and dist/clinch/ground % of sig strikes thrown
+
+plot_df <- careers[year(Last_Bout) >= min_year & SS_Attempted >= min_strike_attempts, 
+                   .(Name, SS_Accuracy, SS_Attempt_Dist_Pct, SS_Attempt_Clinch_Pct, SS_Attempt_Ground_Pct)]
+
+ggplot(plot_df, aes(x = SS_Accuracy, y = SS_Attempt_Dist_Pct)) + 
+  geom_point(color = paired_colors4[2], size = 2) + 
+  geom_smooth(se = F, color = 'black', size = .8, method = 'glm', lty = 2) + 
+  geom_text(aes(label = paste0('Pearson correlation coefficient = ', plot_df[, round(cor(SS_Attempt_Dist_Pct, SS_Accuracy), 2)]), x = .35, y = .6), size =3) + 
+  scale_x_continuous(breaks = seq(0, 1, .1), limits = plot_df[, c(.95 * min(SS_Accuracy), 1.05 * max(SS_Accuracy))], label = percent) + 
+  scale_y_continuous(breaks = seq(0, 1, .1), limits = plot_df[, c(max(0, .95 * min(SS_Attempt_Dist_Pct)), min(1, 1.05 * max(SS_Attempt_Dist_Pct)))], label = percent) + 
+  labs(title = 'UFC fighter strike accuracy vs distance % of strike attempts', 
+       subtitle = paste0('Among all UFC fighters with at least 1 bout between ', min_year, ' to ', fights[, format.Date(max(EventDate), format = '%B %d, %Y')], ' and ', min_strike_attempts, '+ significant strike attempts'), 
+       x = 'Strike accuracy (significant strikes landed / attempted)', 
+       y = 'Percent of significant strikes attempted at distance') + 
+  theme_minimal() + 
+  theme(plot.title = element_text(size = 17, face = 'bold', color = 'black'), 
+        plot.title.position = 'plot', 
+        plot.subtitle = element_text(size = 9, face = 'italic', color = 'black'), 
+        axis.text = element_text(size = 9.5), 
+        axis.title = element_text(size = 10.5, face = 'bold', color = 'black')) + 
+  coord_flip()
+
+```
+
+## Clinch
+
+```{r}
+#| echo: false
+#| fig-align: center
+
+# Show correlation between strike accuracy and dist/clinch/ground % of sig strikes thrown
+
+plot_df <- careers[year(Last_Bout) >= min_year & SS_Attempted >= min_strike_attempts, 
+                   .(Name, SS_Accuracy, SS_Attempt_Dist_Pct, SS_Attempt_Clinch_Pct, SS_Attempt_Ground_Pct)]
+
+ggplot(plot_df, aes(x = SS_Accuracy, y = SS_Attempt_Clinch_Pct)) + 
+  geom_point(color = paired_colors4[2], size = 2) + 
+  geom_smooth(se = F, color = 'black', size = .8, method = 'glm', lty = 2) + 
+  geom_text(aes(label = paste0('Pearson correlation coefficient = ', plot_df[, round(cor(SS_Attempt_Clinch_Pct, SS_Accuracy), 2)]), x = .35, y = .25), size =3) + 
+  scale_x_continuous(breaks = seq(0, 1, .1), limits = plot_df[, c(.95 * min(SS_Accuracy), 1.05 * max(SS_Accuracy))], label = percent) + 
+  scale_y_continuous(breaks = seq(0, 1, .1), limits = plot_df[, c(max(0, .95 * min(SS_Attempt_Clinch_Pct)), min(1, 1.05 * max(SS_Attempt_Clinch_Pct)))], label = percent) + 
+  labs(title = 'UFC fighter strike accuracy vs clinch % of strike attempts', 
+       subtitle = paste0('Among all UFC fighters with at least 1 bout between ', min_year, ' to ', fights[, format.Date(max(EventDate), format = '%B %d, %Y')], ' and ', min_strike_attempts, '+ significant strike attempts'), 
+       x = 'Strike accuracy (significant strikes landed / attempted)', 
+       y = 'Percent of significant strikes attempted in the clinch') + 
+  theme_minimal() + 
+  theme(plot.title = element_text(size = 17, face = 'bold', color = 'black'), 
+        plot.title.position = 'plot', 
+        plot.subtitle = element_text(size = 9, face = 'italic', color = 'black'), 
+        axis.text = element_text(size = 9.5), 
+        axis.title = element_text(size = 10.5, face = 'bold', color = 'black')) + 
+  coord_flip()
+
+```
+
+## Ground
+
+```{r}
+#| echo: false
+#| fig-align: center
+
+# Show correlation between strike accuracy and dist/clinch/ground % of sig strikes thrown
+
+plot_df <- careers[year(Last_Bout) >= min_year & SS_Attempted >= min_strike_attempts, 
+                   .(Name, SS_Accuracy, SS_Attempt_Dist_Pct, SS_Attempt_Clinch_Pct, SS_Attempt_Ground_Pct)]
+
+ggplot(plot_df, aes(x = SS_Accuracy, y = SS_Attempt_Ground_Pct)) + 
+  geom_point(color = paired_colors4[2], size = 2) + 
+  geom_smooth(se = F, color = 'black', size = .8, method = 'glm', lty = 2) + 
+  geom_text(aes(label = paste0('Pearson correlation coefficient = ', plot_df[, round(cor(SS_Attempt_Ground_Pct, SS_Accuracy), 2)]), x = .35, y = .3), size =3) + 
+  scale_x_continuous(breaks = seq(0, 1, .1), limits = plot_df[, c(.95 * min(SS_Accuracy), 1.05 * max(SS_Accuracy))], label = percent) + 
+  scale_y_continuous(breaks = seq(0, 1, .1), limits = plot_df[, c(max(0, .95 * min(SS_Attempt_Ground_Pct)), min(1, 1.05 * max(SS_Attempt_Ground_Pct)))], label = percent) + 
+  labs(title = 'UFC fighter strike accuracy vs ground % of strike attempts', 
+       subtitle = paste0('Among all UFC fighters with at least 1 bout between ', min_year, ' to ', fights[, format.Date(max(EventDate), format = '%B %d, %Y')], ' and ', min_strike_attempts, '+ significant strike attempts'), 
+       x = 'Strike accuracy (significant strikes landed / attempted)', 
+       y = 'Percent of significant strikes attempted on the ground') + 
+  theme_minimal() + 
+  theme(plot.title = element_text(size = 17, face = 'bold', color = 'black'), 
+        plot.title.position = 'plot', 
+        plot.subtitle = element_text(size = 9, face = 'italic', color = 'black'), 
+        axis.text = element_text(size = 9.5), 
+        axis.title = element_text(size = 10.5, face = 'bold', color = 'black')) + 
+  coord_flip()
+
+```
+
+:::
+
+Finally, the table below shows the top 10 UFC fighters with the highest strike accuracy, among fighters with `r min_strike_attempts`+ significant strike attempts and 1+ bouts since `r min_year`. Many on this list are not necessarily considered elite strikers, and most throw a relatively small percent of strikes from distance, which indicates their strike accuracy is largely driven by striking tendencies rather than precision. As such, this top 10 list is not particularly relevant.
+
+```{r}
+#| echo: false
+#| fig-align: center
+
+# Show top 10 strike accuracy - we will revisit this later
+
+tbl_df <- careers[year(Last_Bout) >= min_year & SS_Attempted >= min_strike_attempts, 
+        .('Fighter' = Name,
+          'Strike accuracy' = paste0(format(round(100 * SS_Accuracy, 1), nsmall = 1), '%'), 
+          'Distance % of strike attempts' = paste0(format(round(100 * SS_Attempt_Dist_Pct, 1), nsmall = 1), '%'), 
+          'Significant strikes attempts' = format(SS_Attempted, big.mark = ','))][order(-get('Strike accuracy'))][1:10]
+
+kable(tbl_df, align = 'c', 
+      caption = paste0('UFC Career Strike Accuracy Top 10 (among fighters with ', min_strike_attempts, '+ significant strike attempts and at least 1 bout since ', min_year, ')')) %>%
+  kable_styling(bootstrap_options = c("striped"), full_width = F)
+```
+
+Therefore, strike accuracy is limited in its ability to depict anything meaningful when (a) considering one fighter at a time, (b) comparing two fighters, and (c) attempting to rank fighters. Enter SAOE, a new and improved measure for overall striking precision.
+
+# Calculating Strike Accuracy Over Expected (SAOE)
+
+**SAOE is interpreted as the percentage point difference between observed and expected strike accuracy based on the types of strikes thrown**. Positive numbers indicate fighters are more accurate than we would expect given their strike attempt distribution, and thus, elite strikers often rank highly in SAOE.
+
+Understanding SAOE is as simple as comprehending the paragraph above. Now, the rest of this section gets mildly technical to show the computational details of the SAOE metric, so here is your warning if that is not of interest - you should be able to safely skip to the next section that showcases the importance of SAOE. For everyone else, I attempt to keep the forthcoming notation light and as readable as possible.
+
+Mathematically, SAOE is calculated as follows:
+
+$$
+SAOE = \text{Significant strike accuracy} - \text{Expected significant strike accuracy}
+$$
+
+The only complexity underlying SAOE is then how to compute *expected* strike accuracy. The current version of SAOE separates distance, clinch, and ground strikes, and the expected accuracy is calculated for each bout using the corresponding accuracy of the given weight class from the prior calendar year. As an example, the expected distance strike accuracy for a Lightweight bout in 2025 is the total distance strike accuracy from all distance strikes thrown in Lightweight bouts in 2024. Expected clinch and ground strike accuracy is computed analogously. Also, for all Catchweight bouts (since there are so few) and for all fights in the debut year of a weight class, the expected accuracy metrics are calculated using all fights from the prior calendar year.
+
+With this methodology, the updated formula for SAOE for a given fighter $f$ is:
+
+
+\begin{aligned}
+
+SAOE_f &= \text{Significant strike accuracy}_f - \text{Expected significant strike accuracy}_f \\
+
+&= \frac{\text{Significant strikes landed}_f}{\text{Significant strikes attempted}_f} - \frac{\text{Expected significant strikes landed}_f}{\text{Significant strikes attempted}_f} \\
+
+&= \frac{\text{Significant strikes landed}_f - \text{Expected significant strikes landed}_f}{\text{Significant strikes attempted}_f}
+
+\end{aligned}
+
+
+Now, let $B_f$ be the set of UFC bouts for fighter $f$, and let the prior year's distance/clinch/ground strike accuracy be for the associated weight class for bout $b$. Then, the formula for the expected number of significant strikes landed for the entire UFC career of fighter $f$ is:
+
+
+\begin{array}{l}
+
+\text{Expected significant strikes landed}_f = \\
+
+\sum_{b \in B_f} \text{Expected distance strikes landed}_{f,b} + \text{Expected clinch strikes landed}_{f,b} \\
++ \text{Expected ground strikes landed}_{f,b} = \\
+
+\sum_{b \in B_f} \text{Distance significant strike attempts}_{f,b} * \text{prior year distance strike accuracy}_b \\
++ \text{Clinch significant strike attempts}_{f,b} * \text{prior year clinch strike accuracy}_b \\
++ \text{Ground significant strike attempts}_{f,b} * \text{prior year ground strike accuracy}_b
+
+\end{array}
+
+For those who do not follow the notation, the expected number of significant strikes landed for a given fighter in a single bout is the sum of the expected number of distance, clinch, and ground significant strikes landed. Next, the expected number of distance strikes landed is the number of distance significant strike attempts times the distance strike accuracy for the corresponding weight class in the prior year (and so on for expected clinch and ground strikes). Then, summing those values across all bouts in the given fighter's career yields the expected number of significant strikes landed, which can be plugged into the equation above for $SAOE_f$.
+
+# How SAOE improves upon strike accuracy
+
+The objective of this section is to illustrate how SAOE improves upon strike accuracy as a more informative composite measure of striking precision while maintaining interpretability.
+
+To start, consider Sean O'Malley's strike accuracy and SAOE in the table below.
+
+```{r}
+#| echo: false
+#| fig-align: center
+
+# table for Sean O'Malley
+tbl_df <- careers[Name == "Sean O'Malley", 
+                  .('Strike Accuracy' = paste0(format(round(100 * SS_Accuracy, 1), nsmall = 1), '%'), 
+                    SAOE = paste0(ifelse(SAOE >= 0, '+', ''), format(round(100 * SAOE, 1), nsmall = 1) ,'%'), 
+                    'Distance % of Strike Attempts' = paste0(format(round(100 * SS_Attempt_Dist_Pct, 1), nsmall = 1), '%'))]
+saoe_omalley <- tbl_df$SAOE
+acc_omalley <- tbl_df$`Strike Accuracy`
+
+kable(tbl_df, align = 'c', 
+      caption = paste0("Sean O'Malley UFC Career Striking Statistics (as of ", max_date, ')')) %>%
+  kable_styling(bootstrap_options = c("striped"), full_width = F)
+
+```
+
+Strike accuracy alone does not provide any context, meaning it is unclear if O'Malley's accuracy is high or low because there is no point of reference. SAOE, on the other hand, contains that context and depicts how much more accurate O'Malley is than the aggregate of his peers. In this case, O'Malley's SAOE of `r saoe_omalley` indicates that his strike accuracy is `r gsub('\\+|%', '', saoe_omalley)` percentage points higher than expected; hence, his expected strike accuracy based on the distribution of distance, clinch, and ground strikes he throws is: `r acc_omalley` - `r gsub('\\+', '', saoe_omalley)` = `r paste0(format(as.numeric(gsub('%', '', acc_omalley)) - as.numeric(gsub('\\+|%', '', saoe_omalley)), nsmall = 1), '%')`.
+
+Comparing strike accuracy between fighters can further exacerbate the issue, as seen in the table below. Jailton Almeida has a noticeably higher strike accuracy than Ciryl Gane. However, that difference in strike accuracy is largely driven by striking tendencies - Almeida throws nearly all his strikes from the clinch or ground while Gane strikes almost exclusively from distance. When accounting for the inherent differences in distance, clinch, and ground strikes, SAOE shows that Gane is clearly the more precise striker, as we would expect.
+
+```{r}
+#| echo: false
+#| fig-align: center
+
+# table for Gane and Almeida
+tbl_df <- careers[Name %in% c('Ciryl Gane', 'Jailton Almeida'), 
+                  .('Strike Accuracy' = paste0(format(round(100 * SS_Accuracy, 1), nsmall = 1), '%'), 
+                    SAOE = paste0(ifelse(SAOE >= 0, '+', ''), format(round(100 * SAOE, 1), nsmall = 1) ,'%'), 
+                    'Distance % of Strike Attempts' = paste0(format(round(100 * SS_Attempt_Dist_Pct, 1), nsmall = 1), '%')), 
+                  by = .(Fighter = Name)]
+
+
+kable(tbl_df, align = 'c', 
+      caption = paste0("UFC Career Striking Statistics (as of ", max_date, ')')) %>%
+  kable_styling(bootstrap_options = c("striped"), full_width = F)
+
+```
+
+The table below shows Pearson correlation coefficients that describe the strength and direction of the linear relationships between striking metric (i.e. strike accuracy and SAOE) and striking tendencies (i.e. percent of strikes thrown at distance, in the clinch, or on the ground). Pearson correlation coefficients range from -1 to 1 such that positive numbers indicate a positive linear relationship (and vice-versa for negative numbers) and 0 indicates no linear relationship.
+
+As we can see, strike accuracy is moderately correlated with striking tendencies, but SAOE is effectively uncorrelated with the distribution of a fighter's strike attempts. This property of SAOE is desirable because, unlike strike accuracy, it allows for meaningful comparisons between fighters across striking styles and tendencies. Put another way, a fighter's strike accuracy can be artificially inflated by being an average grounder striker who only throws ground strikes. However, that is not possible with SAOE - this hypothetical fighter would have to be an above average ground striker to have a positive SAOE.
+
+```{r}
+#| echo: false
+#| fig-align: center
+
+# correlation between SAOE, strike accuracy, and % of strikes thrown from distance/clinch/ground
+
+cor_df <- data.table('Strike Type' = c('Distance % of strike attempts', 'Clinch % of strike attempts', 'Ground % of strike attempts'), 
+                     'Strike Accuracy' = c(careers[year(Last_Bout) >= min_year & SS_Attempted >= min_strike_attempts, 
+                                                   cor(SS_Accuracy, SS_Attempt_Dist_Pct)], 
+                                           careers[year(Last_Bout) >= min_year & SS_Attempted >= min_strike_attempts, 
+                                                   cor(SS_Accuracy, SS_Attempt_Clinch_Pct)], 
+                                           careers[year(Last_Bout) >= min_year & SS_Attempted >= min_strike_attempts, 
+                                                   cor(SS_Accuracy, SS_Attempt_Ground_Pct)]), 
+                     SAOE = c(careers[year(Last_Bout) >= min_year & SS_Attempted >= min_strike_attempts, 
+                                      cor(SAOE, SS_Attempt_Dist_Pct)], 
+                              careers[year(Last_Bout) >= min_year & SS_Attempted >= min_strike_attempts, 
+                                      cor(SAOE, SS_Attempt_Clinch_Pct)], 
+                              careers[year(Last_Bout) >= min_year & SS_Attempted >= min_strike_attempts, 
+                                      cor(SAOE, SS_Attempt_Ground_Pct)]))
+cor_df[, 'Strike Accuracy' := format(round(get('Strike Accuracy'), 3), nsmall = 3)]
+cor_df[, SAOE := format(round(SAOE, 3), nsmall = 3)]
+setnames(cor_df, 'Strike Type', '')
+
+cor_acc_saoe <- careers[year(Last_Bout) >= min_year & SS_Attempted >= min_strike_attempts, cor(SS_Accuracy, SAOE)]
+
+kable(cor_df, align = 'c', 
+      caption = paste0('Pearson Correlation Coefficients (among fighters with ', min_strike_attempts, '+ significant strike attempts and at least 1 bout since ', min_year, ')')) %>%
+  kable_styling(bootstrap_options = c("striped"), full_width = F)
+
+```
+
+Finally, the table below shows the top 10 fighters with the highest UFC career SAOE. Unlike the top 10 in strike accuracy shown in a prior table, this table features almost exclusively elite strikers, which is a positive sign for the SAOE metric's ability to meaningfully quantify striking precision.
+
+```{r}
+#| echo: false
+#| fig-align: center
+
+# show top 10 SAOE
+
+tbl_df <- careers[year(Last_Bout) >= min_year & SS_Attempted >= min_strike_attempts, 
+        .('Fighter' = Name,
+          tmp = SAOE,
+          SAOE = paste0(ifelse(SAOE >= 0, '+', ''), format(round(100 * SAOE, 1), nsmall = 1), '%'), 
+          'Strike accuracy' = paste0(format(round(100 * SS_Accuracy, 1), nsmall = 1), '%'), 
+          'Distance % of strike attempts' = paste0(format(round(100 * SS_Attempt_Dist_Pct, 1), nsmall = 1), '%'), 
+          'Significant strikes attempts' = format(SS_Attempted, big.mark = ','))][order(-tmp)][1:10]
+tbl_df[, tmp := NULL]
+
+kable(tbl_df, align = 'c', 
+      caption = paste0('UFC Career SAOE Top 10 (among fighters with ', min_strike_attempts, '+ significant strike attempts and at least 1 bout since ', min_year, ')')) %>%
+  kable_styling(bootstrap_options = c("striped"), full_width = F)
+```
+
+# Components of SAOE
+
+SAOE serves as a composite measure of striking precision across all strikes. However, breaking SAOE into its distance, clinch, and ground striking components is also informative. The formula for, say, Distance SAOE is the same as SAOE, minus the clinch and ground strikes. Hence, Distance SAOE is interpreted as the percentage point difference between observed and expected *distance* strike accuracy. Clinch SAOE and Ground SAOE are interpreted similarly.
+
+The table below shows the UFC's top 10 in SAOE alongside each fighter's Distance, Clinch, and Ground SAOE. We can see that Sean O'Malley predominantly strikes from distance, but his clinch and ground striking precision has been strong so far. However, while Chris Gutierrez also throws the majority of his strikes from distance, the precision of his clinch and ground striking has been lacking. Thus, breaking SAOE into its components can highlight the different strengths and weaknesses of a fighter's striking game.
+
+```{r}
+#| echo: false
+#| fig-align: center
+#| classes: preview-image
+
+# create and format table
+top_n <- 10
+tbl_df <- careers[year(Last_Bout) >= min_year & SS_Attempted >= min_strike_attempts, 
+        .('Fighter' = Name,
+          tmp = SAOE, 
+          SS_Attempt_Dist_Pct = 100 * SS_Attempt_Dist_Pct, 
+          SS_Attempt_Clinch_Pct = 100 * SS_Attempt_Clinch_Pct, 
+          SS_Attempt_Ground_Pct = 100 * SS_Attempt_Ground_Pct,
+          SAOE_Distance, 
+          SAOE_Clinch, 
+          SAOE_Ground, 
+          SAOE)][order(-tmp)][1:top_n]
+tbl_df$bar <- apply(tbl_df[, 3:5], 1, function(x) paste0(x[1], ",", x[2], ",", x[3]))
+tbl_df[, tmp := NULL]
+setcolorder(tbl_df, c('Fighter', 'SAOE_Distance', 'SAOE_Clinch', 'SAOE_Ground', 'bar'))
+cell_font_size = 15
+
+# build formatted table
+# formatted_tbl <- reactable(
+#   tbl_df,
+#   pagination = F,
+#   striped = T,
+#   theme = reactableTheme(headerStyle = list(borderColor = 'black')),
+#   style = list(fontSize = cell_font_size,
+#                fontWeight = 'bold',
+#                fontFamily = 'Arial'),
+#   columns = list(
+#     'Fighter' = colDef(name = '',
+#                        align = 'right',
+#                        headerVAlign = 'bottom',
+#                        width = 150,
+#                        style = list(fontSize = cell_font_size)),
+#     bar = colDef(
+#               name = 'Distance, Clinch, & Ground % of Strike Attempts',
+#               width = 230,
+#               align = 'center',
+#               headerVAlign = 'bottom',
+#               cell = function(value) {
+#                 # Split the components
+#                 components <- as.numeric(strsplit(value, ",")[[1]])
+#                 # Create the bar with three segments
+#                 htmltools::tags$div(
+#                   style = paste0("height: 20px; display: flex; width: 100%;"),
+#                   htmltools::tags$div(style = paste0("background-color: #1F78B4; width: ", components[1], "%;")),
+#                   htmltools::tags$div(style = paste0("background-color: #E31A1C; width: ", components[2], "%;")),
+#                   htmltools::tags$div(style = paste0("background-color: #33A02C; width: ", components[3], "%;"))
+#                 )
+#               }
+#             ),
+#     'SAOE_Distance' = colDef(name = 'Distance SAOE',
+#                                      width = 140,
+#                                      align = 'center',
+#                                      headerVAlign = 'bottom',
+#                                      cell = color_tiles(tbl_df,
+#                                                         colors = all_blue_colors,
+#                                                         number_fmt = percent_format(accuracy = .1, trim = F, style_positive = 'plus'),
+#                                                         bold_text = T),
+#                                      style = color_scales(tbl_df,
+#                                                           colors = all_blue_colors),
+#                                      headerStyle = list(color = paired_blue)),
+#     'SAOE_Clinch' = colDef(name = 'Clinch SAOE',
+#                                      width = 140,
+#                                      align = 'center',
+#                                      headerVAlign = 'bottom',
+#                                      cell = color_tiles(tbl_df,
+#                                                         colors = all_red_colors,
+#                                                         number_fmt = percent_format(accuracy = .1, trim = F, style_positive = 'plus'),
+#                                                         bold_text = T),
+#                                      style = color_scales(tbl_df,
+#                                                           colors = all_red_colors),
+#                                      headerStyle = list(color = paired_red)),
+#     'SAOE_Ground' = colDef(name = 'Ground SAOE',
+#                                      width = 140,
+#                                      align = 'center',
+#                                      headerVAlign = 'bottom',
+#                                      cell = color_tiles(tbl_df,
+#                                                         colors = all_green_colors,
+#                                                         number_fmt = percent_format(accuracy = .1, trim = F, style_positive = 'plus'),
+#                                                         bold_text = T),
+#                                      style = color_scales(tbl_df,
+#                                                           colors = all_green_colors),
+#                                      headerStyle = list(color = paired_green)),
+#     'SAOE' = colDef(name = 'Strike Accuracy Over Expected (SAOE)',
+#                                   width = 300,
+#                                   align = 'left',
+#                                   headerVAlign = 'bottom',
+#                                   cell = data_bars(tbl_df,
+#                                                    bar_height = 20,
+#                                                    max_value = tbl_df[, max(SAOE) * 1.25],
+#                                                    number_fmt = percent_format(accuracy = .1, trim = F, style_positive = 'plus'),
+#                                                    fill_color = 'black',
+#                                                    bold_text = T)),
+#     SS_Attempt_Dist_Pct = colDef(show = F),
+#     SS_Attempt_Clinch_Pct = colDef(show = F),
+#     SS_Attempt_Ground_Pct = colDef(show = F)
+#   )
+# ) %>%
+#   add_title(paste0('Strike Accuracy Over Expected (SAOE) - UFC Top ', top_n), font_family = 'Arial', font_size = 34) %>%
+#   add_subtitle(paste0('SAOE is interpreted as the percentage point difference between a fighter\'s observed and expected strike accuracy'), font_family = 'Arial', font_size = 20, font_style = 'italic') %>%
+#   add_source(source = paste0('Created by @NateLatshaw on Twitter || As of ', max_date, ' || Figure only includes fighters with ', min_strike_attempts, '+ significant strike attempts and at least 1 UFC bout since ', min_year, ' || See literalfightnerd.com for methodological details'),
+#              font_style = 'italic',
+#              font_size = 11)
+# save_reactable(formatted_tbl, './img/saoe-table.png', vwidth = 1190)
+
+knitr::include_graphics('img/saoe-table.png')
+```
+
+# Limitations of SAOE
+
+While SAOE offers a clear improvement over strike accuracy and has many desirable properties, this version of SAOE is based on publicly available data and thus far from perfect. For instance, rather than only partitioning strikes based on whether they were thrown from distance, in the clinch, or on the ground, we would also preferably distinguish between the strike type (i.e. punch, kick, knee, elbow) and the target (i.e. opponent's head, body, or legs). All of these different attributes of a strike are presumably associated with an inherently different accuracy that SAOE would ideally account for, but unfortunately, current publicly available data does not provide that level of granularity.
+
+# Next steps
+
+The natural follow on to SAOE is Strike Defense Over Expected (SDOE). Offensive striking only tells half the story of striking, so exploring how strike defense (defined as the number of significant strikes a fighter's opponent misses divided by the number of significant strikes the opponent attempts) compares to an SDOE metric that accounts for the distribution of strike attempts faced at distance, in the clinch, or on the ground - alongside the associated expected strike defense of each - will hopefully be similarly valuable.
+
+Finally, once both SAOE and SDOE are developed as composite offensive and defensive striking metrics, respectively, more work can be done to attempt to combine these metrics into a single, unified advanced striking metric that considers both offensive and defensive striking prowess relative to expectation. Stay tuned for more work on this front - the best way to do so is to follow me on Twitter at [@NateLatshaw](https://x.com/NateLatshaw).
