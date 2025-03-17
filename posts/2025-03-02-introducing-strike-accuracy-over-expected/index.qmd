@@ -1,5 +1,5 @@
 ---
-title: "Introducing Strike Accuracy over Expected (SAOE)"
+title: "Introducing Strike Accuracy Over Expected (SAOE)"
 description: |
   An advanced striking metric that is easily interpreted, offers new insights, and facilitates meangingful comparisons between fighters
 base_url: "https://literalfightnerd.com/"
