@@ -1,7 +1,7 @@
 ---
 title: "Introducing Strike Accuracy Over Expected (SAOE)"
 description: |
-  An advanced striking metric that is easily interpreted, offers new insights, and facilitates meangingful comparisons between fighters
+  An advanced striking metric that is easily interpreted, offers new insights, and facilitates meaningful comparisons between fighters
 base_url: "https://literalfightnerd.com/"
 twitter:
   - site: "@NateLatshaw"
@@ -340,7 +340,7 @@ kable(tbl_df, align = 'c',
 
 ```
 
-The table below shows Pearson correlation coefficients that describe the strength and direction of the linear relationships between striking metric (i.e. strike accuracy and SAOE) and striking tendencies (i.e. percent of strikes thrown at distance, in the clinch, or on the ground). Pearson correlation coefficients range from -1 to 1 such that positive numbers indicate a positive linear relationship (and vice-versa for negative numbers) and 0 indicates no linear relationship.
+The table below shows Pearson correlation coefficients that describe the strength and direction of the linear relationships between striking metric (i.e. strike accuracy and SAOE) and striking tendencies (i.e. percent of strikes thrown at distance, in the clinch, or on the ground). Pearson correlation coefficients range from -1 to 1 such that positive numbers indicate a positive linear relationship (and vice versa for negative numbers) and 0 indicates no linear relationship.
 
 As we can see, strike accuracy is moderately correlated with striking tendencies, but SAOE is effectively uncorrelated with the distribution of a fighter's strike attempts. This property of SAOE is desirable because, unlike strike accuracy, it allows for meaningful comparisons between fighters across striking styles and tendencies. Put another way, a fighter's strike accuracy can be artificially inflated by being an average grounder striker who only throws ground strikes. However, that is not possible with SAOE - this hypothetical fighter would have to be an above average ground striker to have a positive SAOE.
 
