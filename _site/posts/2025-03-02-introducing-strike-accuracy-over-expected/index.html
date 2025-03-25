@@ -212,7 +212,7 @@ ul.task-list li input[type="checkbox"] {
 <p>To solve this limitation of strike accuracy as a metric, the UFC computes an expected strike accuracy based on both (a) the types of strikes that each fighter throws and (b) the rate at which each type of strike has landed historically across all fighters. Then, the difference between a fighter’s observed and expected strike accuracy is computed to serve as a more meaningful measure of accuracy.</p>
 <p>This blog post utilizes this concept to formally introduce Strike Accuracy Over Expected (SAOE), a new metric that aims to quantify a fighter’s striking precision in a manner that improves upon the traditional strike accuracy metric. The details are provided below in this post, but put simply, SAOE has three desirable properties:</p>
 <ol type="1">
-<li><p><strong>SAOE is easily interpreted</strong> - it is interpreted as the percentage point difference between a fighter’s observed and expected strike accuracy.</p></li>
+<li><p><strong>SAOE is easily interpreted</strong> - it is interpreted as the percentage-point difference between a fighter’s observed and expected strike accuracy.</p></li>
 <li><p><strong>SAOE offers new insights</strong> - it contains a frame of reference for strike accuracy against which to compare to a fighter’s performance and wraps that up into a single, composite metric that quantifies striking precision.</p></li>
 <li><p><strong>SAOE facilitates meaningful comparisons between fighters with different styles</strong> - it is correlated with strike accuracy but uncorrelated with striking tendencies.</p></li>
 </ol>
@@ -354,7 +354,7 @@ ul.task-list li input[type="checkbox"] {
 </section>
 <section id="calculating-strike-accuracy-over-expected-saoe" class="level1">
 <h1>Calculating Strike Accuracy Over Expected (SAOE)</h1>
-<p><strong>SAOE is interpreted as the percentage point difference between observed and expected strike accuracy based on the types of strikes thrown</strong>. Positive numbers indicate fighters are more accurate than we would expect given their strike attempt distribution, and thus, elite strikers often rank highly in SAOE.</p>
+<p><strong>SAOE is interpreted as the percentage-point difference between observed and expected strike accuracy based on the types of strikes thrown</strong>. Positive numbers indicate fighters are more accurate than we would expect given their strike attempt distribution, and thus, elite strikers often rank highly in SAOE.</p>
 <p>Understanding SAOE is as simple as comprehending the paragraph above. Now, the rest of this section gets mildly technical to show the computational details of the SAOE metric, so here is your warning if that is not of interest - you should be able to safely skip to the next section that showcases the importance of SAOE. For everyone else, I attempt to keep the forthcoming notation light and as readable as possible.</p>
 <p>Mathematically, SAOE is calculated as follows:</p>
 <p><span class="math display">\[
@@ -575,7 +575,7 @@ SAOE_f &amp;= \text{Significant strike accuracy}_f - \text{Expected significant 
 </section>
 <section id="components-of-saoe" class="level1">
 <h1>Components of SAOE</h1>
-<p>SAOE serves as a composite measure of striking precision across all strikes. However, breaking SAOE into its distance, clinch, and ground striking components is also informative. The formula for, say, Distance SAOE is the same as SAOE, minus the clinch and ground strikes. Hence, Distance SAOE is interpreted as the percentage point difference between observed and expected <em>distance</em> strike accuracy. Clinch SAOE and Ground SAOE are interpreted similarly.</p>
+<p>SAOE serves as a composite measure of striking precision across all strikes. However, breaking SAOE into its distance, clinch, and ground striking components is also informative. The formula for, say, Distance SAOE is the same as SAOE, minus the clinch and ground strikes. Hence, Distance SAOE is interpreted as the percentage-point difference between observed and expected <em>distance</em> strike accuracy. Clinch SAOE and Ground SAOE are interpreted similarly.</p>
 <p>The table below shows the UFC’s top 10 in SAOE alongside each fighter’s Distance, Clinch, and Ground SAOE. We can see that Sean O’Malley predominantly strikes from distance, but his clinch and ground striking precision has been strong so far. However, while Chris Gutierrez also throws the majority of his strikes from distance, the precision of his clinch and ground striking has been lacking. Thus, breaking SAOE into its components can highlight the different strengths and weaknesses of a fighter’s striking game.</p>
 <div class="cell preview-image" data-layout-align="center">
 <div class="cell-output-display">

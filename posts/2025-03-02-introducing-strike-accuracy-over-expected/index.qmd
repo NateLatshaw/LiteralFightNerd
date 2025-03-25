@@ -82,7 +82,7 @@ To solve this limitation of strike accuracy as a metric, the UFC computes an exp
 
 This blog post utilizes this concept to formally introduce Strike Accuracy Over Expected (SAOE), a new metric that aims to quantify a fighter's striking precision in a manner that improves upon the traditional strike accuracy metric. The details are provided below in this post, but put simply, SAOE has three desirable properties:
 
-1. **SAOE is easily interpreted** - it is interpreted as the percentage point difference between a fighter's observed and expected strike accuracy.
+1. **SAOE is easily interpreted** - it is interpreted as the percentage-point difference between a fighter's observed and expected strike accuracy.
 
 2. **SAOE offers new insights** - it contains a frame of reference for strike accuracy against which to compare to a fighter's performance and wraps that up into a single, composite metric that quantifies striking precision.
 
@@ -250,7 +250,7 @@ Therefore, strike accuracy is limited in its ability to depict anything meaningf
 
 # Calculating Strike Accuracy Over Expected (SAOE)
 
-**SAOE is interpreted as the percentage point difference between observed and expected strike accuracy based on the types of strikes thrown**. Positive numbers indicate fighters are more accurate than we would expect given their strike attempt distribution, and thus, elite strikers often rank highly in SAOE.
+**SAOE is interpreted as the percentage-point difference between observed and expected strike accuracy based on the types of strikes thrown**. Positive numbers indicate fighters are more accurate than we would expect given their strike attempt distribution, and thus, elite strikers often rank highly in SAOE.
 
 Understanding SAOE is as simple as comprehending the paragraph above. Now, the rest of this section gets mildly technical to show the computational details of the SAOE metric, so here is your warning if that is not of interest - you should be able to safely skip to the next section that showcases the importance of SAOE. For everyone else, I attempt to keep the forthcoming notation light and as readable as possible.
 
@@ -399,7 +399,7 @@ kable(tbl_df, align = 'c',
 
 # Components of SAOE
 
-SAOE serves as a composite measure of striking precision across all strikes. However, breaking SAOE into its distance, clinch, and ground striking components is also informative. The formula for, say, Distance SAOE is the same as SAOE, minus the clinch and ground strikes. Hence, Distance SAOE is interpreted as the percentage point difference between observed and expected *distance* strike accuracy. Clinch SAOE and Ground SAOE are interpreted similarly.
+SAOE serves as a composite measure of striking precision across all strikes. However, breaking SAOE into its distance, clinch, and ground striking components is also informative. The formula for, say, Distance SAOE is the same as SAOE, minus the clinch and ground strikes. Hence, Distance SAOE is interpreted as the percentage-point difference between observed and expected *distance* strike accuracy. Clinch SAOE and Ground SAOE are interpreted similarly.
 
 The table below shows the UFC's top 10 in SAOE alongside each fighter's Distance, Clinch, and Ground SAOE. We can see that Sean O'Malley predominantly strikes from distance, but his clinch and ground striking precision has been strong so far. However, while Chris Gutierrez also throws the majority of his strikes from distance, the precision of his clinch and ground striking has been lacking. Thus, breaking SAOE into its components can highlight the different strengths and weaknesses of a fighter's striking game.
 
@@ -506,7 +506,7 @@ cell_font_size = 15
 #   )
 # ) %>%
 #   add_title(paste0('Strike Accuracy Over Expected (SAOE) - UFC Top ', top_n), font_family = 'Arial', font_size = 34) %>%
-#   add_subtitle(paste0('SAOE is interpreted as the percentage point difference between a fighter\'s observed and expected strike accuracy'), font_family = 'Arial', font_size = 20, font_style = 'italic') %>%
+#   add_subtitle(paste0('SAOE is interpreted as the percentage-point difference between a fighter\'s observed and expected strike accuracy'), font_family = 'Arial', font_size = 20, font_style = 'italic') %>%
 #   add_source(source = paste0('Created by @NateLatshaw on Twitter || As of ', max_date, ' || Figure only includes fighters with ', min_strike_attempts, '+ significant strike attempts and at least 1 UFC bout since ', min_year, ' || See literalfightnerd.com for methodological details'),
 #              font_style = 'italic',
 #              font_size = 11)
